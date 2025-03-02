@@ -6,6 +6,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import gui_elements.CardDesignerGUI;
 import abstractclasses.*;
+import java.awt.Color;
+
 
 public class CardImageBrowser extends ImageBrowser{
     private final CardDesignerGUI parent;
@@ -24,7 +26,7 @@ public class CardImageBrowser extends ImageBrowser{
     }
 
 
-protected void updateImage(File file) {
+    protected void updateImage(File file) {
         try {
             switch(type){
                 case 'f': parent.setCardFrame(ImageIO.read(file));break;
@@ -35,5 +37,20 @@ protected void updateImage(File file) {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(parent.getFrame(), "Error loading new image.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    @Override
+    protected IconLabel addMouseListener(IconLabel label, File file) {
+        label.setOpaque(true);  // Important: This allows the background color to show.
+        label.setBackground(Color.LIGHT_GRAY);  // Set light grey background.
+
+        label.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                updateImage(file);
+            }
+        });
+
+        return label;
     }
 }

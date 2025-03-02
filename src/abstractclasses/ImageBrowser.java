@@ -72,7 +72,7 @@ public abstract class ImageBrowser {
     }
 
     public void rescale(double scale) {
-        scrollPane.setBounds((int) (x * scale), (int) (y * scale), (int) (width * scale), (int) (scale * scale));
+        scrollPane.setBounds(0, 0, (int) (width * scale), (int) (scale * scale));
         scrollPane.setPreferredSize(new Dimension((int) (width * scale), (int) (height * scale)));
     }
 

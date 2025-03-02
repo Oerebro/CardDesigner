@@ -37,11 +37,11 @@ public class ControlPanel1 extends ControlPanel {
     private void createButtons() {
         // Create the dropdown menu for frame selection
         tabbedPane = new JTabbedPane();
-        frameSelect = new CardImageBrowser(parent,"resources/frame",360,180,'f');
-        backgroundSelect = new CardImageBrowser(parent,"resources/background",360,180,'b');
+        frameSelect = new CardImageBrowser(parent,"resources/frame",360,180,600,40, 64,'f');
+        backgroundSelect = new CardImageBrowser(parent,"resources/background",360,180,600,40, 64,'b');
         
-        textboxSelect = new CardImageBrowser(parent,"resources/textbox",360,180,'t');
-        titleSelect = new CardImageBrowser(parent,"resources/title",360,180,'h');
+        textboxSelect = new CardImageBrowser(parent,"resources/textbox",360,180,600,40, 64,'t');
+        titleSelect = new CardImageBrowser(parent,"resources/title",360,180,600,40, 64,'h');
         tabbedPane.addTab("Choose Frame",frameSelect.getScrollPane());
         tabbedPane.addTab("Choose Background",backgroundSelect.getScrollPane());
         tabbedPane.addTab("Choose Textbox",textboxSelect.getScrollPane());
