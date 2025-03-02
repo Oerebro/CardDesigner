@@ -32,13 +32,23 @@ public class VariableTabbedPane extends JTabbedPane{
     }
 
     private void addTabsWeapon(){
-        add(new ImageBrowser(parent,"resources/textbox",360,180,'7').filePanel)
+        removeAll();
+        add("Bows",new ImageBrowser(parent,"resources/weapons/",360,180,'7').getScrollPane());
     }
 
-    private void addTabsArmor(){}
+    private void addTabsArmor(){
+        removeAll();
+    }
 
-    private void addTabsClothing(){}
+    private void addTabsClothing(){
+        removeAll();
+    }
 
-    private void addTabsAccessoire(){}
+    private void addTabsAccessoire(){
+        removeAll();
+    }
 
-    private void addTabsConsumabl
+    private void addTabsConsumable(){
+        removeAll();
+    }
+}
