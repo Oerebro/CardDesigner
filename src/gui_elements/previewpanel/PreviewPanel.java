@@ -45,6 +45,10 @@ public class PreviewPanel {
                     g.drawImage(cf, 0, 0, scaledWidth, scaledHeight, this);
                 }
 
+                try{
+                    g.drawImage(ImageIO.read(new File("resources/misc/frontborder.png")), 0, 0, 555, 735, this);
+                }catch(IOException e){};
+
                 if (ii != null) {
                     g.drawImage(ii, (int)(93*scale), (int)(80*scale), (int)(400*scale), (int)(400*scale), this);
                 }

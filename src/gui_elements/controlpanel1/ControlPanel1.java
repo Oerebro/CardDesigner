@@ -18,8 +18,8 @@ public class ControlPanel1 extends ControlPanel {
     private SelectTypePanel selectItemTypePanel;
 
     private JTabbedPane tabbedPane;
-    private CardImageBrowser frameSelect, backgroundSelect, textboxSelect, titleSelect;
-    private VariableTabbedPane selectItemArt;
+    private ImageBrowser frameSelect, backgroundSelect, textboxSelect, titleSelect;
+    private VariableTabbedPane selectItemArt, weapons, armor, accessoire, consumable;
 
     public void init(CardDesignerGUI parent) {
         this.parent = parent;
@@ -47,19 +47,45 @@ public class ControlPanel1 extends ControlPanel {
         tabbedPane.addTab("Choose Textbox",textboxSelect.getScrollPane());
         tabbedPane.addTab("Choose Title",titleSelect.getScrollPane());
 
-        selectItemArt = new VariableTabbedPane();
-        selectItemArt.init(parent);
-
-        //selectTypePanel
         selectItemTypePanel = new SelectTypePanel(parent);
 
-        /*  Listeners
-        loadFrameButton.addActionListener(e -> parent.loadImagePreviewPanel("frame"));
-        loadBackgroundButton.addActionListener(e -> parent.loadImagePreviewPanel("background"));
-        loadTextboxButton.addActionListener(e -> parent.loadImagePreviewPanel("textbox"));
-        //loadTextboxButton.addActionListener(e -> parent.loadImagePreviewPanel("title"));*/
+        weapons = new VariableTabbedPane();
+        weapons.init(parent,0);
+        selectItemArt = weapons;
 
- 
+        
+    }
+
+    public void changeToType(int type){
+        selectItemArt.removeAll();
+        switch(type){
+            case 0:{
+                selectItemArt = weapons;
+            }break;
+            case 1:{
+                if(armor == null){
+                    armor = new VariableTabbedPane();
+                    armor.init(parent,1);
+                }
+                selectItemArt = armor;
+            }break;
+            case 3:{
+                if(accessoire==null){
+                    accessoire = new VariableTabbedPane();
+                    accessoire.init(parent,3);
+                }
+                selectItemArt = accessoire;
+            }break;
+            case 4:{
+                if(consumable==null){
+                    consumable = new VariableTabbedPane();
+                    consumable.init(parent,4);
+                }
+                selectItemArt = consumable;
+            }break;
+        }
+        selectItemArt.revalidate();
+        selectItemArt.repaint();
     }
 
     public void compose() {

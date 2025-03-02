@@ -81,6 +81,15 @@ public class CardDesignerGUI {
         previewPanel.repaint();
     }
 
+        /*types: 
+    0 - weaponOneHand
+    10 - weaponTwoHand
+    1 - armor
+    2 - clothing
+    3 - accessoire
+    4 - consumable
+    */
+
     public void onButtonWeapon(){
         try{
             setCardType(ImageIO.read(new File("resources/weapon.png")));
@@ -106,6 +115,8 @@ public class CardDesignerGUI {
         }catch(IOException e){
             throw new Error("Error on Checkbox Clothing; Icon File not found");
         }
+        if(controlPanel.getItemArtType()!=1)
+        controlPanel.setItemArtType(1);
     }
 
     public void onButtonAccessoire(){
@@ -125,10 +136,6 @@ public class CardDesignerGUI {
         }
         controlPanel.setItemArtType(4);
     }
-
-
-
-
 
 
     public CardDesignerGUI() {
@@ -212,6 +219,8 @@ public class CardDesignerGUI {
             g2d.drawImage(cardFrame, 0, 0, 750, 1050, null);
         }
 
+        g.drawImage(ImageIO.read(new File("resources/misc/frontborder.png")), 0, 0, 750, 1050, null);
+
         if (cardItemImage != null) {
             g2d.drawImage(cardItemImage, (int)(93*scale), (int)(80*scale),  (int)(400*scale),  (int)(400*scale), null);
         }
@@ -267,6 +276,8 @@ public class CardDesignerGUI {
         catch (IllegalAccessException e) {
         // handle exception
         }
+
+        //run ui thread
         SwingUtilities.invokeLater(CardDesignerGUI::new);
     }
 

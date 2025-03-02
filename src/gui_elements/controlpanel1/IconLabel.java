@@ -4,7 +4,7 @@ import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Graphics;
 
-class IconLabel extends JLabel {
+public class IconLabel extends JLabel {
 
     public IconLabel(ImageIcon icon) {
         super(icon);
