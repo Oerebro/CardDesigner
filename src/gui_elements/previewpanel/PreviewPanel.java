@@ -44,17 +44,17 @@ public class PreviewPanel {
                 if (cf != null) {
                     g.drawImage(cf, 0, 0, scaledWidth, scaledHeight, this);
                 }
+
+                if (ii != null) {
+                    g.drawImage(ii, (int)(93*scale), (int)(80*scale), (int)(400*scale), (int)(400*scale), this);
+                }
     
                 if (tb != null) {
                     g.drawImage(tb, 0, 0, scaledWidth, scaledHeight, this);
                 }
     
                 if (ct != null) {
-                    g.drawImage(parent.getCardType(), (int) (410*scale), (int)(372*scale), (int) (128*scale), (int) (128*scale), this);
-                }
-
-                if (ii != null) {
-                    g.drawImage(ii, 0, 0, scaledWidth, scaledHeight, this);
+                    g.drawImage(ct, (int) (410*scale), (int)(372*scale), (int) (128*scale), (int) (128*scale), this);
                 }
 
                 if (ti != null) {
@@ -65,7 +65,7 @@ public class PreviewPanel {
     
         object.setPreferredSize(new Dimension(555, 735));
         panel = new JPanel(new BorderLayout());
-        //panel.setPreferredSize(new Dimension(0, 1100));
+        panel.setPreferredSize(new Dimension(0, 1100));
         panel.add(object, BorderLayout.LINE_START);
         rescale(1.0);
     
@@ -75,7 +75,7 @@ public class PreviewPanel {
     public void loadDefault() {
         try{
             parent.setCardFrame(ImageIO.read(new File("resources/frame/default.png")));
-            parent.setCardTextbox(ImageIO.read(new File("resources/textbox/default.png")));
+            //parent.setCardTextbox(ImageIO.read(new File("resources/textbox/default.png")));
             parent.setCardBackground(ImageIO.read(new File("resources/background/default.png")));
         }catch(IOException e){
             JOptionPane.showMessageDialog(parent.getFrame(), "Error loading default images.","Error",JOptionPane.ERROR_MESSAGE);

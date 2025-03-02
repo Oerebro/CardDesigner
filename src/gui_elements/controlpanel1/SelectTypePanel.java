@@ -1,14 +1,10 @@
 package gui_elements.controlpanel1;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import gui_elements.CardDesignerGUI;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.awt.image.BufferedImage;
 
 public class SelectTypePanel {
     private final CardDesignerGUI parent;
@@ -62,23 +58,16 @@ public class SelectTypePanel {
     }
 
     public void updateImage(JCheckBox selected, JCheckBox[] checkboxes){
-        for(JCheckBox x:checkboxes){
-            if(x != selected){
-                x.setSelected(false);
-            }
-        } 
-        selected.setSelected(true);
+
+        uncheckOtherCheckboxes(selected, checkboxes);
+
         String type = selected.getText();
-        try{
-            switch(type) {
-                case "Weapon": parent.setCardType(ImageIO.read(new File("resources/weapon.png"))); break;
-                case "Armor": parent.setCardType(ImageIO.read(new File("resources/armor.png"))); break;
-                case "Consumable": parent.setCardType(ImageIO.read(new File("resources/consumable.png"))); break;
-                case "Clothing": parent.setCardType(ImageIO.read(new File("resources/clothing.png"))); break;
-                case "Accessoire": parent.setCardType(ImageIO.read(new File("resources/accessoire.png"))); break;
-            }
-        }catch (IOException e){
-            JOptionPane.showMessageDialog(parent.getFrame(), "Error loading type image.","Error",JOptionPane.ERROR_MESSAGE);
+        switch(type) {
+            case "Weapon": parent.onButtonWeapon(); break;
+            case "Armor": parent.onButtonArmor(); break;
+            case "Consumable": parent.onButtonConsumable(); break;
+            case "Clothing": parent.onButtonClothing(); break;
+            case "Accessoire": parent.onButtonAccessoire(); break;
         };
     }
 

@@ -8,7 +8,7 @@ import gui_elements.CardDesignerGUI;
 public class ControlPanel2 extends ControlPanel{
 
     private JLabel frameLabel, backgroundLabel, textboxLabel;
-    private JButton loadFrameButton, loadBackgroundButton, loadTextboxButton;
+    private JButton loadFrameButton, loadBackgroundButton, loadTextboxButton, exportButton;
     private CardDesignerGUI parent;
 
     public void init(CardDesignerGUI parent){
@@ -26,6 +26,8 @@ public class ControlPanel2 extends ControlPanel{
         loadBackgroundButton = new JButton("Load Background");
         loadTextboxButton = new JButton("Load Text Box");
 
+        exportButton = new JButton("Export Card");
+
         frameLabel = new JLabel("No frame selected");
         backgroundLabel = new JLabel("No background selected");
         textboxLabel = new JLabel("No text box selected");
@@ -35,10 +37,13 @@ public class ControlPanel2 extends ControlPanel{
         loadBackgroundButton.addActionListener(e -> parent.loadImagePreviewPanel("background"));
         loadTextboxButton.addActionListener(e -> parent.loadImagePreviewPanel("textbox"));
 
+        exportButton.addActionListener(e -> parent.exportImage());
+
     }
     
     public void compose(){
         add(textboxLabel);
+        add(exportButton);
 
     }
 
