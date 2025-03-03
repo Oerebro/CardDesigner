@@ -17,7 +17,7 @@ import java.util.Date;
 public class CardDesignerGUI {
     private JFrame frame;
     //private JLabel frameLabel, backgroundLabel, textBoxLabel;
-    private BufferedImage cardFrame, cardBackground, cardTextBox, cardTitleImage,cardItemImage, /*cardWeight,*/ cardType/*, cardRune, cardEnchant, cardRange, cardTargets, cardDamageType*/;
+    private BufferedImage cardFrame, cardBackground, cardTextBox, cardTitleImage,cardItemImage, /*cardWeight,*/ cardType/*, cardRune, cardEnchant, cardRange, cardTargets, cardDamageType*/,handedImage;
     private PreviewPanel previewPanel;
     ControlPanel1 controlPanel;
     ControlPanel2 controlPanel2;
@@ -55,6 +55,10 @@ public class CardDesignerGUI {
         return cardItemImage;
     }
 
+    public BufferedImage getCardHandedImage(){
+        return handedImage;
+    }
+
     public void setCardFrame(BufferedImage i){
         cardFrame = i;
         previewPanel.repaint();
@@ -78,6 +82,11 @@ public class CardDesignerGUI {
     }
     public void setCardItemImage(BufferedImage i){
         cardItemImage = i;
+        previewPanel.repaint();
+    }
+
+    public void setCardHandedImage(BufferedImage i){
+        handedImage = i;
         previewPanel.repaint();
     }
 
@@ -135,6 +144,21 @@ public class CardDesignerGUI {
             throw new Error("Error on Checkbox Consumable; Icon File not found");
         }
         controlPanel.itemArtChangeToType(4);
+    }
+
+    public void onButtonTwoHanded(boolean selected){
+        try{
+            if(selected){
+                setCardHandedImage(ImageIO.read(new File("resources/misc/twoHanded.png")));
+                controlPanel.itemArtChangeToType(10);
+            }else{    
+            setCardHandedImage(ImageIO.read(new File("resources/misc/oneHanded.png")));
+            }
+        }catch(IOException e){
+            throw new Error("Couldnt find image resources/misc/*Handed.png");
+        }
+
+        
     }
 
 

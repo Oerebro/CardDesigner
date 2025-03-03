@@ -2,6 +2,11 @@ package gui_elements.controlpanel1;
 
 import java.awt.Dimension;
 //import java.io.File;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.awt.Font; 
 
 //import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,9 +22,11 @@ public class ControlPanel1 extends ControlPanel {
     
     private SelectTypePanel selectItemTypePanel;
 
-    private JTabbedPane tabbedPane;
+    private JTabbedPane cardComponentTabbedPane;
     private ImageBrowser frameSelect, backgroundSelect, textboxSelect, titleSelect;
-    private VariableTabbedPane selectItemArt, weapons , armor, accessoire, consumable;
+    private VariableTabbedPane selectItemArt, weapons,weaponsTwoHanded, armor, accessoire, consumable;
+    private JTextField titleTextField;
+    private JComboBox<String> titleFontSelection;
 
     public void init(CardDesignerGUI parent) {
         this.parent = parent;
@@ -28,37 +35,69 @@ public class ControlPanel1 extends ControlPanel {
         rescale(1.0);
     }
 
-    /*public void setItemArtType(int type){
-        selectItemArt.switchToType(type);
-    }*/
-
-    
-
     private void createButtons() {
-        // Create the dropdown menu for frame selection
-        tabbedPane = new JTabbedPane();
+        createCardComponentSelection();
+        selectItemTypePanel = new SelectTypePanel(parent);
+
+        //Item Art VariableTabbedPane with default state weapons
+        weapons = new VariableTabbedPane();
+        weapons.init(parent,0);
+        selectItemArt = weapons;    
+    }
+
+    private void  createTitleTextFieldAndPreview(){
+        titleTextField = new JTextField();
+
+    }
+
+    private void createTitleFontSelection(){
+        titleFontSelection = new JComboBox<>();
+        Map<String,Font> fonts = loadFonts();
+
+        for (String fontName : fonts.keySet()) {
+            titleFontSelection.addItem(fontName);
+        }
+    }
+
+    private Map<String, Font> loadFonts() {
+        Map<String, Font> fonts = new HashMap<>();
+        File fontFolder = new File("resources/misc/fonts");
+        if (fontFolder.exists() && fontFolder.isDirectory()) {
+            File[] files = fontFolder.listFiles((dir, name) -> name.toLowerCase().endsWith(".ttf"));
+            if (files != null) {
+                for (File file : files) {
+                    try (FileInputStream fis = new FileInputStream(file)) {
+                        Font font = Font.createFont(Font.TRUETYPE_FONT, fis).deriveFont(24f);
+                        fonts.put(file.getName(), font);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return fonts;
+    }
+
+    private void createCardComponentSelection(){
+        cardComponentTabbedPane = new JTabbedPane();
         frameSelect = new CardImageBrowser(parent,"resources/frame",360,180,600,40, 64,'f');
         backgroundSelect = new CardImageBrowser(parent,"resources/background",360,180,600,40, 64,'b');
         
         textboxSelect = new CardImageBrowser(parent,"resources/textbox",360,180,600,40, 64,'t');
         titleSelect = new CardImageBrowser(parent,"resources/title",360,180,600,40, 64,'h');
-        tabbedPane.addTab("Choose Frame",frameSelect.getScrollPane());
-        tabbedPane.addTab("Choose Background",backgroundSelect.getScrollPane());
-        tabbedPane.addTab("Choose Textbox",textboxSelect.getScrollPane());
-        tabbedPane.addTab("Choose Title",titleSelect.getScrollPane());
-
-        selectItemTypePanel = new SelectTypePanel(parent);
-
-        weapons = new VariableTabbedPane();
-        weapons.init(parent,0);
-        selectItemArt = weapons;
-
-        
+        cardComponentTabbedPane.addTab("Choose Frame",frameSelect.getScrollPane());
+        cardComponentTabbedPane.addTab("Choose Background",backgroundSelect.getScrollPane());
+        cardComponentTabbedPane.addTab("Choose Textbox",textboxSelect.getScrollPane());
+        cardComponentTabbedPane.addTab("Choose Title",titleSelect.getScrollPane());
     }
 
     public void itemArtChangeToType(int type){
         remove(selectItemArt);
-        //selectItemArt.removeAll();
+
+        if(!(type==0||type==10)){
+            parent.setCardHandedImage(null);
+        }
+
         switch(type){
             case 0:{
                 selectItemArt = weapons;
@@ -84,6 +123,13 @@ public class ControlPanel1 extends ControlPanel {
                 }
                 selectItemArt = consumable;
             }break;
+            case 10:{
+                if(weaponsTwoHanded==null){
+                    weaponsTwoHanded = new VariableTabbedPane();
+                    weaponsTwoHanded.init(parent,10);
+                }
+                selectItemArt = weaponsTwoHanded;
+            }break;
         }
         add(selectItemArt);
         double scale = parent.getFrameScale();
@@ -93,8 +139,7 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     public void compose() {
-        //System.out.println("Compose");
-        add(tabbedPane);
+        add(cardComponentTabbedPane);
         add(selectItemTypePanel.menu);
         add(selectItemArt);
     }
@@ -104,18 +149,13 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     public void rescale(double scale) {
-        System.out.println("rescale");
         frameSelect.rescale(scale);
         backgroundSelect.rescale(scale);
         textboxSelect.rescale(scale);
-        tabbedPane.setPreferredSize(new Dimension((int)(360 * scale), (int)(180 * scale)));
-        tabbedPane.setBounds((int)(575 * scale), (int)(10 * scale), (int)(360 * scale), (int)(180 * scale));
+        //cardComponentTabbedPane.setPreferredSize(new Dimension((int)(360 * scale), (int)(180 * scale)));
+        cardComponentTabbedPane.setBounds((int)(575 * scale), (int)(10 * scale), (int)(360 * scale), (int)(180 * scale));
         
-        //tabbed Pane of the item art selector
-        selectItemArt.setBounds((int) (980*scale), (int) (260*scale), (int) (360*scale), (int) (500*scale));
-
-
-
+        selectItemArt.setBounds((int) (980*scale), (int) (10*scale), (int) (360*scale), (int) (500*scale));
         setBounds((int)(575 * scale), (int)(10 * scale), (int)(1100 * scale), (int)(1070 * scale));
     }
 }

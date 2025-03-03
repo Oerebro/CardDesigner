@@ -36,6 +36,7 @@ public class PreviewPanel {
                 BufferedImage cf = parent.getCardFrame();
                 BufferedImage ii = parent.getCardItemImage();
                 BufferedImage ti = parent.getTitleImage();
+                BufferedImage hi = parent.getCardHandedImage();
 
                 if (bg != null) {
                     g.drawImage(bg, 0, 0, scaledWidth, scaledHeight, this);
@@ -63,7 +64,11 @@ public class PreviewPanel {
 
                 if (ti != null) {
                     g.drawImage(ti, 0, 10, scaledWidth, scaledHeight, this);
-                }               
+                } 
+                
+                if (hi != null) {
+                    g.drawImage(hi, 498, 650, (int)(60*scale), (int)(60*scale), this);
+                } 
             }
         };
     
