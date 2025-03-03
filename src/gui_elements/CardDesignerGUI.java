@@ -17,7 +17,7 @@ import java.util.Date;
 public class CardDesignerGUI {
     private JFrame frame;
     //private JLabel frameLabel, backgroundLabel, textBoxLabel;
-    private BufferedImage cardFrame, cardBackground, cardTextBox, cardTitleImage,cardItemImage, cardWeight, cardType, cardRune, cardEnchant, cardRange, cardTargets, cardDamageType;
+    private BufferedImage cardFrame, cardBackground, cardTextBox, cardTitleImage,cardItemImage, /*cardWeight,*/ cardType/*, cardRune, cardEnchant, cardRange, cardTargets, cardDamageType*/;
     private PreviewPanel previewPanel;
     ControlPanel1 controlPanel;
     ControlPanel2 controlPanel2;
@@ -96,7 +96,7 @@ public class CardDesignerGUI {
         }catch(IOException e){
             throw new Error("Error on Checkbox Weapon; Icon File not found");
         }
-        controlPanel.setItemArtType(0);
+        controlPanel.itemArtChangeToType(0);
     }
 
     public void onButtonArmor(){
@@ -106,7 +106,7 @@ public class CardDesignerGUI {
             throw new Error("Error on Checkbox Armor; Icon File not found");
         }
         if(controlPanel.getItemArtType()!=1)
-            controlPanel.setItemArtType(1);
+            controlPanel.itemArtChangeToType(1);
     }
 
     public void onButtonClothing(){
@@ -116,7 +116,7 @@ public class CardDesignerGUI {
             throw new Error("Error on Checkbox Clothing; Icon File not found");
         }
         if(controlPanel.getItemArtType()!=1)
-        controlPanel.setItemArtType(1);
+        controlPanel.itemArtChangeToType(1);
     }
 
     public void onButtonAccessoire(){
@@ -125,7 +125,7 @@ public class CardDesignerGUI {
         }catch(IOException e){
             throw new Error("Error on Checkbox Accessoire; Icon File not found");
         }
-        controlPanel.setItemArtType(3);
+        controlPanel.itemArtChangeToType(3);
     }
 
     public void onButtonConsumable(){
@@ -134,7 +134,7 @@ public class CardDesignerGUI {
         }catch(IOException e){
             throw new Error("Error on Checkbox Consumable; Icon File not found");
         }
-        controlPanel.setItemArtType(4);
+        controlPanel.itemArtChangeToType(4);
     }
 
 
@@ -219,7 +219,10 @@ public class CardDesignerGUI {
             g2d.drawImage(cardFrame, 0, 0, 750, 1050, null);
         }
 
-        g.drawImage(ImageIO.read(new File("resources/misc/frontborder.png")), 0, 0, 750, 1050, null);
+        try
+        {
+            g2d.drawImage(ImageIO.read(new File("resources/misc/frontborder.png")), 0, 0, 750, 1050, null);
+        }catch(IOException ignore){}
 
         if (cardItemImage != null) {
             g2d.drawImage(cardItemImage, (int)(93*scale), (int)(80*scale),  (int)(400*scale),  (int)(400*scale), null);

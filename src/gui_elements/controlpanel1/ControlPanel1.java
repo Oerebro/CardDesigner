@@ -19,7 +19,7 @@ public class ControlPanel1 extends ControlPanel {
 
     private JTabbedPane tabbedPane;
     private ImageBrowser frameSelect, backgroundSelect, textboxSelect, titleSelect;
-    private VariableTabbedPane selectItemArt, weapons, armor, accessoire, consumable;
+    private VariableTabbedPane selectItemArt, weapons , armor, accessoire, consumable;
 
     public void init(CardDesignerGUI parent) {
         this.parent = parent;
@@ -28,9 +28,9 @@ public class ControlPanel1 extends ControlPanel {
         rescale(1.0);
     }
 
-    public void setItemArtType(int type){
+    /*public void setItemArtType(int type){
         selectItemArt.switchToType(type);
-    }
+    }*/
 
     
 
@@ -56,8 +56,9 @@ public class ControlPanel1 extends ControlPanel {
         
     }
 
-    public void changeToType(int type){
-        selectItemArt.removeAll();
+    public void itemArtChangeToType(int type){
+        remove(selectItemArt);
+        //selectItemArt.removeAll();
         switch(type){
             case 0:{
                 selectItemArt = weapons;
@@ -84,6 +85,9 @@ public class ControlPanel1 extends ControlPanel {
                 selectItemArt = consumable;
             }break;
         }
+        add(selectItemArt);
+        double scale = parent.getFrameScale();
+        selectItemArt.setBounds((int) (980*scale), (int) (260*scale), (int) (360*scale), (int) (500*scale));
         selectItemArt.revalidate();
         selectItemArt.repaint();
     }

@@ -50,7 +50,7 @@ public class PreviewPanel {
                 }catch(IOException e){};
 
                 if (ii != null) {
-                    g.drawImage(ii, (int)(93*scale), (int)(80*scale), (int)(400*scale), (int)(400*scale), this);
+                    g.drawImage(ii, (int)(97*scale), (int)(80*scale), (int)(400*scale), (int)(400*scale), this);
                 }
     
                 if (tb != null) {
@@ -62,7 +62,7 @@ public class PreviewPanel {
                 }
 
                 if (ti != null) {
-                    g.drawImage(ti, 0, 0, scaledWidth, scaledHeight, this);
+                    g.drawImage(ti, 0, 10, scaledWidth, scaledHeight, this);
                 }               
             }
         };

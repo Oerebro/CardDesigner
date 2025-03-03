@@ -74,6 +74,7 @@ public class VariableTabbedPane extends JTabbedPane{
         add("Helmet",new ItemArtImageBrowser(parent,"resources/armor/helmet",440,350,1300,40,80).getScrollPane());
         add("Glove",new ItemArtImageBrowser(parent,"resources/armor/glove",440,350,1300,40,80).getScrollPane());
         add("Pants",new ItemArtImageBrowser(parent,"resources/armor/pants",440,350,1300,40,80).getScrollPane());
+        add("Capes",new ItemArtImageBrowser(parent,"resources/armor/cape",440,350,1300,40,80).getScrollPane());
         add("Shields",new ItemArtImageBrowser(parent,"resources/armor/shield",440,350,1300,40,80).getScrollPane());
         
 
