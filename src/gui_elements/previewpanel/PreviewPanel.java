@@ -14,7 +14,7 @@ public class PreviewPanel {
     public JPanel panel;
     private JPanel object;
     private CardDesignerGUI parent;
-    private JLabel titleTextDisplay;
+    private JLabel titleTextDisplay, infoTextDisplay;
 
     public PreviewPanel(CardDesignerGUI parent){
         this.parent = parent;
@@ -31,7 +31,18 @@ public class PreviewPanel {
 
         return newLabel;
     }
-    
+
+    public JLabel getInfoTextDisplay() {
+        JLabel newLabel = new JLabel(infoTextDisplay.getText());
+        newLabel.setFont(infoTextDisplay.getFont());
+        newLabel.setForeground(infoTextDisplay.getForeground());
+        newLabel.setHorizontalAlignment(infoTextDisplay.getHorizontalAlignment());
+        newLabel.setVerticalAlignment(infoTextDisplay.getVerticalAlignment());
+        newLabel.setOpaque(infoTextDisplay.isOpaque());
+
+        return newLabel;
+    }
+
     private void init() {
         int scaledWidth = (int) (parent.getFrameScale() * (750*0.7));
         int scaledHeight = (int) (parent.getFrameScale() * (1050*0.7));
@@ -42,10 +53,7 @@ public class PreviewPanel {
                 super.paintComponent(g);
 
                 double scale = parent.getFrameScale();
-
-                
-
-                System.out.println(scaledHeight + " "+ scaledWidth);
+                //System.out.println(scaledHeight + " "+ scaledWidth);
 
                 BufferedImage bg = parent.getCardBackground();
                 BufferedImage tb = parent.getCardTextbox();
@@ -72,7 +80,7 @@ public class PreviewPanel {
                 }
     
                 if (tb != null) {
-                    g.drawImage(tb, 0, 0, scaledWidth, scaledHeight, this);
+                    g.drawImage(tb, (int) (0*scale),(int) (290*scale), (int) (530*scale), (int) (440*scale), this);
                 }
     
                 if (ct != null) {
@@ -93,42 +101,56 @@ public class PreviewPanel {
         object.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
 
         titleTextDisplay = new JLabel("", SwingConstants.CENTER);
-        //titleTextDisplay.setBounds(70, 10, 405, 50); // Position at (0,0) with size 200x300
         titleTextDisplay.setOpaque(false);
 
+        infoTextDisplay = new JLabel("", SwingConstants.LEFT);
+        infoTextDisplay.setVerticalAlignment(SwingConstants.TOP);
+        infoTextDisplay.setOpaque(false);
+
         //temporary measure to make title text white
-        titleTextDisplay.setForeground(Color.WHITE);
+                titleTextDisplay.setForeground(Color.WHITE);
+                infoTextDisplay.setForeground(Color.WHITE);
 
         object.add(titleTextDisplay);
+        object.add(infoTextDisplay);
 
         panel = new JPanel(new BorderLayout());
         panel.setPreferredSize(new Dimension(0, 1100));
         panel.add(object, BorderLayout.LINE_START);
         
-
-        
-
-        rescale(1.0);
-    
-        
+        rescale(1.0);  
     }
 
     public void updateTitleTextDisplay(String str, Font font) {
         //System.out.println("Test preview updateTitleTextDisplay: "+str+" Font: "+font.getName());
         font = FontLoader.loadFont(font.getName(), 72f);
-        Font scaledFont = getScaledFont(str, font, titleTextDisplay.getWidth(), titleTextDisplay.getHeight());
+        Font scaledFont = getScaledFont(str, font, titleTextDisplay.getWidth(), titleTextDisplay.getHeight(),titleTextDisplay);
         titleTextDisplay.setText("<html><div style='text-align:center;'>" + str + "</div></html>");
         titleTextDisplay.setFont(scaledFont);
         titleTextDisplay.repaint();
     }
 
-    private Font getScaledFont(String text, Font baseFont, int maxWidth, int maxHeight) {
+    public void updateInfoTextDisplay(String str, Font font) {   
+        // Load and scale the font as before
+        font = FontLoader.loadFont(font.getName(), 20f);
+        Font scaledFont = getScaledFont(str, font, infoTextDisplay.getWidth(), infoTextDisplay.getHeight(), infoTextDisplay);
+        
+        // Build the HTML string to center only the first line
+        String formattedText = "<html><div style='text-align:left;'>" + str.replaceAll("\n", "<br>") + "</div></html>";
+        
+        // Set the text and apply the font
+        infoTextDisplay.setText(formattedText);
+        infoTextDisplay.setFont(scaledFont);
+        infoTextDisplay.repaint();
+    }
+
+    private Font getScaledFont(String text, Font baseFont, int maxWidth, int maxHeight,JLabel label) {
         int fontSize = baseFont.getSize();
         FontMetrics metrics;
         do {
             fontSize--;
             Font tempFont = baseFont.deriveFont((float) fontSize);
-            metrics = titleTextDisplay.getFontMetrics(tempFont);
+            metrics = label.getFontMetrics(tempFont);
         } while (metrics.stringWidth(text) > maxWidth || metrics.getHeight() > maxHeight);
 
         return baseFont.deriveFont((float) fontSize);
@@ -199,6 +221,7 @@ public class PreviewPanel {
         panel.repaint();
 
         titleTextDisplay.setBounds((int) (60*scale), (int) (20*scale), (int) (405*scale), (int) (50*scale));
+        infoTextDisplay.setBounds((int) (50*scale), (int) (440*scale), (int) (570*scale), (int) (290*scale));
     }
 
 }

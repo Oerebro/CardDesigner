@@ -26,7 +26,8 @@ public class ControlPanel1 extends ControlPanel {
     private ImageBrowser frameSelect, backgroundSelect, textboxSelect, titleSelect;
     private VariableTabbedPane selectItemArt, weapons,weaponsTwoHanded, armor, accessoire, consumable;
     private JTextField titleTextField;
-    private JComboBox<String> titleFontSelection;
+    private JTextArea infoTextField;
+    private JComboBox<String> titleFontSelection,infoFontSelection;
 
     public void init(CardDesignerGUI parent) {
         setLayout(null);
@@ -47,7 +48,8 @@ public class ControlPanel1 extends ControlPanel {
     
         // Create title input field and font selector
         createTitleFontSelection();
-        createTitleTextFieldAndPreview();
+        createInfoFontSelection();
+        createTextFieldsAndPreview();
         
     }
 
@@ -56,41 +58,89 @@ public class ControlPanel1 extends ControlPanel {
         add(selectItemTypePanel);
         add(selectItemArt);
         add(titleFontSelection);
+        add(infoFontSelection);
     }
 
-    private void createTitleTextFieldAndPreview() {
+    private void createTextFieldsAndPreview() {
         titleTextField = new JTextField();
-        titleTextField.setBounds(10, 290, 260, 30);
+        //titleTextField.setBounds(10, 290, 260, 30);
         add(titleTextField);
+
+        infoTextField = new JTextArea();
+        add(infoTextField);
+
+        infoTextField.setWrapStyleWord(true); // Wrap at word boundaries
+        infoTextField.setLineWrap(true); // Enable wrapping
+        infoTextField.setPreferredSize(new java.awt.Dimension(485, 320));
     
         // Listen for text changes
         titleTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                updatePreview();
+                updateTitlePreview();
             }
     
             @Override
             public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                updatePreview();
+                updateTitlePreview();
             }
     
             @Override
             public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                updatePreview();
+                updateTitlePreview();
+            }
+        });
+
+        infoTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                updateInfoPreview();
+            }
+    
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                updateInfoPreview();
+            }
+    
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                updateInfoPreview();
             }
         });
     
         // Listen for font selection changes
-        titleFontSelection.addActionListener(e -> updatePreview());
+        titleFontSelection.addActionListener(e -> updateTitlePreview());
+        infoFontSelection.addActionListener(e -> updateInfoPreview());
     }
     
     //updates the text in the preview Panel
-    private void updatePreview() {
+    private void updateTitlePreview() {
         String text = titleTextField.getText();
         String selectedFontName = (String) titleFontSelection.getSelectedItem();
         Font font = new Font(selectedFontName, Font.PLAIN, 72); // Default size, will be resized in PreviewPanel
         parent.updateTitleTextDisplay(text, font);
+    }
+
+    /*private void updateInfoPreview() {
+        
+        String text = infoTextField.getText();
+        String selectedFontName = (String) infoFontSelection.getSelectedItem();
+        Font font = new Font(selectedFontName, Font.PLAIN, 72); // Default size, will be resized in PreviewPanel
+        parent.updateInfoTextDisplay(text, font);
+    }*/
+
+    private void updateInfoPreview() {
+        String text = infoTextField.getText();
+        
+        // Format the text as HTML, converting line breaks to <br> tags for proper line breaks in preview
+        String formattedText = "<html>" + text.replaceAll("\n", "<br>") + "</html>";
+    
+        // Assuming parent.updateInfoTextDisplay() is expecting the formatted HTML text and a font
+        String selectedFontName = (String) infoFontSelection.getSelectedItem();
+        Font font = new Font(selectedFontName, Font.PLAIN, 72);  // Example font size, can be adjusted
+    
+        // Update the preview with both the formatted text and the selected font
+        parent.updateInfoTextDisplay(formattedText, font); // Now passing both formatted text and font
     }
 
     //this creates a dropdown menu for fonts next to the title text input
@@ -100,6 +150,15 @@ public class ControlPanel1 extends ControlPanel {
 
         for (String fontName : fonts.keySet()) {
             titleFontSelection.addItem(fontName);
+        }
+    }
+
+    private void createInfoFontSelection(){
+        infoFontSelection = new JComboBox<>();
+        Map<String,Font> fonts = loadFonts();
+
+        for (String fontName : fonts.keySet()) {
+            infoFontSelection.addItem(fontName);
         }
     }
 
@@ -202,7 +261,9 @@ public class ControlPanel1 extends ControlPanel {
         selectItemTypePanel.setBounds((int) (770 *scale), (int) (0), (int) (300*scale), (int) (160*scale));
 
         titleFontSelection.setBounds((int) (280 *scale), (int) (290*scale), (int) (90*scale), (int) (30*scale));
+        infoFontSelection.setBounds((int) (280 *scale), (int) (335*scale), (int) (90*scale), (int) (30*scale));
         titleTextField.setBounds((int) (10 *scale), (int) (290*scale), (int) (260*scale), (int) (30*scale));
+        infoTextField.setBounds((int) (10 *scale), (int) (335*scale), (int) (260*scale), (int) (205*scale));
 
 
         //absolute pos of the controlpanel within the window frame

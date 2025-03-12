@@ -307,6 +307,12 @@ public class CardDesignerGUI {
         previewPanel.updateTitleTextDisplay(str, font);
     }
 
+    public void updateInfoTextDisplay(String str, Font font) {
+        
+        //System.out.println(str);
+        previewPanel.updateInfoTextDisplay(str, font);
+    }
+
 
     public static void main(String[] args) {
         try {
