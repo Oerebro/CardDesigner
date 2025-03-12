@@ -14,6 +14,9 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+
+
 public class CardDesignerGUI {
     private JFrame frame;
     //private JLabel frameLabel, backgroundLabel, textBoxLabel;
@@ -226,7 +229,9 @@ public class CardDesignerGUI {
         int targetWidth = 750;
         int targetHeight = 1050;
 
-        double scale = Math.min((750.0/555.0),(1050.0/735.0));
+        double previewScaleWidth = 750.0*0.7;
+        double previewScaleHeight = 1050.0*0.7;
+        double scale = Math.min((750.0/(previewScaleWidth)),(1050.0/(previewScaleHeight)));
 
         BufferedImage finalImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = finalImage.createGraphics();
@@ -261,9 +266,21 @@ public class CardDesignerGUI {
         }
 
         if (cardTitleImage != null) {
-            g2d.drawImage(cardTitleImage, 0, 0, 750, 1050, null);
+            g2d.drawImage(cardTitleImage, 0, 10, 750, 1050, null);
         }
-        
+
+        if (previewPanel.getTitleTextDisplay() != null) {
+            JLabel p = previewPanel.getTitleTextDisplay();
+            p.setBounds((int)(60*scale), (int)(20*scale), (int)(405*(750.0/previewScaleWidth)), (int)(50*(1050.0/previewScaleHeight)));
+            p.setFont(p.getFont().deriveFont((float) (p.getFont().getSize()*scale)));
+
+            BufferedImage titleText = new BufferedImage(p.getWidth(), p.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D labelGraphics = titleText.createGraphics();
+            p.paint(labelGraphics);
+            labelGraphics.dispose();
+            g2d.drawImage(titleText, p.getX(), p.getY(),  p.getWidth(),  p.getHeight(), null);
+        }
 
         try {
             File outputfile = new File("export//"+generateDateTimeString()+".png");
@@ -274,6 +291,8 @@ public class CardDesignerGUI {
         }
 
         g2d.dispose();
+
+        rescaleComponents();
         
     }
 
@@ -283,18 +302,22 @@ public class CardDesignerGUI {
         return sdf.format(now);
     }
 
+    public void updateTitleTextDisplay(String str, Font font) {
+        //System.out.println(str);
+        previewPanel.updateTitleTextDisplay(str, font);
+    }
 
 
     public static void main(String[] args) {
         try {
             // Set System L&F
-        UIManager.setLookAndFeel(
-            UIManager.getSystemLookAndFeelClassName());
+        //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        UIManager.setLookAndFeel(new FlatDarkLaf());
         } 
         catch (UnsupportedLookAndFeelException e) {
         // handle exception
         }
-        catch (ClassNotFoundException e) {
+        /*catch (ClassNotFoundException e) {
         // handle exception
         }
         catch (InstantiationException e) {
@@ -302,7 +325,7 @@ public class CardDesignerGUI {
         }
         catch (IllegalAccessException e) {
         // handle exception
-        }
+        }*/
 
         //run ui thread
         SwingUtilities.invokeLater(CardDesignerGUI::new);

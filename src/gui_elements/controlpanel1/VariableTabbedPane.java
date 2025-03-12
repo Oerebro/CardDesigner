@@ -21,6 +21,7 @@ public class VariableTabbedPane extends JTabbedPane{
     public void init(CardDesignerGUI parent, int type){
         this.parent = parent;
         switchToType(type);
+        setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     }
 
     public int getType(){
@@ -56,7 +57,7 @@ public class VariableTabbedPane extends JTabbedPane{
 
     private void addTabsWeaponTwoHand(){
         add("Bows",new ItemArtImageBrowser(parent,"resources/weapons/bows",440,350,1300,40,80).getScrollPane());
-        add("Curved Greatswords",new ItemArtImageBrowser(parent,"resources/weapons/curvedGreatSwords",440,350,1300,40,80).getScrollPane());
+        //add("Curved Greatswords",new ItemArtImageBrowser(parent,"resources/weapons/curvedGreatSwords",440,350,1300,40,80).getScrollPane());
         add("Double Daggers",new ItemArtImageBrowser(parent,"resources/weapons/doubleDaggers",440,350,1300,40,80).getScrollPane());
         add("GreatAxes",new ItemArtImageBrowser(parent,"resources/weapons/greatAxes",440,350,1300,40,80).getScrollPane());
         add("Greatclubs",new ItemArtImageBrowser(parent,"resources/weapons/greatClubs",440,350,1300,40,80).getScrollPane());
@@ -66,7 +67,7 @@ public class VariableTabbedPane extends JTabbedPane{
         add("Hammers",new ItemArtImageBrowser(parent,"resources/weapons/hammers",440,350,1300,40,80).getScrollPane());
         add("Scythes",new ItemArtImageBrowser(parent,"resources/weapons/scythes",440,350,1300,40,80).getScrollPane());
         add("Spears",new ItemArtImageBrowser(parent,"resources/weapons/spears",440,350,1300,40,80).getScrollPane());
-        add("Staves",new ItemArtImageBrowser(parent,"resources/weapons/spears",440,350,1300,40,80).getScrollPane());
+        add("Staves",new ItemArtImageBrowser(parent,"resources/weapons/staves",440,350,1300,40,80).getScrollPane());
     }
 
     private void addTabsArmor(){

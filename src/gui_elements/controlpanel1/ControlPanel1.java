@@ -1,6 +1,5 @@
 package gui_elements.controlpanel1;
 
-import java.awt.Dimension;
 //import java.io.File;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,6 +9,7 @@ import java.awt.Font;
 
 //import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.DocumentListener;
 
 import abstractclasses.*;
 import gui_elements.CardDesignerGUI;
@@ -39,16 +39,16 @@ public class ControlPanel1 extends ControlPanel {
     private void createButtons() {
         createCardComponentSelection();
         selectItemTypePanel = new SelectTypePanel(parent);
-
-        //Item Art VariableTabbedPane with default state weapons
+    
+        // Item Art VariableTabbedPane with default state weapons
         weapons = new VariableTabbedPane();
-        weapons.init(parent,0);
-        selectItemArt = weapons;    
-
-        //create the text fields and font selectors
-        createTitleTextFieldAndPreview();
-
+        weapons.init(parent, 0);
+        selectItemArt = weapons;
+    
+        // Create title input field and font selector
         createTitleFontSelection();
+        createTitleTextFieldAndPreview();
+        
     }
 
     public void compose() {
@@ -58,11 +58,42 @@ public class ControlPanel1 extends ControlPanel {
         add(titleFontSelection);
     }
 
-    private void  createTitleTextFieldAndPreview(){
+    private void createTitleTextFieldAndPreview() {
         titleTextField = new JTextField();
-
+        titleTextField.setBounds(10, 290, 260, 30);
+        add(titleTextField);
+    
+        // Listen for text changes
+        titleTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                updatePreview();
+            }
+    
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                updatePreview();
+            }
+    
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                updatePreview();
+            }
+        });
+    
+        // Listen for font selection changes
+        titleFontSelection.addActionListener(e -> updatePreview());
+    }
+    
+    //updates the text in the preview Panel
+    private void updatePreview() {
+        String text = titleTextField.getText();
+        String selectedFontName = (String) titleFontSelection.getSelectedItem();
+        Font font = new Font(selectedFontName, Font.PLAIN, 72); // Default size, will be resized in PreviewPanel
+        parent.updateTitleTextDisplay(text, font);
     }
 
+    //this creates a dropdown menu for fonts next to the title text input
     private void createTitleFontSelection(){
         titleFontSelection = new JComboBox<>();
         Map<String,Font> fonts = loadFonts();
@@ -72,11 +103,12 @@ public class ControlPanel1 extends ControlPanel {
         }
     }
 
+    //this gets all fonts in folder and returns a map for the dropdown menu
     private Map<String, Font> loadFonts() {
         Map<String, Font> fonts = new HashMap<>();
         File fontFolder = new File("resources/misc/fonts");
         if (fontFolder.exists() && fontFolder.isDirectory()) {
-            File[] files = fontFolder.listFiles((dir, name) -> name.toLowerCase().endsWith(".ttf"));
+            File[] files = fontFolder.listFiles((dir, name) -> name.toLowerCase().endsWith(".ttf") || name.toLowerCase().endsWith(".otf"));
             if (files != null) {
                 for (File file : files) {
                     try (FileInputStream fis = new FileInputStream(file)) {
@@ -168,6 +200,9 @@ public class ControlPanel1 extends ControlPanel {
         cardComponentTabbedPane.setBounds((int)(10 * scale), (int)(0), (int)(360 * scale), (int)(245 * scale));   
         selectItemArt.setBounds((int) (390 *scale), (int) (0), (int) (360*scale), (int) (245*scale));
         selectItemTypePanel.setBounds((int) (770 *scale), (int) (0), (int) (300*scale), (int) (160*scale));
+
+        titleFontSelection.setBounds((int) (280 *scale), (int) (290*scale), (int) (90*scale), (int) (30*scale));
+        titleTextField.setBounds((int) (10 *scale), (int) (290*scale), (int) (260*scale), (int) (30*scale));
 
 
         //absolute pos of the controlpanel within the window frame
