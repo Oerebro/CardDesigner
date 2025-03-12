@@ -29,6 +29,7 @@ public class ControlPanel1 extends ControlPanel {
     private JComboBox<String> titleFontSelection;
 
     public void init(CardDesignerGUI parent) {
+        setLayout(null);
         this.parent = parent;
         createButtons();
         compose();
@@ -43,6 +44,18 @@ public class ControlPanel1 extends ControlPanel {
         weapons = new VariableTabbedPane();
         weapons.init(parent,0);
         selectItemArt = weapons;    
+
+        //create the text fields and font selectors
+        createTitleTextFieldAndPreview();
+
+        createTitleFontSelection();
+    }
+
+    public void compose() {
+        add(cardComponentTabbedPane);
+        add(selectItemTypePanel);
+        add(selectItemArt);
+        add(titleFontSelection);
     }
 
     private void  createTitleTextFieldAndPreview(){
@@ -80,11 +93,12 @@ public class ControlPanel1 extends ControlPanel {
 
     private void createCardComponentSelection(){
         cardComponentTabbedPane = new JTabbedPane();
-        frameSelect = new CardImageBrowser(parent,"resources/frame",360,180,600,40, 64,'f');
-        backgroundSelect = new CardImageBrowser(parent,"resources/background",360,180,600,40, 64,'b');
-        
-        textboxSelect = new CardImageBrowser(parent,"resources/textbox",360,180,600,40, 64,'t');
-        titleSelect = new CardImageBrowser(parent,"resources/title",360,180,600,40, 64,'h');
+
+        frameSelect = new CardImageBrowser(parent,"resources/frame",360,90,600,40, 64,'f');
+        backgroundSelect = new CardImageBrowser(parent,"resources/background",360,90,600,40, 64,'b'); 
+        textboxSelect = new CardImageBrowser(parent,"resources/textbox",360,90,600,40, 64,'t');
+        titleSelect = new CardImageBrowser(parent,"resources/title",360,90,600,40, 64,'h');
+
         cardComponentTabbedPane.addTab("Choose Frame",frameSelect.getScrollPane());
         cardComponentTabbedPane.addTab("Choose Background",backgroundSelect.getScrollPane());
         cardComponentTabbedPane.addTab("Choose Textbox",textboxSelect.getScrollPane());
@@ -133,29 +147,30 @@ public class ControlPanel1 extends ControlPanel {
         }
         add(selectItemArt);
         double scale = parent.getFrameScale();
-        selectItemArt.setBounds((int) (980*scale), (int) (260*scale), (int) (360*scale), (int) (500*scale));
+        selectItemArt.setBounds((int) (390 *scale), (int) (0), (int) (360*scale), (int) (245*scale));
         selectItemArt.revalidate();
         selectItemArt.repaint();
     }
 
-    public void compose() {
-        add(cardComponentTabbedPane);
-        add(selectItemTypePanel.menu);
-        add(selectItemArt);
-    }
+
 
     public int getItemArtType(){
         return selectItemArt.getType();
     }
 
     public void rescale(double scale) {
+        //these rescales should be done in a better way, but they work atm
         frameSelect.rescale(scale);
         backgroundSelect.rescale(scale);
         textboxSelect.rescale(scale);
-        //cardComponentTabbedPane.setPreferredSize(new Dimension((int)(360 * scale), (int)(180 * scale)));
-        cardComponentTabbedPane.setBounds((int)(575 * scale), (int)(10 * scale), (int)(360 * scale), (int)(180 * scale));
-        
-        selectItemArt.setBounds((int) (980*scale), (int) (10*scale), (int) (360*scale), (int) (500*scale));
-        setBounds((int)(575 * scale), (int)(10 * scale), (int)(1100 * scale), (int)(1070 * scale));
+
+        //set the absolute position of these menus within the controlpanel
+        cardComponentTabbedPane.setBounds((int)(10 * scale), (int)(0), (int)(360 * scale), (int)(245 * scale));   
+        selectItemArt.setBounds((int) (390 *scale), (int) (0), (int) (360*scale), (int) (245*scale));
+        selectItemTypePanel.setBounds((int) (770 *scale), (int) (0), (int) (300*scale), (int) (160*scale));
+
+
+        //absolute pos of the controlpanel within the window frame
+        setBounds((int)(575 * scale), (int)(10 * scale), (int)(1210 * scale), (int)(1070 * scale));
     }
 }

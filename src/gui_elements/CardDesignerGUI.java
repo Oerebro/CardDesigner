@@ -191,7 +191,7 @@ public class CardDesignerGUI {
             frame.addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
-                    rescaleComponents(); // This should be called after all components are loaded
+                    rescaleComponents();
                 }
             });
             frame.addWindowStateListener(new WindowStateListener() {

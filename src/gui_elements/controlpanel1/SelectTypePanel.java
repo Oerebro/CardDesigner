@@ -6,18 +6,16 @@ import gui_elements.CardDesignerGUI;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class SelectTypePanel {
+public class SelectTypePanel extends JPanel{
     private final CardDesignerGUI parent;
-    public JPanel menu;
 
-    public SelectTypePanel(CardDesignerGUI o) {
-        this.parent = o; 
-        menu = createCheckBoxPanel();
+    public SelectTypePanel(CardDesignerGUI parent) {
+        this.parent = parent; 
+        createCheckBoxPanel();
     }
 
-    public JPanel createCheckBoxPanel() {
-        JPanel checkboxPanel = new JPanel(new GridLayout(0, 2, 5, 5));
-
+    public void createCheckBoxPanel() {
+        this.setLayout(new GridLayout(0, 2, 5, 5));
         JCheckBox isWeapon = new JCheckBox("Weapon", false);
         JCheckBox isArmor = new JCheckBox("Armor", false);
         JCheckBox isClothing = new JCheckBox("Clothing", false);
@@ -26,12 +24,12 @@ public class SelectTypePanel {
         JCheckBox isTwoHanded = new JCheckBox("Two-Handed", false);
 
         // Add the checkboxes to the panel
-        checkboxPanel.add(isWeapon);
-        checkboxPanel.add(isArmor);
-        checkboxPanel.add(isClothing);
-        checkboxPanel.add(isAccessoire);
-        checkboxPanel.add(isConsumable);
-        checkboxPanel.add(isTwoHanded);
+        this.add(isWeapon);
+        this.add(isArmor);
+        this.add(isClothing);
+        this.add(isAccessoire);
+        this.add(isConsumable);
+        this.add(isTwoHanded);
 
         // Collect all checkboxes in this panel in an array
         JCheckBox[] checkboxes = {isWeapon, isArmor, isClothing, isAccessoire, isConsumable,isTwoHanded};
@@ -40,8 +38,6 @@ public class SelectTypePanel {
         for (JCheckBox checkbox : checkboxes) {
             checkbox.addActionListener(createCheckboxListener(checkbox, checkboxes));
         }
-
-        return checkboxPanel;
     }
 
     private ActionListener createCheckboxListener(JCheckBox selectedCheckbox, JCheckBox[] allCheckboxes) {
@@ -56,7 +52,6 @@ public class SelectTypePanel {
                 checkbox.setSelected(false);
             }
         }
-        //selectedCheckbox.setSelected(true);
     }
 
     public void updateImage(JCheckBox selected, JCheckBox[] checkboxes){

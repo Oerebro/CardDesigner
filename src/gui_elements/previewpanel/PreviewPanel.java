@@ -84,7 +84,8 @@ public class PreviewPanel {
     public void loadDefault() {
         try{
             parent.setCardFrame(ImageIO.read(new File("resources/frame/default.png")));
-            //parent.setCardTextbox(ImageIO.read(new File("resources/textbox/default.png")));
+            parent.setCardTitleImage(ImageIO.read(new File("resources/title/default.png")));
+            parent.setCardTextbox(ImageIO.read(new File("resources/textbox/default.png")));
             parent.setCardBackground(ImageIO.read(new File("resources/background/default.png")));
         }catch(IOException e){
             JOptionPane.showMessageDialog(parent.getFrame(), "Error loading default images.","Error",JOptionPane.ERROR_MESSAGE);
