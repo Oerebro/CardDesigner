@@ -1,0 +1,21 @@
+
+FIXES
+(CardDesignerGUI) 
+-Textbox scaled bei Export zu groß
+
+(PreviewPanel) 
+-Title Text in nicht richtig positioniert
+-Info Text wie Title Text
+
+
+FEATURES
+-Armor Class Input + Preview
+-Damage Dice Input + Preview
+
+-Enchantment Input 
+-Enchantment List 
+-Enchantment Add Button 
+-Enchantment Remove Button
+
+CURRENT AGENDA
+-FIX Title Text Position

@@ -15,6 +15,8 @@ public class PreviewPanel {
     private JPanel object;
     private CardDesignerGUI parent;
     private JLabel titleTextDisplay, infoTextDisplay;
+    private double panelRatio = 0.7;
+    private int scaledWidth,scaledHeight;
 
     public PreviewPanel(CardDesignerGUI parent){
         this.parent = parent;
@@ -44,8 +46,8 @@ public class PreviewPanel {
     }
 
     private void init() {
-        int scaledWidth = (int) (parent.getFrameScale() * (750*0.7));
-        int scaledHeight = (int) (parent.getFrameScale() * (1050*0.7));
+        scaledWidth = (int) (parent.getFrameScale() * (750*panelRatio));
+        scaledHeight = (int) (parent.getFrameScale() * (1050*panelRatio));
 
         object = new JPanel() {
             @Override
@@ -53,7 +55,7 @@ public class PreviewPanel {
                 super.paintComponent(g);
 
                 double scale = parent.getFrameScale();
-                //System.out.println(scaledHeight + " "+ scaledWidth);
+                
 
                 BufferedImage bg = parent.getCardBackground();
                 BufferedImage tb = parent.getCardTextbox();
@@ -76,23 +78,23 @@ public class PreviewPanel {
                 }catch(IOException e){};
 
                 if (ii != null) {
-                    g.drawImage(ii, (int)(97*scale), (int)(80*scale), (int)(400*scale), (int)(400*scale), this);
+                    g.drawImage(ii, (int)(40*scale*panelRatio), (int)(120*scale*panelRatio), (int)(660*scale*panelRatio), (int)(660*scale*panelRatio), this);
                 }
     
                 if (tb != null) {
-                    g.drawImage(tb, (int) (0*scale),(int) (290*scale), (int) (530*scale), (int) (440*scale), this);
+                    g.drawImage(tb, (int) (0),(int) (440*scale*panelRatio), (int) (750*scale*panelRatio), (int) (610*scale*panelRatio), this);
                 }
     
                 if (ct != null) {
-                    g.drawImage(ct, (int) (410*scale), (int)(372*scale), (int) (128*scale), (int) (128*scale), this);
+                    g.drawImage(ct, (int) (550*scale*panelRatio), (int)(415*scale*panelRatio), (int) (180*scale*panelRatio), (int) (180*scale*panelRatio), this);
                 }
 
                 if (ti != null) {
-                    g.drawImage(ti, 0, (int) (10*scale), scaledWidth, scaledHeight, this);
+                    g.drawImage(ti, 0, (int) (10*scale*panelRatio), scaledWidth, scaledHeight, this);
                 } 
                 
                 if (hi != null) {
-                    g.drawImage(hi, 498, 650, (int)(60*scale), (int)(60*scale), this);
+                    g.drawImage(hi, 498, 650, (int)(60*scale*panelRatio), (int)(60*scale*panelRatio), this);
                 } 
             }
         };
@@ -106,6 +108,8 @@ public class PreviewPanel {
         infoTextDisplay = new JLabel("", SwingConstants.LEFT);
         infoTextDisplay.setVerticalAlignment(SwingConstants.TOP);
         infoTextDisplay.setOpaque(false);
+
+        
 
         //temporary measure to make title text white
                 titleTextDisplay.setForeground(Color.WHITE);
@@ -212,16 +216,24 @@ public class PreviewPanel {
         panel.repaint();
     }
 
+    //scaling for the previewPanel images works
     public void rescale(double scale){
-        int scaledWidth = (int) (parent.getFrameScale() * (750*0.7));
-        int scaledHeight = (int) (parent.getFrameScale() * (1050*0.7));
+        scaledWidth = (int) (parent.getFrameScale() * (750*panelRatio));
+        scaledHeight = (int) (parent.getFrameScale() * (1050*panelRatio));
 
-        panel.setBounds((int) (10*scale), (int) (10*scale), (int) (scaledWidth*scale), (int) (scaledHeight*scale));
-        object.setPreferredSize(new Dimension((int) (scaledWidth*scale), (int) (scaledHeight*scale)));
+        panel.setBounds((int) (10*scale), (int) (10*scale), (int) (scaledWidth), (int) (scaledHeight));
+        object.setPreferredSize(new Dimension((int) (scaledWidth), (int) (scaledHeight)));
+
+        rescaleComponents(scale);
         panel.repaint();
+    }
 
-        titleTextDisplay.setBounds((int) (60*scale), (int) (20*scale), (int) (405*scale), (int) (50*scale));
-        infoTextDisplay.setBounds((int) (50*scale), (int) (440*scale), (int) (570*scale), (int) (290*scale));
+    //title text isnt positioned correctly in preview, but works proper in export
+    private void rescaleComponents(double scale){
+
+        titleTextDisplay.setBounds((int) (60*scale*panelRatio), (int) (20*scale*panelRatio), (int) (405*scale*panelRatio), (int) (50*scale*panelRatio));
+        infoTextDisplay.setBounds((int) (50*scale*panelRatio), (int) (630*scale*panelRatio), (int) (640*scale*panelRatio), (int) (405*scale*panelRatio));
+
     }
 
 }

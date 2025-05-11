@@ -69,8 +69,8 @@ public class ControlPanel1 extends ControlPanel {
         infoTextField = new JTextArea();
         add(infoTextField);
 
-        infoTextField.setWrapStyleWord(true); // Wrap at word boundaries
-        infoTextField.setLineWrap(true); // Enable wrapping
+        //infoTextField.setWrapStyleWord(true); // Wrap at word boundaries
+        //infoTextField.setLineWrap(true); // Enable wrapping
         infoTextField.setPreferredSize(new java.awt.Dimension(485, 320));
     
         // Listen for text changes

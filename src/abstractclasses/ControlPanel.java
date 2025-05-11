@@ -5,7 +5,7 @@ import gui_elements.*;
 
 
 public abstract class ControlPanel extends JPanel {
-    private CardDesignerGUI parent;
+    //private CardDesignerGUI parent;
 
     public void init(CardDesignerGUI parent){
     }
