@@ -9,14 +9,17 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class PreviewPanel {
     public JPanel panel;
     private JPanel object;
     private CardDesignerGUI parent;
-    private JLabel titleTextDisplay, infoTextDisplay;
+    private JLabel titleTextDisplay;
+    private JTextArea infoTextDisplay;
     private double panelRatio = 0.7;
     private int scaledWidth,scaledHeight;
+    private int infoFontSize=20;
 
     public PreviewPanel(CardDesignerGUI parent){
         this.parent = parent;
@@ -24,25 +27,19 @@ public class PreviewPanel {
     }
 
     public JLabel getTitleTextDisplay() {
-        JLabel newLabel = new JLabel(titleTextDisplay.getText());
+        /*JLabel newLabel = new JLabel(titleTextDisplay.getText());
         newLabel.setFont(titleTextDisplay.getFont());
         newLabel.setForeground(titleTextDisplay.getForeground());
         newLabel.setHorizontalAlignment(titleTextDisplay.getHorizontalAlignment());
         newLabel.setVerticalAlignment(titleTextDisplay.getVerticalAlignment());
         newLabel.setOpaque(titleTextDisplay.isOpaque());
 
-        return newLabel;
+        return newLabel;*/
+        return titleTextDisplay;
     }
 
-    public JLabel getInfoTextDisplay() {
-        JLabel newLabel = new JLabel(infoTextDisplay.getText());
-        newLabel.setFont(infoTextDisplay.getFont());
-        newLabel.setForeground(infoTextDisplay.getForeground());
-        newLabel.setHorizontalAlignment(infoTextDisplay.getHorizontalAlignment());
-        newLabel.setVerticalAlignment(infoTextDisplay.getVerticalAlignment());
-        newLabel.setOpaque(infoTextDisplay.isOpaque());
-
-        return newLabel;
+    public JTextArea getInfoTextDisplay() {
+        return infoTextDisplay;
     }
 
     private void init() {
@@ -86,7 +83,7 @@ public class PreviewPanel {
                 }
     
                 if (ct != null) {
-                    g.drawImage(ct, (int) (550*scale*panelRatio), (int)(415*scale*panelRatio), (int) (180*scale*panelRatio), (int) (180*scale*panelRatio), this);
+                    g.drawImage(ct, (int) (550*scale*panelRatio), (int)(500*scale*panelRatio), (int) (180*scale*panelRatio), (int) (180*scale*panelRatio), this);
                 }
 
                 if (ti != null) {
@@ -104,11 +101,18 @@ public class PreviewPanel {
 
         titleTextDisplay = new JLabel("", SwingConstants.CENTER);
         titleTextDisplay.setOpaque(false);
+        titleTextDisplay.setForeground(Color.GRAY);
 
-        infoTextDisplay = new JLabel("", SwingConstants.LEFT);
-        infoTextDisplay.setVerticalAlignment(SwingConstants.TOP);
+        infoTextDisplay = new JTextArea();
+        infoTextDisplay.setLineWrap(true);
+        infoTextDisplay.setWrapStyleWord(true);
+        infoTextDisplay.setEditable(false);
+        infoTextDisplay.setFocusable(false);
+        infoTextDisplay.setBorder(null);
+
         infoTextDisplay.setOpaque(false);
-
+        infoTextDisplay.setForeground(Color.GRAY);
+        
         
 
         //temporary measure to make title text white
@@ -123,32 +127,70 @@ public class PreviewPanel {
         panel.add(object, BorderLayout.LINE_START);
         
         rescale(1.0);  
+        System.out.println(infoTextDisplay.getBounds());
     }
 
     public void updateTitleTextDisplay(String str, Font font) {
-        //System.out.println("Test preview updateTitleTextDisplay: "+str+" Font: "+font.getName());
-        font = FontLoader.loadFont(font.getName(), 72f);
-        Font scaledFont = getScaledFont(str, font, titleTextDisplay.getWidth(), titleTextDisplay.getHeight(),titleTextDisplay);
+        font = FontLoader.loadFont(font.getName(), 40f);
+        Font scaledFont = getScaledFontLabel(str, font, (int)(titleTextDisplay.getWidth()), Integer.MAX_VALUE, titleTextDisplay);
+        
         titleTextDisplay.setText("<html><div style='text-align:center;'>" + str + "</div></html>");
         titleTextDisplay.setFont(scaledFont);
         titleTextDisplay.repaint();
+        
     }
 
-    public void updateInfoTextDisplay(String str, Font font) {   
-        // Load and scale the font as before
-        font = FontLoader.loadFont(font.getName(), 20f);
-        Font scaledFont = getScaledFont(str, font, infoTextDisplay.getWidth(), infoTextDisplay.getHeight(), infoTextDisplay);
-        
-        // Build the HTML string to center only the first line
-        String formattedText = "<html><div style='text-align:left;'>" + str.replaceAll("\n", "<br>") + "</div></html>";
-        
-        // Set the text and apply the font
-        infoTextDisplay.setText(formattedText);
-        infoTextDisplay.setFont(scaledFont);
+
+    public void updateInfoTextDisplay(String str1, Font font) { 
+        String str = htmlToPlainText(str1);
+        int lineCount = getLineCount(str); 
+        int lineHeight = infoTextDisplay.getFont().getSize();
+        int availableLines = (infoTextDisplay.getHeight() / lineHeight)-1;
+        System.out.println("lineCount: "+lineCount+" availableLines: "+availableLines+" lineHeight: "+lineHeight);
+
+        if(availableLines < lineCount){
+            double scaleFactor = (lineCount > 0) ? (9.0 / lineCount) : 1.0; 
+            infoFontSize *= scaleFactor;
+        }
+
+        font = FontLoader.loadFont(font.getName(), (int)(infoFontSize));
+        infoTextDisplay.setFont(font);
+        infoTextDisplay.setText(htmlToPlainText(str));
         infoTextDisplay.repaint();
+        
     }
 
-    private Font getScaledFont(String text, Font baseFont, int maxWidth, int maxHeight,JLabel label) {
+    private int getLineCount(String str) {
+        System.out.println(str);
+        String[] lines = str.split("\n");
+        System.out.println(Arrays.toString(lines));
+        if (lines.length <= 10) {
+            return 9;
+        }
+        return lines.length;
+    }
+
+    private static String htmlToPlainText(String html) {
+        if (html == null) return "";
+        String text = html
+            .replaceAll("(?i)<br\\s*/?>", "\n")
+            .replaceAll("(?i)</p>", "\n")
+            .replaceAll("(?i)<li>", "• ")
+            .replaceAll("(?i)</li>", "\n")
+            .replaceAll("(?i)<div.*?>", "")
+            .replaceAll("(?i)</div>", "\n");
+
+        text = text.replaceAll("<[^>]+>", "");
+
+        text = text.replace("&nbsp;", " ")
+                .replace("&lt;", "<")
+                .replace("&gt;", ">")
+                .replace("&amp;", "&");
+
+        return text.trim();
+    }
+
+    private Font getScaledFontLabel(String text, Font baseFont, int maxWidth, int maxHeight,JLabel label) {
         int fontSize = baseFont.getSize();
         FontMetrics metrics;
         do {
@@ -228,12 +270,28 @@ public class PreviewPanel {
         panel.repaint();
     }
 
-    //title text isnt positioned correctly in preview, but works proper in export
-    private void rescaleComponents(double scale){
+    public void rescaleComponents(double scale){
 
-        titleTextDisplay.setBounds((int) (60*scale*panelRatio), (int) (20*scale*panelRatio), (int) (405*scale*panelRatio), (int) (50*scale*panelRatio));
-        infoTextDisplay.setBounds((int) (50*scale*panelRatio), (int) (630*scale*panelRatio), (int) (640*scale*panelRatio), (int) (405*scale*panelRatio));
+        titleTextDisplay.setBounds((int) (80*scale*panelRatio), (int) (20*scale*panelRatio), (int) (590*scale*panelRatio), (int) (80*scale*panelRatio));
 
+        infoTextDisplay.setBounds((int) (65*scale*panelRatio), (int) (655*scale*panelRatio), (int) (620*scale*panelRatio), (int) (340*scale*panelRatio));
+        infoTextDisplay.setPreferredSize(new Dimension((int) (620*scale*panelRatio), (int) (340*scale*panelRatio)));
+
+    }
+
+    public JTextArea cloneTextArea(JTextArea area) {
+        JTextArea newArea = new JTextArea();
+        newArea.setText(area.getText());
+        newArea.setFont(area.getFont());
+        newArea.setCaretPosition(area.getCaretPosition());
+        newArea.setEditable(area.isEditable());
+        newArea.setLineWrap(area.getLineWrap());
+        newArea.setWrapStyleWord(area.getWrapStyleWord());
+        if (area.getSelectedText() != null) {
+            newArea.select(area.getSelectionStart(), area.getSelectionEnd());
+        }
+        newArea.setOpaque(false);
+        return newArea;
     }
 
 }

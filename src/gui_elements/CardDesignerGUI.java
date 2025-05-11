@@ -231,7 +231,9 @@ public class CardDesignerGUI {
 
         double previewScaleWidth = 750.0*0.7;
         double previewScaleHeight = 1050.0*0.7;
-        double scale = Math.min((750.0/(previewScaleWidth)),(1050.0/(previewScaleHeight)));
+
+        //if higher resolution card is wanted
+        double scale = 1.0;
 
         BufferedImage finalImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = finalImage.createGraphics();
@@ -250,29 +252,43 @@ public class CardDesignerGUI {
 
         try
         {
-            g2d.drawImage(ImageIO.read(new File("resources/misc/frontborder.png")), 0, 0, 750, 1050, null);
+            g2d.drawImage(ImageIO.read(new File("resources/misc/frontborder.png")), 0, 0, (int)(750*scale), (int)(1050*scale), null);
         }catch(IOException ignore){}
 
         if (cardItemImage != null) {
-            g2d.drawImage(cardItemImage, (int)(93*scale), (int)(80*scale),  (int)(400*scale),  (int)(400*scale), null);
+            g2d.drawImage(cardItemImage, (int)(40*scale), (int)(120*scale),  (int)(660*scale),  (int)(660*scale), null);
         }
 
         if (cardTextBox != null) {
-            g2d.drawImage(cardTextBox, 0, 0, 750, 1050, null);
+            g2d.drawImage(cardTextBox, (int)(0*scale), (int)(440*scale), (int)(750*scale), (int)(610*scale), null);
         }
 
         if (cardType != null) {
-            g2d.drawImage(cardType, (int)(410*scale), (int)(372*scale),  (int)(128*scale),  (int)(128*scale), null);
+            g2d.drawImage(cardType, (int)(550*scale), (int)(500*scale),  (int)(180*scale),  (int)(180*scale), null);
         }
 
         if (cardTitleImage != null) {
-            g2d.drawImage(cardTitleImage, 0, 10, 750, 1050, null);
+            g2d.drawImage(cardTitleImage, 0, (int)(10*scale), (int)(750*scale), (int)(1050*scale), null);
         }
 
         if (previewPanel.getTitleTextDisplay() != null) {
             JLabel p = previewPanel.getTitleTextDisplay();
-            p.setBounds((int)(60*scale), (int)(20*scale), (int)(405*(750.0/previewScaleWidth)), (int)(50*(1050.0/previewScaleHeight)));
-            p.setFont(p.getFont().deriveFont((float) (p.getFont().getSize()*scale)));
+            p.setBounds((int)(80*scale), (int)(20*scale), (int)(590*scale), (int)(80*scale));
+            p.repaint();
+            //p.setFont(p.getFont().deriveFont((float) (p.getFont().getSize()*scale)));
+
+            BufferedImage titleText = new BufferedImage(p.getWidth(), p.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D labelGraphics = titleText.createGraphics();
+            p.paint(labelGraphics);
+            labelGraphics.dispose();
+            g2d.drawImage(titleText, p.getX(), p.getY(),  p.getWidth(),  p.getHeight(), null);
+        }
+
+        if (previewPanel.getInfoTextDisplay() != null) {
+            JTextArea p = previewPanel.getInfoTextDisplay();
+            p.setBounds((int)(65*scale), (int)(655*scale), (int)(620*scale), (int)(340*scale));
+            previewPanel.updateInfoTextDisplay(p.getText(), p.getFont());
 
             BufferedImage titleText = new BufferedImage(p.getWidth(), p.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
@@ -303,13 +319,10 @@ public class CardDesignerGUI {
     }
 
     public void updateTitleTextDisplay(String str, Font font) {
-        //System.out.println(str);
         previewPanel.updateTitleTextDisplay(str, font);
     }
 
     public void updateInfoTextDisplay(String str, Font font) {
-        
-        //System.out.println(str);
         previewPanel.updateInfoTextDisplay(str, font);
     }
 

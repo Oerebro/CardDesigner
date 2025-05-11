@@ -1,12 +1,18 @@
 
 FIXES
 (CardDesignerGUI) 
--Textbox scaled bei Export zu groß
+-InfoText bei export falsch skaliert
 
 (PreviewPanel) 
--Title Text in nicht richtig positioniert
--Info Text wie Title Text
+-Title Text skaliert nur bei Input
+-InfoText - wenn mehr als 9 Zeilen:
+    Font skaliert falsch, und verfügbare
+    Zeilen + Zeilenhöhe sind falsch
 
+    Da standardgröße, und skalierung 
+    bekannt sind -> vllt. kann man richtige
+    Größe berechnen? Font size =/= pixel 
+    size ist das Problem
 
 FEATURES
 -Armor Class Input + Preview
@@ -17,5 +23,15 @@ FEATURES
 -Enchantment Add Button 
 -Enchantment Remove Button
 
+-add Button for
+    changing selected Text's Color
+    selected Text bold 
+    selected Text italic
+
 CURRENT AGENDA
--FIX Title Text Position
+-FIX Info Text Skalierung
+
+INFO
+InfoTextDisplay soll standardmäßig für
+9 Zeilen skaliert sein (340/20)
+(Textboxhöhe / Standard Fontsize)
