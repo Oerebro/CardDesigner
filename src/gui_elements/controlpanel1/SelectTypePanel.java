@@ -15,8 +15,10 @@ public class SelectTypePanel extends JPanel{
     }
 
     public void createCheckBoxPanel() {
-        this.setLayout(new GridLayout(0, 2, 5, 5));
-        JCheckBox isWeapon = new JCheckBox("Weapon", false);
+        JPanel typePanel = new JPanel();
+        typePanel.setBorder(BorderFactory.createTitledBorder("Item Type"));
+        typePanel.setLayout(new GridLayout(0, 2, 5, 5));
+        JCheckBox isWeapon = new JCheckBox("Weapon", true);
         JCheckBox isArmor = new JCheckBox("Armor", false);
         JCheckBox isClothing = new JCheckBox("Clothing", false);
         JCheckBox isAccessoire = new JCheckBox("Accessoire", false);
@@ -24,12 +26,18 @@ public class SelectTypePanel extends JPanel{
         JCheckBox isTwoHanded = new JCheckBox("Two-Handed", false);
 
         // Add the checkboxes to the panel
-        this.add(isWeapon);
-        this.add(isArmor);
-        this.add(isClothing);
-        this.add(isAccessoire);
-        this.add(isConsumable);
-        this.add(isTwoHanded);
+        typePanel.add(isWeapon);
+        typePanel.add(isArmor);
+        typePanel.add(isClothing);
+        typePanel.add(isAccessoire);
+        typePanel.add(isConsumable);
+        typePanel.add(isTwoHanded);
+
+        this.add(typePanel);
+
+        
+        this.add(new AttributePanel(parent, "weapon"));
+
 
         // Collect all checkboxes in this panel in an array
         JCheckBox[] checkboxes = {isWeapon, isArmor, isClothing, isAccessoire, isConsumable,isTwoHanded};

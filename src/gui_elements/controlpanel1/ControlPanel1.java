@@ -67,11 +67,17 @@ public class ControlPanel1 extends ControlPanel {
         add(titleTextField);
 
         infoTextField = new JTextArea();
+        infoTextField.setPreferredSize(new java.awt.Dimension(485, 320));
+        infoTextField.setLineWrap(true);
+        infoTextField.setWrapStyleWord(true);
+        infoTextField.setBorder(UIManager.getBorder("TextField.border"));
         add(infoTextField);
 
-        //infoTextField.setWrapStyleWord(true); // Wrap at word boundaries
-        //infoTextField.setLineWrap(true); // Enable wrapping
-        infoTextField.setPreferredSize(new java.awt.Dimension(485, 320));
+        ColorPicker titleColor = new ColorPicker(parent, 420, 290, 30, 30, "title");
+        ColorPicker infoColor = new ColorPicker(parent, 420, 335, 30, 30, "info");
+        add(titleColor);
+        add(infoColor);
+
     
         // Listen for text changes
         titleTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -108,39 +114,24 @@ public class ControlPanel1 extends ControlPanel {
             }
         });
     
-        // Listen for font selection changes
         titleFontSelection.addActionListener(e -> updateTitlePreview());
         infoFontSelection.addActionListener(e -> updateInfoPreview());
     }
     
-    //updates the text in the preview Panel
     private void updateTitlePreview() {
         String text = titleTextField.getText();
         String selectedFontName = (String) titleFontSelection.getSelectedItem();
-        Font font = new Font(selectedFontName, Font.PLAIN, 72); // Default size, will be resized in PreviewPanel
+        Font font = new Font(selectedFontName, Font.PLAIN, 72);
         parent.updateTitleTextDisplay(text, font);
     }
 
-    /*private void updateInfoPreview() {
-        
-        String text = infoTextField.getText();
-        String selectedFontName = (String) infoFontSelection.getSelectedItem();
-        Font font = new Font(selectedFontName, Font.PLAIN, 72); // Default size, will be resized in PreviewPanel
-        parent.updateInfoTextDisplay(text, font);
-    }*/
-
     private void updateInfoPreview() {
         String text = infoTextField.getText();
-        
-        // Format the text as HTML, converting line breaks to <br> tags for proper line breaks in preview
         String formattedText = "<html>" + text.replaceAll("\n", "<br>") + "</html>";
     
-        // Assuming parent.updateInfoTextDisplay() is expecting the formatted HTML text and a font
         String selectedFontName = (String) infoFontSelection.getSelectedItem();
-        Font font = new Font(selectedFontName, Font.PLAIN, 72);  // Example font size, can be adjusted
-    
-        // Update the preview with both the formatted text and the selected font
-        parent.updateInfoTextDisplay(formattedText, font); // Now passing both formatted text and font
+        Font font = new Font(selectedFontName, Font.PLAIN, 72); 
+        parent.updateInfoTextDisplay(formattedText, font);
     }
 
     //this creates a dropdown menu for fonts next to the title text input
@@ -258,12 +249,12 @@ public class ControlPanel1 extends ControlPanel {
         //set the absolute position of these menus within the controlpanel
         cardComponentTabbedPane.setBounds((int)(10 * scale), (int)(0), (int)(360 * scale), (int)(245 * scale));   
         selectItemArt.setBounds((int) (390 *scale), (int) (0), (int) (360*scale), (int) (245*scale));
-        selectItemTypePanel.setBounds((int) (770 *scale), (int) (0), (int) (300*scale), (int) (160*scale));
+        selectItemTypePanel.setBounds((int) (770 *scale), (int) (0), (int) (300*scale), (int) (450*scale));
 
-        titleFontSelection.setBounds((int) (280 *scale), (int) (290*scale), (int) (90*scale), (int) (30*scale));
-        infoFontSelection.setBounds((int) (280 *scale), (int) (335*scale), (int) (90*scale), (int) (30*scale));
-        titleTextField.setBounds((int) (10 *scale), (int) (290*scale), (int) (260*scale), (int) (30*scale));
-        infoTextField.setBounds((int) (10 *scale), (int) (335*scale), (int) (260*scale), (int) (205*scale));
+        titleFontSelection.setBounds((int) (320 *scale), (int) (290*scale), (int) (90*scale), (int) (30*scale));
+        infoFontSelection.setBounds((int) (320 *scale), (int) (335*scale), (int) (90*scale), (int) (30*scale));
+        titleTextField.setBounds((int) (10 *scale), (int) (290*scale), (int) (305*scale), (int) (30*scale));
+        infoTextField.setBounds((int) (10 *scale), (int) (335*scale), (int) (305*scale), (int) (205*scale));
 
 
         //absolute pos of the controlpanel within the window frame

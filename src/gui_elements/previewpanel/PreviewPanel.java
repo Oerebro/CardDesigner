@@ -27,19 +27,57 @@ public class PreviewPanel {
     }
 
     public JLabel getTitleTextDisplay() {
-        /*JLabel newLabel = new JLabel(titleTextDisplay.getText());
-        newLabel.setFont(titleTextDisplay.getFont());
-        newLabel.setForeground(titleTextDisplay.getForeground());
-        newLabel.setHorizontalAlignment(titleTextDisplay.getHorizontalAlignment());
-        newLabel.setVerticalAlignment(titleTextDisplay.getVerticalAlignment());
-        newLabel.setOpaque(titleTextDisplay.isOpaque());
-
-        return newLabel;*/
         return titleTextDisplay;
     }
 
     public JTextArea getInfoTextDisplay() {
         return infoTextDisplay;
+    }
+
+    public JLabel copyTitleTextDisplay(double scale) {
+        JLabel p = new JLabel("",SwingConstants.CENTER);
+        
+        p.setBounds((int)(80*scale), (int)(40*scale), (int)(590*scale), (int)(80*scale));
+        p.setFont(titleTextDisplay.getFont());
+        p.setText(titleTextDisplay.getText());
+
+        String text = htmlToPlainText(titleTextDisplay.getText());
+        Font baseFont =  titleTextDisplay.getFont();
+
+        Font font = baseFont.deriveFont((float) (baseFont.getSize2D() * scale * (float)(80.0/titleTextDisplay.getHeight())));
+        Font scaledFont = getScaledFontLabel(text, font, (int)(p.getWidth()), 80, p);
+        
+        p.setText("<html><div style='text-align:center;'>" + text + "</div></html>");
+        p.setFont(scaledFont);
+        
+        p.setOpaque(false);
+        p.setForeground(titleTextDisplay.getForeground());
+        return p;
+    }
+
+    public JTextArea copyInfoTextDisplay(double scale) {
+        JTextArea p = new JTextArea();
+        
+        p.setBounds((int) (65*scale), (int) (655*scale), (int) (620*scale), (int) (340*scale));
+
+        Font f = infoTextDisplay.getFont();
+        f = f.deriveFont((float) (infoTextDisplay.getFont().getSize2D() * scale * (620.0/infoTextDisplay.getWidth())));
+        
+        p.setFont(f);
+        p.setLineWrap(true);
+        p.setWrapStyleWord(true);
+        p.setText(infoTextDisplay.getText());
+        p.setOpaque(false);
+        p.setForeground(infoTextDisplay.getForeground());
+        return p;
+    }
+
+    public void updateInfoColor(Color color){
+        infoTextDisplay.setForeground(color);
+    }
+
+    public void updateTitleColor(Color color){
+        titleTextDisplay.setForeground(color);
     }
 
     private void init() {
@@ -70,9 +108,9 @@ public class PreviewPanel {
                     g.drawImage(cf, 0, 0, scaledWidth, scaledHeight, this);
                 }
 
-                try{
+                /*try{
                     g.drawImage(ImageIO.read(new File("resources/misc/frontborder.png")), 0, 0, scaledWidth, scaledHeight, this);
-                }catch(IOException e){};
+                }catch(IOException e){};*/
 
                 if (ii != null) {
                     g.drawImage(ii, (int)(40*scale*panelRatio), (int)(120*scale*panelRatio), (int)(660*scale*panelRatio), (int)(660*scale*panelRatio), this);
@@ -111,13 +149,9 @@ public class PreviewPanel {
         infoTextDisplay.setBorder(null);
 
         infoTextDisplay.setOpaque(false);
-        infoTextDisplay.setForeground(Color.GRAY);
-        
-        
 
-        //temporary measure to make title text white
-                titleTextDisplay.setForeground(Color.WHITE);
-                infoTextDisplay.setForeground(Color.WHITE);
+        titleTextDisplay.setForeground(Color.WHITE);
+        infoTextDisplay.setForeground(Color.WHITE);
 
         object.add(titleTextDisplay);
         object.add(infoTextDisplay);

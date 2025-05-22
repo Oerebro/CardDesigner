@@ -1,7 +1,7 @@
 
 FIXES
 (CardDesignerGUI) 
--InfoText bei export falsch skaliert
+-Text bei Output ist slightly falsch skaliert
 
 (PreviewPanel) 
 -Title Text skaliert nur bei Input
@@ -14,6 +14,9 @@ FIXES
     Größe berechnen? Font size =/= pixel 
     size ist das Problem
 
+(ControlPanel)
+-color button scaling
+
 FEATURES
 -Armor Class Input + Preview
 -Damage Dice Input + Preview
@@ -25,11 +28,18 @@ FEATURES
 
 -add Button for
     changing selected Text's Color
-    selected Text bold 
-    selected Text italic
+    (would need rework to JTextpane) selected Text bold 
+    (would need rework to JTextpane) selected Text italic
 
 CURRENT AGENDA
--FIX Info Text Skalierung
+-Text Color Buttons
+->picking color should update text color
+
+
+
+
+
+
 
 INFO
 InfoTextDisplay soll standardmäßig für

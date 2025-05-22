@@ -18,12 +18,20 @@ import com.formdev.flatlaf.FlatDarkLaf;
 
 
 public class CardDesignerGUI {
-    private JFrame frame;
+    public JFrame frame;
     //private JLabel frameLabel, backgroundLabel, textBoxLabel;
     private BufferedImage cardFrame, cardBackground, cardTextBox, cardTitleImage,cardItemImage, /*cardWeight,*/ cardType/*, cardRune, cardEnchant, cardRange, cardTargets, cardDamageType*/,handedImage;
     private PreviewPanel previewPanel;
     ControlPanel1 controlPanel;
     ControlPanel2 controlPanel2;
+
+    public void setTitleColor(Color color){
+        previewPanel.updateTitleColor(color);
+    }
+
+    public void setInfoColor(Color color){
+        previewPanel.updateInfoColor(color);
+    }
 
     public void loadImagePreviewPanel(String i){
         previewPanel.loadImage(i);
@@ -272,30 +280,25 @@ public class CardDesignerGUI {
         }
 
         if (previewPanel.getTitleTextDisplay() != null) {
-            JLabel p = previewPanel.getTitleTextDisplay();
-            p.setBounds((int)(80*scale), (int)(20*scale), (int)(590*scale), (int)(80*scale));
-            p.repaint();
-            //p.setFont(p.getFont().deriveFont((float) (p.getFont().getSize()*scale)));
-
+            JLabel p = previewPanel.copyTitleTextDisplay(scale);
+            
             BufferedImage titleText = new BufferedImage(p.getWidth(), p.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
             Graphics2D labelGraphics = titleText.createGraphics();
             p.paint(labelGraphics);
             labelGraphics.dispose();
-            g2d.drawImage(titleText, p.getX(), p.getY(),  p.getWidth(),  p.getHeight(), null);
+            g2d.drawImage(titleText, (int) (80*scale), (int) (20*scale),  (int) (590*scale),  (int) (80*scale), null);
         }
 
         if (previewPanel.getInfoTextDisplay() != null) {
-            JTextArea p = previewPanel.getInfoTextDisplay();
-            p.setBounds((int)(65*scale), (int)(655*scale), (int)(620*scale), (int)(340*scale));
-            previewPanel.updateInfoTextDisplay(p.getText(), p.getFont());
+            JTextArea p = previewPanel.copyInfoTextDisplay(scale);
 
             BufferedImage titleText = new BufferedImage(p.getWidth(), p.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
             Graphics2D labelGraphics = titleText.createGraphics();
             p.paint(labelGraphics);
             labelGraphics.dispose();
-            g2d.drawImage(titleText, p.getX(), p.getY(),  p.getWidth(),  p.getHeight(), null);
+            g2d.drawImage(titleText, (int) (65*scale), (int)(655*scale),  (int)(620*scale),  (int)(340*scale), null);
         }
 
         try {
