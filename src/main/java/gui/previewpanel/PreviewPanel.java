@@ -130,8 +130,10 @@ public class PreviewPanel {
         
         p.setBounds((int) (65*scale), (int) (655*scale), (int) (620*scale), (int) (340*scale));
 
+        
+
         Font f = infoTextDisplay.getFont();
-        f = f.deriveFont((float) (infoTextDisplay.getFont().getSize2D() * scale * (620.0/infoTextDisplay.getWidth())));
+        f = f.deriveFont((float) Math.floor((float) (infoTextDisplay.getFont().getSize2D() * ((620.0* scale)/infoTextDisplay.getWidth()))));
         
         p.setFont(f);
         p.setLineWrap(true);
@@ -173,17 +175,13 @@ public class PreviewPanel {
     }
 
     public void updateArmorClass(String str, String font) {
-        /*str = htmlToPlainText(str);
-        System.out.println("previewPanel: "+str);
-        Font font2 = FontLoader.loadFont(font, 100);
-        Font scaledFont = getScaledFontLabel(str, font2, (int)(armorClassDisplay.getWidth()), Integer.MAX_VALUE, armorClassDisplay);
-        
-        armorClassDisplay.setText("<html><div style='text-align:center;'>" + str + "</div></html>");
-        armorClassDisplay.setFont(scaledFont);
-        armorClassDisplay.repaint();*/
-
+        if(str.matches("")){
+            parent.updateArmorClass(0);
+            return;
+        }
         int ac = Integer.parseInt(str);
         parent.updateArmorClass(ac);
+        
     }
 
     public void setRangeAndACFont(String font){
@@ -210,6 +208,7 @@ public class PreviewPanel {
         //System.out.println("height: "+boxHeight+" lineheight: "+lineHeight);
         //System.out.println("total lines: "+(boxHeight/lineHeight)+" used lines: "+lineCount+" available lines: "+availableLines);
         
+
 
         if(availableLines <= 1){
             while (lineHeight * lineCount > boxHeight && font.getSize() > 1) {

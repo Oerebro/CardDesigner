@@ -34,16 +34,28 @@ public class AttributePanel extends JPanel{
         input.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                if(input.getText().matches("")){
+                    parent.updateArmorClass(0);
+                    return;
+                }
                 parent.updateArmorClass(Integer.parseInt(input.getText()));
             }
     
             @Override
             public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                if(input.getText().matches("")){
+                    parent.updateArmorClass(0);
+                    return;
+                }
                 parent.updateArmorClass(Integer.parseInt(input.getText()));
             }
     
             @Override
             public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                if(input.getText().matches("")){
+                    parent.updateArmorClass(0);
+                    return;
+                }
                 parent.updateArmorClass(Integer.parseInt(input.getText()));
             }
         });
@@ -51,6 +63,7 @@ public class AttributePanel extends JPanel{
         this.add(input);
         createRuneSlotSelection();
         createTierSelection();
+        createStatSelection();
 
     }
 

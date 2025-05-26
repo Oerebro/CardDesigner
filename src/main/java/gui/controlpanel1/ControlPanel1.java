@@ -23,8 +23,8 @@ public class ControlPanel1 extends ControlPanel {
     private SelectTypePanel selectItemTypePanel;
 
     private JTabbedPane cardComponentTabbedPane;
-    private ImageBrowser frameSelect, backgroundSelect, textboxSelect, titleSelect;
-    private VariableTabbedPane selectItemArt, weapons,rune, armor, accessoire, consumable;
+    private ImageBrowser frameSelect, backgroundSelect, textboxSelect, titleSelect,effectSelect;
+    private VariableTabbedPane selectItemArt, weapons,rune, armor, accessoire, consumable,effect,character;
     private JTextField titleTextField;
     private JTextArea infoTextField;
     private JComboBox<String> titleFontSelection,infoFontSelection;
@@ -194,10 +194,13 @@ public class ControlPanel1 extends ControlPanel {
         textboxSelect = new CardImageBrowser(parent,"resources/textbox",360,90,600,40, 64,'t');
         titleSelect = new CardImageBrowser(parent,"resources/title",360,90,600,40, 64,'h');
 
+        effectSelect = new CardImageBrowser(parent,"resources/effects",360,90,600,40, 64,'b');
+
         cardComponentTabbedPane.addTab("Choose Frame",frameSelect.getScrollPane());
         cardComponentTabbedPane.addTab("Choose Background",backgroundSelect.getScrollPane());
         cardComponentTabbedPane.addTab("Choose Textbox",textboxSelect.getScrollPane());
         cardComponentTabbedPane.addTab("Choose Title",titleSelect.getScrollPane());
+        cardComponentTabbedPane.addTab("Choose Effect Background",effectSelect.getScrollPane());
     }
 
     public void itemArtChangeToType(int type){
@@ -227,6 +230,21 @@ public class ControlPanel1 extends ControlPanel {
                     consumable.init(parent,4);
                 }
                 selectItemArt = consumable;
+            }break;
+            
+            case 5:{
+                if(effect==null){
+                    effect = new VariableTabbedPane();
+                    effect.init(parent,5);
+                }
+                selectItemArt = effect;
+            }break;
+            case 6:{
+                if(character==null){
+                    character = new VariableTabbedPane();
+                    character.init(parent,6);
+                }
+                selectItemArt = character;
             }break;
             case 10:{
                 if(rune==null){

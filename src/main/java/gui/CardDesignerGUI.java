@@ -59,34 +59,60 @@ public class CardDesignerGUI {
         return imageComposer.composeCard(getFrameScale());
     }
 
+    private void clearUnrelatedFields(){
+        setImageComposer("cardType",null);
+        setImageComposer("ac1",null);
+        setImageComposer("ac2",null);
+        setImageComposer("cardItemImage",null);
+        setImageComposer("runeSlot",null);
+        setImageComposer("weaponType",null);
+        setImageComposer("attributeImage",null);
+        setImageComposer("effectImage",null);
+        updateTier(0);
+    }
+
     public void onButtonWeapon(){
+        clearUnrelatedFields();
         try{
             setImageComposer("cardType",ImageIO.read(new File("resources/dice/d6.png")));
         }catch(IOException e){
             throw new Error("Error on Checkbox Weapon; Icon File not found");
         }
         controlPanel.itemArtChangeToType(0);
-        setImageComposer("cardItemImage",null);
-        setImageComposer("runeSlot",null);
-        updateTier(0);
+        
     }
 
     public void onButtonRune(){
+        clearUnrelatedFields();
         try{
             setImageComposer("cardType",ImageIO.read(new File("resources/glyphs/rune.png")));
         }catch(IOException e){
             throw new Error("Error on Checkbox Rune; Icon File not found");
         }
         controlPanel.itemArtChangeToType(10);
-        setImageComposer("cardItemImage",null);
-        setImageComposer("weaponType",null);
-        setImageComposer("runeSlot",null);
-        updateTier(0);
+    }
+
+    public void onButtonEffect(){
+        clearUnrelatedFields();
+        setImageComposer("cardType",null);
+        controlPanel.itemArtChangeToType(5);
+    }
+
+    public void onButtonCharacter(){
+        clearUnrelatedFields();
+        try{
+            setImageComposer("character",ImageIO.read(new File("resources/character.png")));
+        }catch(IOException e){
+            throw new Error("Error on Checkbox Effects; Icon File not found");
+        }
+        controlPanel.itemArtChangeToType(6);
     }
 
     public void onButtonArmor(){
+        clearUnrelatedFields();
         try{
             setImageComposer("cardType",ImageIO.read(new File("resources/armor.png")));
+            setImageComposer("weaponType",ImageIO.read(new File("resources/glyphs/ui_armor.png")));
         }catch(IOException e){
             throw new Error("Error on Checkbox Armor; Icon File not found");
         }
@@ -94,14 +120,11 @@ public class CardDesignerGUI {
             controlPanel.itemArtChangeToType(1);
             setImageComposer("cardItemImage",null);
         }
-        setImageComposer("weaponType",null);
-        setImageComposer("attributeImage",null);
-        setImageComposer("runeSlot",null);
-        updateTier(0);
         
     }
 
     public void onButtonClothing(){
+        clearUnrelatedFields();
         try{
            setImageComposer("cardType",ImageIO.read(new File("resources/clothing.png")));
         }catch(IOException e){
@@ -111,42 +134,31 @@ public class CardDesignerGUI {
             controlPanel.itemArtChangeToType(1);
             setImageComposer("cardItemImage",null);
         }
-        setImageComposer("weaponType",null);
-        setImageComposer("attributeImage",null);
-        setImageComposer("runeSlot",null);
-        updateTier(0);
-
     }
 
     public void onButtonAccessoire(){
+        clearUnrelatedFields();
         try{
             setImageComposer("cardType",ImageIO.read(new File("resources/accessoire.png")));
         }catch(IOException e){
             throw new Error("Error on Checkbox Accessoire; Icon File not found");
         }
         controlPanel.itemArtChangeToType(3);
-        setImageComposer("cardItemImage",null);
-        setImageComposer("weaponType",null);
-        setImageComposer("attributeImage",null);
-        setImageComposer("runeSlot",null);
         updateTier(0);
     }
 
     public void onButtonConsumable(){
+        clearUnrelatedFields();
         try{
             setImageComposer("cardType",ImageIO.read(new File("resources/consumable.png")));
         }catch(IOException e){
             throw new Error("Error on Checkbox Consumable; Icon File not found");
         }
         controlPanel.itemArtChangeToType(4);
-        setImageComposer("cardItemImage",null);
-        setImageComposer("weaponType",null);
-        setImageComposer("attributeImage",null);
-        setImageComposer("runeSlot",null);
-        updateTier(0);
     }
 
     public void onButtonTwoHanded(boolean selected){
+        clearUnrelatedFields();
         try{
             if(selected){
                 setImageComposer("handedImage",ImageIO.read(new File("resources/misc/twoHanded.png")));
@@ -157,11 +169,6 @@ public class CardDesignerGUI {
         }catch(IOException e){
             throw new Error("Couldnt find image resources/misc/*Handed.png");
         }
-        setImageComposer("cardItemImage",null);
-        updateTier(0);
-        setImageComposer("attributeImage",null);
-        setImageComposer("runeSlot",null);
-
         
     }
 
@@ -261,12 +268,12 @@ public class CardDesignerGUI {
         if (previewPanel.getInfoTextDisplay() != null) {
             JTextArea p = previewPanel.copyInfoTextDisplay(scale);
 
-            BufferedImage titleText = new BufferedImage(p.getWidth(), p.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            BufferedImage infoText = new BufferedImage((int)(620*scale),  (int)(340*scale), BufferedImage.TYPE_INT_ARGB);
 
-            Graphics2D labelGraphics = titleText.createGraphics();
+            Graphics2D labelGraphics = infoText.createGraphics();
             p.paint(labelGraphics);
             labelGraphics.dispose();
-            g2d.drawImage(titleText, (int) (65*scale), (int)(655*scale),  (int)(620*scale),  (int)(340*scale), null);
+            g2d.drawImage(infoText, (int) (65*scale), (int)(655*scale),  (int)(620*scale),  (int)(340*scale), null);
         }
 
         try {
@@ -298,29 +305,36 @@ public class CardDesignerGUI {
 
     public void updateArmorClass(int ac) {
         
-        //previewPanel.updateArmorClass(str, controlPanel.getTitleFont());
+        if(ac == 0){
+            setImageComposer("ac1",null);
+            setImageComposer("ac2",null);
+            return;
+        }
 
         if(ac < 10){
             try{
                 setImageComposer("ac1",ImageIO.read(new File("resources/glyphs/ac/"+ac+".png")));
+                setImageComposer("ac2", null);
             }catch(IOException e){
-                throw new Error("Error on Dice; Icon File not found");
+                throw new Error("Error on AC; Icon File not found");
             }
+            return;
         }else if(ac >=10 && ac < 20){
             try{
                 setImageComposer("ac1",ImageIO.read(new File("resources/glyphs/ac/1_.png")));
                 ac %= 10;
-                setImageComposer("ac2",ImageIO.read(new File("resources/glyphs/ac/_"+ac+".png")));
+                setImageComposer("ac2",ImageIO.read(new File("resources/glyphs/ac/_2.png")));
             }catch(IOException e){
-                throw new Error("Error on Dice; Icon File not found");
+                throw new Error("Error on AC; Icon File not found");
             }
+            return;
         }else if(ac >=20 && ac < 30){
             try{
                 setImageComposer("ac1",ImageIO.read(new File("resources/glyphs/ac/2_.png")));
                 ac %= 10;
                 setImageComposer("ac2",ImageIO.read(new File("resources/glyphs/ac/_"+ac+".png")));
             }catch(IOException e){
-                throw new Error("Error on Dice; Icon File not found");
+                throw new Error("Error on AC; Icon File not found");
             }
         }else if(ac >=30){
             try{
@@ -328,7 +342,7 @@ public class CardDesignerGUI {
                 ac %= 10;
                 setImageComposer("ac2",ImageIO.read(new File("resources/glyphs/ac/_"+ac+".png")));
             }catch(IOException e){
-                throw new Error("Error on Dice; Icon File not found");
+                throw new Error("Error on AC; Icon File not found");
             }
         }
 

@@ -29,6 +29,7 @@ public class SelectTypePanel extends JPanel{
         JCheckBox isAccessoire = new JCheckBox("Accessoire", false);
         JCheckBox isConsumable = new JCheckBox("Consumable", false);
         JCheckBox isRune = new JCheckBox("Rune", false);
+        JCheckBox isEffect = new JCheckBox("Effect", false);
         JCheckBox hasRuneCut = new JCheckBox("Show Rune Cut Line", false);
 
         hasRuneCut.addActionListener(e->{parent.updateRuneCut(hasRuneCut.isSelected());});
@@ -39,6 +40,7 @@ public class SelectTypePanel extends JPanel{
         typePanel.add(isAccessoire);
         typePanel.add(isConsumable);
         typePanel.add(isRune);
+        typePanel.add(isEffect);
         typePanel.add(hasRuneCut);
 
         this.add(typePanel);
@@ -48,7 +50,7 @@ public class SelectTypePanel extends JPanel{
 
 
         // Collect all checkboxes in this panel in an array
-        JCheckBox[] checkboxes = {isWeapon, isArmor, isClothing, isAccessoire, isConsumable,isRune};
+        JCheckBox[] checkboxes = {isWeapon, isArmor, isClothing, isAccessoire, isConsumable,isRune,isEffect};
 
         // Add action listeners to each checkbox
         for (JCheckBox checkbox : checkboxes) {
@@ -93,6 +95,9 @@ public class SelectTypePanel extends JPanel{
                                 break;
             case "Rune":        parent.onButtonRune();
                                 this.attributePanel = new AttributePanel(parent, "rune");
+                                break;
+            case "Effect":      parent.onButtonEffect();
+                                this.attributePanel = new AttributePanel(parent, "effect");
                                 break;
         }
         this.add(attributePanel);

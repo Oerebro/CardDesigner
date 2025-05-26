@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.awt.*;
 
 public class ImageComposer {
-    private BufferedImage cardFrame, cardBackground, cardTextbox, cardTitle,cardItemImage, attributeImage,cardType,handedImage, tierGlyph, weaponType, runeSlot,runeCut,armorclass1,armorclass2;
+    private BufferedImage cardFrame, cardBackground, cardTextbox, cardTitle,cardItemImage, attributeImage,cardType,handedImage, tierGlyph, weaponType, runeSlot,runeCut,armorclass1,armorclass2,effectImage;
 
     public BufferedImage getTier(){
         return tierGlyph;
@@ -49,6 +49,10 @@ public class ImageComposer {
 
         if (cardBackground != null) {
             g2d.drawImage(cardBackground, 0, 0, targetWidth, targetHeight, null);
+        }
+
+        if (effectImage != null) {
+            g2d.drawImage(effectImage, 0, 0, targetWidth, targetHeight, null);
         }
 
         if (cardFrame != null) {
@@ -97,11 +101,11 @@ public class ImageComposer {
         }
 
         if (armorclass1 != null) {
-            g2d.drawImage(armorclass1, (int)(560*scale), (int)(490*scale), (int)(120*scale), (int)(120*scale), null);
+            g2d.drawImage(armorclass1, (int)(570*scale), (int)(520*scale), (int)(100*scale), (int)(100*scale), null);
         }
 
         if (armorclass2 != null) {
-            g2d.drawImage(armorclass1, (int)(560*scale), (int)(490*scale), (int)(120*scale), (int)(120*scale), null);
+            g2d.drawImage(armorclass2, (int)(570*scale), (int)(520*scale), (int)(100*scale), (int)(100*scale), null);
         }
 
 
@@ -124,6 +128,7 @@ public class ImageComposer {
             case "runeCutTemplate": runeCut = i ;break;
             case "ac1": armorclass1 = i ;break;
             case "ac2": armorclass2 = i ;break;
+            case "effect": effectImage = i ;break;
         }
     }
 

@@ -38,6 +38,7 @@ public class VariableTabbedPane extends JTabbedPane{
             case 1: addTabsArmor();break;
             case 3: addTabsAccessoire();break;
             case 4: addTabsConsumable();break;
+            case 5: addTabsCharacters();break;
         }
 
 
@@ -93,6 +94,10 @@ public class VariableTabbedPane extends JTabbedPane{
         add("Weaponoils",new ItemArtImageBrowser(parent,"resources/consumable/oil",440,350,1300,40,80).getScrollPane());
         add("Bombs",new ItemArtImageBrowser(parent,"resources/consumable/grenade",440,350,1300,40,80).getScrollPane());
         add("Throwable Flasks",new ItemArtImageBrowser(parent,"resources/consumable/throwableFlask",440,350,1300,40,80).getScrollPane());
+        
+    }
+    private void addTabsCharacters(){
+        //add("Negative",new ItemArtImageBrowser(parent,"resources/effects/negative",440,350,1300,40,80).getScrollPane());
         
     }
 }
