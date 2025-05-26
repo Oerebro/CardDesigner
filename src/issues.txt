@@ -1,4 +1,25 @@
 
+IMPORTANT
+
+-changed Render logic. Both preview and export
+now use ImageComposer.
+
+public void setImageComposer(String field, BufferedImage i){
+        imageComposer.setField(field,i);
+    }
+
+i.e. parent.setImageComposer "cardType",image)
+!!!    must now be called whenever an image
+    is updated  !!!
+
+
+
+
+
+
+
+
+
 FIXES
 (CardDesignerGUI) 
 -Text bei Output ist slightly falsch skaliert
@@ -20,6 +41,8 @@ FIXES
 FEATURES
 -Armor Class Input + Preview
 -Damage Dice Input + Preview
+-save and load card sets 
+-export all cards in set
 
 -Enchantment Input 
 -Enchantment List 

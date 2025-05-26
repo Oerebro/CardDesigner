@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "CardDesignerGUI",
+      "request": "launch",
+      "mainClass": "gui.CardDesignerGUI",
+      "projectName": "card-editor"
+    },
+    {
+      "type": "java",
+      "name": "Run CardDesignerGUI",
+      "request": "launch",
+      "mainClass": "CardDesignerGUI"
+    }
+  ]
+}
