@@ -7,16 +7,16 @@ import javax.swing.*;
 
 import gui.*;
 import abstractclasses.*;
+import events.EventBus;
+import events.ImageUpdateEvent;
 
 import java.awt.Color;
 
 
 public class CardImageBrowser extends ImageBrowser{
-    private final CardDesignerGUI parent;
-    private char type;
+    private String type;
 
-    public CardImageBrowser(CardDesignerGUI parent, String path, int width, int height,int x, int y, int iconSize,char type) {
-        this.parent = parent;
+    public CardImageBrowser(String path, int width, int height,int x, int y, int iconSize,String type) {
         this.path = path;
         this.width = width;
         this.height = height;
@@ -29,16 +29,13 @@ public class CardImageBrowser extends ImageBrowser{
 
 
     protected void updateImage(File file) {
-        try {
-            switch(type){
-                case 'f': parent.setImageComposer("cardFrame",ImageIO.read(file));break;
-                case 'b': parent.setImageComposer("cardBackground",ImageIO.read(file));break;
-                case 't': parent.setImageComposer("cardTextbox",ImageIO.read(file));break;
-                case 'h': parent.setImageComposer("cardTitle",ImageIO.read(file));break;
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(parent.getFrame(), "Error loading new image.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        publishImageUpdate(type,path);
+        /*switch(type){
+            case 'f': publishImageUpdate("cardFrame",file.getPath());break;
+            case 'b': publishImageUpdate("cardBackground",file.getPath());break;
+            case 't': publishImageUpdate("cardTextbox",file.getPath());break;
+            case 'h': publishImageUpdate("cardTitle",file.getPath());break;
+        }*/
     }
 
     @Override
@@ -54,5 +51,9 @@ public class CardImageBrowser extends ImageBrowser{
         });
 
         return label;
+    }
+
+    private void publishImageUpdate(String type, String path){
+        EventBus.publish(new ImageUpdateEvent(type,path));
     }
 }

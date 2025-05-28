@@ -202,12 +202,12 @@ public class ControlPanel1 extends ControlPanel {
     private void createCardComponentSelection(){
         cardComponentTabbedPane = new JTabbedPane();
 
-        frameSelect = new CardImageBrowser(parent,"resources/frame",360,90,600,40, 64,'f');
-        backgroundSelect = new CardImageBrowser(parent,"resources/background",360,90,600,40, 64,'b'); 
-        textboxSelect = new CardImageBrowser(parent,"resources/textbox",360,90,600,40, 64,'t');
-        titleSelect = new CardImageBrowser(parent,"resources/title",360,90,600,40, 64,'h');
+        frameSelect = new CardImageBrowser("resources/card_components/frame",360,90,600,40, 64,"cardFrame");
+        backgroundSelect = new CardImageBrowser("resources/card_components/background",360,90,600,40, 64,"cardBackground"); 
+        textboxSelect = new CardImageBrowser("resources/card_components/textbox",360,90,600,40, 64,"cardTextbox");
+        titleSelect = new CardImageBrowser("resources/card_components/title",360,90,600,40, 64,"cardTitle");
 
-        effectSelect = new CardImageBrowser(parent,"resources/effects",360,90,600,40, 64,'b');
+        effectSelect = new CardImageBrowser("resources/card_components/effects",360,90,600,40, 64,"cardBackground");
 
         cardComponentTabbedPane.addTab("Choose Frame",frameSelect.getScrollPane());
         cardComponentTabbedPane.addTab("Choose Background",backgroundSelect.getScrollPane());
