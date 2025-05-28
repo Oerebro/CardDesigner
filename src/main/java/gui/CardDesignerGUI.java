@@ -12,6 +12,8 @@ import java.util.Date;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 
+import events.EventBus;
+import events.ImageUpdateEvent;
 import gui.controlpanel1.*;
 import gui.controlpanel2.*;
 import gui.previewpanel.*;
@@ -51,7 +53,7 @@ public class CardDesignerGUI {
     }
 
     public void setImageComposer(String field, BufferedImage i){
-        imageComposer.setField(field,i);
+        //imageComposer.setField(field,i);
         previewPanel.repaint();
     }
 
@@ -59,118 +61,86 @@ public class CardDesignerGUI {
         return imageComposer.composeCard(getFrameScale());
     }
 
-    private void clearUnrelatedFields(){
-        setImageComposer("cardType",null);
-        setImageComposer("ac1",null);
-        setImageComposer("ac2",null);
-        setImageComposer("cardItemImage",null);
-        setImageComposer("runeSlot",null);
-        setImageComposer("weaponType",null);
-        setImageComposer("attributeImage",null);
-        setImageComposer("effectImage",null);
-        updateTier(0);
-    }
 
     public void onButtonWeapon(){
-        clearUnrelatedFields();
+        //clearUnrelatedFields();
         try{
             setImageComposer("cardType",ImageIO.read(new File("resources/dice/d6.png")));
         }catch(IOException e){
             throw new Error("Error on Checkbox Weapon; Icon File not found");
         }
-        controlPanel.itemArtChangeToType(0);
+        //controlPanel.itemArtChangeToType(0);
         
     }
 
     public void onButtonRune(){
-        clearUnrelatedFields();
+        //clearUnrelatedFields();
         try{
             setImageComposer("cardType",ImageIO.read(new File("resources/glyphs/rune.png")));
         }catch(IOException e){
             throw new Error("Error on Checkbox Rune; Icon File not found");
         }
-        controlPanel.itemArtChangeToType(10);
+        //controlPanel.itemArtChangeToType(10);
     }
 
     public void onButtonEffect(){
-        clearUnrelatedFields();
         setImageComposer("cardType",null);
-        controlPanel.itemArtChangeToType(5);
+        //controlPanel.itemArtChangeToType(5);
     }
 
     public void onButtonCharacter(){
-        clearUnrelatedFields();
         try{
             setImageComposer("character",ImageIO.read(new File("resources/character.png")));
         }catch(IOException e){
             throw new Error("Error on Checkbox Effects; Icon File not found");
         }
-        controlPanel.itemArtChangeToType(6);
+        //controlPanel.itemArtChangeToType(6);
     }
 
     public void onButtonArmor(){
-        clearUnrelatedFields();
-        try{
-            setImageComposer("cardType",ImageIO.read(new File("resources/armor.png")));
-            setImageComposer("weaponType",ImageIO.read(new File("resources/glyphs/ui_armor.png")));
-        }catch(IOException e){
-            throw new Error("Error on Checkbox Armor; Icon File not found");
-        }
-        if(controlPanel.getItemArtType()!=1){
+        EventBus.publish(new ImageUpdateEvent("cardType","resources/armor.png"));
+
+        /*if(controlPanel.getItemArtType()!=1){
             controlPanel.itemArtChangeToType(1);
             setImageComposer("cardItemImage",null);
-        }
+        }*/
         
     }
 
     public void onButtonClothing(){
-        clearUnrelatedFields();
+        //clearUnrelatedFields();
         try{
            setImageComposer("cardType",ImageIO.read(new File("resources/clothing.png")));
         }catch(IOException e){
             throw new Error("Error on Checkbox Clothing; Icon File not found");
         }
-        if(controlPanel.getItemArtType()!=1){
+        /*if(controlPanel.getItemArtType()!=1){
             controlPanel.itemArtChangeToType(1);
             setImageComposer("cardItemImage",null);
-        }
+        }*/
     }
 
     public void onButtonAccessoire(){
-        clearUnrelatedFields();
+        //clearUnrelatedFields();
         try{
             setImageComposer("cardType",ImageIO.read(new File("resources/accessoire.png")));
         }catch(IOException e){
             throw new Error("Error on Checkbox Accessoire; Icon File not found");
         }
-        controlPanel.itemArtChangeToType(3);
-        updateTier(0);
+        //controlPanel.itemArtChangeToType(3);
+        //updateTier(0);
     }
 
     public void onButtonConsumable(){
-        clearUnrelatedFields();
+        //clearUnrelatedFields();
         try{
             setImageComposer("cardType",ImageIO.read(new File("resources/consumable.png")));
         }catch(IOException e){
             throw new Error("Error on Checkbox Consumable; Icon File not found");
         }
-        controlPanel.itemArtChangeToType(4);
+        //controlPanel.itemArtChangeToType(4);
     }
-
-    public void onButtonTwoHanded(boolean selected){
-        clearUnrelatedFields();
-        try{
-            if(selected){
-                setImageComposer("handedImage",ImageIO.read(new File("resources/misc/twoHanded.png")));
-                controlPanel.itemArtChangeToType(10);
-            }else{    
-            setImageComposer("handedImage",ImageIO.read(new File("resources/misc/oneHanded.png")));
-            }
-        }catch(IOException e){
-            throw new Error("Couldnt find image resources/misc/*Handed.png");
-        }
         
-    }
 
 
     public CardDesignerGUI() {
@@ -262,6 +232,9 @@ public class CardDesignerGUI {
             Graphics2D labelGraphics = titleText.createGraphics();
             p.paint(labelGraphics);
             labelGraphics.dispose();
+            if(controlPanel.getTitleStroke()){
+                titleText = drawStroke(titleText,3,Color.WHITE);
+            }
             g2d.drawImage(titleText, (int) (80*scale), (int) (20*scale),  (int) (590*scale),  (int) (80*scale), null);
         }
 
@@ -289,6 +262,52 @@ public class CardDesignerGUI {
         
     }
 
+    private BufferedImage drawStroke(BufferedImage src, int strokeWidth, Color color) {
+        int w = src.getWidth();
+        int h = src.getHeight();
+
+        BufferedImage result = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = result.createGraphics();
+
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setComposite(AlphaComposite.SrcOver);
+
+        // Draw offset copies to simulate a soft stroke (cheap blur)
+        for (int dx = -strokeWidth; dx <= strokeWidth; dx++) {
+            for (int dy = -strokeWidth; dy <= strokeWidth; dy++) {
+                if (dx * dx + dy * dy <= strokeWidth * strokeWidth) {
+                    g.drawImage(tintAlpha(src, color), dx, dy, null);
+                }
+            }
+        }
+
+        // Draw the original image on top
+        g.drawImage(src, 0, 0, null);
+        g.dispose();
+        return result;
+    }
+
+    private BufferedImage tintAlpha(BufferedImage src, Color color) {
+        int w = src.getWidth();
+        int h = src.getHeight();
+        BufferedImage tinted = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int argb = src.getRGB(x, y);
+                int alpha = (argb >> 24) & 0xFF;
+                if (alpha > 0) {
+                    tinted.setRGB(x, y, (alpha << 24) | (color.getRGB() & 0x00FFFFFF));
+                }
+            }
+        }
+
+        return tinted;
+    }
+
+
+
+
     public static String generateDateTimeString() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
         Date now = new Date();
@@ -303,86 +322,13 @@ public class CardDesignerGUI {
         previewPanel.updateInfoTextDisplay(str, font);
     }
 
-    public void updateArmorClass(int ac) {
-        
-        if(ac == 0){
-            setImageComposer("ac1",null);
-            setImageComposer("ac2",null);
-            return;
-        }
-
-        if(ac < 10){
-            try{
-                setImageComposer("ac1",ImageIO.read(new File("resources/glyphs/ac/"+ac+".png")));
-                setImageComposer("ac2", null);
-            }catch(IOException e){
-                throw new Error("Error on AC; Icon File not found");
-            }
-            return;
-        }else if(ac >=10 && ac < 20){
-            try{
-                setImageComposer("ac1",ImageIO.read(new File("resources/glyphs/ac/1_.png")));
-                ac %= 10;
-                setImageComposer("ac2",ImageIO.read(new File("resources/glyphs/ac/_2.png")));
-            }catch(IOException e){
-                throw new Error("Error on AC; Icon File not found");
-            }
-            return;
-        }else if(ac >=20 && ac < 30){
-            try{
-                setImageComposer("ac1",ImageIO.read(new File("resources/glyphs/ac/2_.png")));
-                ac %= 10;
-                setImageComposer("ac2",ImageIO.read(new File("resources/glyphs/ac/_"+ac+".png")));
-            }catch(IOException e){
-                throw new Error("Error on AC; Icon File not found");
-            }
-        }else if(ac >=30){
-            try{
-                setImageComposer("ac1",ImageIO.read(new File("resources/glyphs/ac/3_.png")));
-                ac %= 10;
-                setImageComposer("ac2",ImageIO.read(new File("resources/glyphs/ac/_"+ac+".png")));
-            }catch(IOException e){
-                throw new Error("Error on AC; Icon File not found");
-            }
-        }
-
-    }
+    
 
     public void updateRange(String str, Font font) {
         previewPanel.updateRangeText(str, font);
     }
 
-    public void updateDice(int num){
-        switch (num){
-            case 0: setImageComposer("cardType",null);break;
-            case 4: try{
-                        setImageComposer("cardType",ImageIO.read(new File("resources/dice/d4.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Dice; Icon File not found");
-                    }break;
-            case 6: try{
-                        setImageComposer("cardType",ImageIO.read(new File("resources/dice/d6.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Dice; Icon File not found");
-                    }break;
-            case 8: try{
-                        setImageComposer("cardType",ImageIO.read(new File("resources/dice/d8.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Dice; Icon File not found");
-                    }break;
-            case 10: try{
-                        setImageComposer("cardType",ImageIO.read(new File("resources/dice/d10.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Dice; Icon File not found");
-                    }break;
-            case 12: try{
-                        setImageComposer("cardType",ImageIO.read(new File("resources/dice/d12.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Dice; Icon File not found");
-                    }break;
-        }
-
-    }
+    
 
     public void updateRuneSlots(int num){
         switch (num){
@@ -446,87 +392,8 @@ public class CardDesignerGUI {
         }
     }
 
-    public void updateWeaponType(String type){
-        switch (type){
-            case "none": setImageComposer("weaponType",null);break;
-            case "ranged": try{
-                        setImageComposer("weaponType",ImageIO.read(new File("resources/glyphs/ui_ranged.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Weapon Type; Icon File not found");
-                    }break;
-            case "melee": try{
-                        setImageComposer("weaponType",ImageIO.read(new File("resources/glyphs/ui_melee.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Weapon Type; Icon File not found");
-                    }break;
-            case "throwable": try{
-                        setImageComposer("weaponType",ImageIO.read(new File("resources/glyphs/ui_throwable.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Weapon Type; Icon File not found");
-                    }break;
-        }
-    }
+    
 
-    public void updateAttributeImage(String type){
-        switch (type){
-            case "str": try{
-                        setImageComposer("attributeImage",ImageIO.read(new File("resources/glyphs/stat_strength.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Weapon Type; Icon File not found");
-                    }break;
-            case "con": try{
-                        setImageComposer("attributeImage",ImageIO.read(new File("resources/glyphs/stat_constitution.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Weapon Type; Icon File not found");
-                    }break;
-            case "dex": try{
-                        setImageComposer("attributeImage",ImageIO.read(new File("resources/glyphs/stat_dexterity.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Weapon Type; Icon File not found");
-                    }break;
-            case "intel": try{
-                        setImageComposer("attributeImage",ImageIO.read(new File("resources/glyphs/stat_intelligence.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Weapon Type; Icon File not found");
-                    }break;
-            case "wis": try{
-                        setImageComposer("attributeImage",ImageIO.read(new File("resources/glyphs/stat_wisdom.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Weapon Type; Icon File not found");
-                    }break;
-            case "rizz": try{
-                        setImageComposer("attributeImage",ImageIO.read(new File("resources/glyphs/stat_charisma.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Weapon Type; Icon File not found");
-                    }break;
-        }
-    }
-
-    public void updateTier(int num){
-        switch (num){
-            case 0: setImageComposer("tierGlyph",null);break;
-            case 1: try{
-                        setImageComposer("tierGlyph",ImageIO.read(new File("resources/glyphs/tier1.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Dice; Icon File not found");
-                    }break;
-            case 2: try{
-                        setImageComposer("tierGlyph",ImageIO.read(new File("resources/glyphs/tier2.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Dice; Icon File not found");
-                    }break;
-            case 3: try{
-                        setImageComposer("tierGlyph",ImageIO.read(new File("resources/glyphs/tier3.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Dice; Icon File not found");
-                    }break;
-            case 4: try{
-                        setImageComposer("tierGlyph",ImageIO.read(new File("resources/glyphs/tier4.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on Dice; Icon File not found");
-                    }break;
-        }
-    }
 
 
     public static void main(String[] args) {

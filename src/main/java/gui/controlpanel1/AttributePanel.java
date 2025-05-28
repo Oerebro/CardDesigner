@@ -2,17 +2,21 @@ package gui.controlpanel1;
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
 
+import events.EventBus;
+import events.ImageUpdateEvent;
+import events.ClearUnrelatedImagesEvent;
 import gui.*;
 
 import java.awt.*;
-
 public class AttributePanel extends JPanel{
     private final CardDesignerGUI parent;
-    private Font rangeAndACFont;
+    //private Font rangeAndACFont;
 
     public AttributePanel(CardDesignerGUI parent, String type) {
         this.parent = parent; 
         this.setLayout(new GridLayout(0, 1, 5, 5));
+
+        EventBus.publish(new ClearUnrelatedImagesEvent());
         
         switch(type){
             case "weapon": createWeaponPanel();break;
@@ -24,7 +28,7 @@ public class AttributePanel extends JPanel{
     }
 
     public void setRangeAndACFont(String font){
-        rangeAndACFont = FontLoader.loadFont(font, 20f);
+        //rangeAndACFont = FontLoader.loadFont(font, 20f);
     }
 
     private void createArmorPanel(){
@@ -35,37 +39,39 @@ public class AttributePanel extends JPanel{
             @Override
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
                 if(input.getText().matches("")){
-                    parent.updateArmorClass(0);
+                    getArmorClass(0);
                     return;
                 }
-                parent.updateArmorClass(Integer.parseInt(input.getText()));
+                getArmorClass(Integer.parseInt(input.getText()));
             }
     
             @Override
             public void removeUpdate(javax.swing.event.DocumentEvent e) {
                 if(input.getText().matches("")){
-                    parent.updateArmorClass(0);
+                    getArmorClass(0);
                     return;
                 }
-                parent.updateArmorClass(Integer.parseInt(input.getText()));
+                getArmorClass(Integer.parseInt(input.getText()));
             }
     
             @Override
             public void changedUpdate(javax.swing.event.DocumentEvent e) {
                 if(input.getText().matches("")){
-                    parent.updateArmorClass(0);
+                    getArmorClass(0);
                     return;
                 }
-                parent.updateArmorClass(Integer.parseInt(input.getText()));
+                getArmorClass(Integer.parseInt(input.getText()));
             }
         });
 
         this.add(input);
         createRuneSlotSelection();
         createTierSelection();
-        createStatSelection();
+        //createStatSelection();
 
     }
+
+    
 
     private void createConsumablePanel(){
         JTextField input = new JTextField();
@@ -88,7 +94,7 @@ public class AttributePanel extends JPanel{
         createTierSelection();
         createStatSelection();
 
-         parent.updateWeaponType("melee");
+         publishImageUpdate("weaponType", "resources/glyphs/weapon_type/melee.png");
     }
 
     private void createRunePanel(){
@@ -97,6 +103,7 @@ public class AttributePanel extends JPanel{
     }
 
     private void createWeaponTypeSelection() {
+        
         JPanel weaponType = new JPanel();
         weaponType.setBorder(BorderFactory.createTitledBorder("Weapon Type"));
         JCheckBox isMelee = new JCheckBox("Melee", true);
@@ -108,9 +115,9 @@ public class AttributePanel extends JPanel{
             x.addActionListener(e->{uncheckOtherCheckboxes(x,weaponTypes);});
         }
 
-        isMelee.addActionListener(e -> {parent.updateWeaponType("melee");});
-        isRanged.addActionListener(e -> {parent.updateWeaponType("ranged");});
-        isThrowable.addActionListener(e -> {parent.updateWeaponType("throwable");});
+        isMelee.addActionListener(e -> {publishImageUpdate("weaponType", "resources/glyphs/weapon_type/melee.png");});
+        isRanged.addActionListener(e -> {publishImageUpdate("weaponType", "resources/glyphs/weapon_type/ranged.png");});
+        isThrowable.addActionListener(e -> {publishImageUpdate("weaponType", "resources/glyphs/weapon_type/throwable.png");});
         weaponType.add(isMelee);
         weaponType.add(isRanged);
         weaponType.add(isThrowable);
@@ -164,11 +171,11 @@ public class AttributePanel extends JPanel{
             x.addActionListener(e->{uncheckOtherCheckboxes(x,diceSelect);});
         }
 
-        d4.addActionListener(e -> {parent.updateDice(4);});
-        d6.addActionListener(e -> {parent.updateDice(6);});
-        d8.addActionListener(e -> {parent.updateDice(8);});
-        d10.addActionListener(e -> {parent.updateDice(10);});
-        d12.addActionListener(e -> {parent.updateDice(12);});
+        d4.addActionListener(e -> {getDice(4);});
+        d6.addActionListener(e -> {getDice(6);});
+        d8.addActionListener(e -> {getDice(8);});
+        d10.addActionListener(e -> {getDice(10);});
+        d12.addActionListener(e -> {getDice(12);});
 
         dice.add(d4);
         dice.add(d6);
@@ -224,11 +231,11 @@ public class AttributePanel extends JPanel{
             x.addActionListener(e->{uncheckOtherCheckboxes(x,tiers);});
         }
 
-        tier0.addActionListener(e -> {parent.updateTier(0);});
-        tier1.addActionListener(e -> {parent.updateTier(1);});
-        tier2.addActionListener(e -> {parent.updateTier(2);});
-        tier3.addActionListener(e -> {parent.updateTier(3);});
-        tier4.addActionListener(e -> {parent.updateTier(4);});
+        tier0.addActionListener(e -> {EventBus.publish(new ImageUpdateEvent("tierGlyph",null));});
+        tier1.addActionListener(e -> {EventBus.publish(new ImageUpdateEvent("tierGlyph","resources/glyphs/tier/1.png"));});
+        tier2.addActionListener(e -> {EventBus.publish(new ImageUpdateEvent("tierGlyph","resources/glyphs/tier/2.png"));});
+        tier3.addActionListener(e -> {EventBus.publish(new ImageUpdateEvent("tierGlyph","resources/glyphs/tier/3.png"));});
+        tier4.addActionListener(e -> {EventBus.publish(new ImageUpdateEvent("tierGlyph","resources/glyphs/tier/4.png"));});
 
         tier.add(tier0);
         tier.add(tier1);
@@ -238,6 +245,8 @@ public class AttributePanel extends JPanel{
 
         this.add(tier);
     }
+
+    
 
     private void createStatSelection(){
         JPanel attribute = new JPanel();
@@ -256,13 +265,13 @@ public class AttributePanel extends JPanel{
             x.addActionListener(e->{uncheckOtherCheckboxes(x,attributes);});
         }
 
-        parent.updateAttributeImage("str");
-        str.addActionListener(e -> {parent.updateAttributeImage("str");});
-        con.addActionListener(e -> {parent.updateAttributeImage("con");});
-        dex.addActionListener(e -> {parent.updateAttributeImage("dex");});
-        intel.addActionListener(e -> {parent.updateAttributeImage("intel");});
-        wis.addActionListener(e -> {parent.updateAttributeImage("wis");});
-        rizz.addActionListener(e -> {parent.updateAttributeImage("rizz");});
+        publishImageUpdate("attributeImage", "resources/glyphs/stat/strength.png");
+        str.addActionListener(e -> {publishImageUpdate("attributeImage", "resources/glyphs/stat/strength.png");});
+        con.addActionListener(e -> {publishImageUpdate("attributeImage", "resources/glyphs/stat/constitution.png");});
+        dex.addActionListener(e -> {publishImageUpdate("attributeImage", "resources/glyphs/stat/dexterity.png");});
+        intel.addActionListener(e -> {publishImageUpdate("attributeImage", "resources/glyphs/stat/intelligence.png");});
+        wis.addActionListener(e -> {publishImageUpdate("attributeImage", "resources/glyphs/stat/wisdom.png");});
+        rizz.addActionListener(e -> {publishImageUpdate("attributeImage", "resources/glyphs/stat/charisma.png");});
 
         attribute.add(str);
         attribute.add(con);
@@ -272,6 +281,64 @@ public class AttributePanel extends JPanel{
         attribute.add(rizz);
 
         this.add(attribute);
+    }
+
+    private void getDice(int num){
+        switch (num){
+            case 0: publishImageUpdate("cardType",null);break;
+            case 4: publishImageUpdate("cardType","resources/dice/d4.png");break;
+            case 6: publishImageUpdate("cardType","resources/dice/d6.png");break;
+            case 8: publishImageUpdate("cardType","resources/dice/d8.png");break;
+            case 10: publishImageUpdate("cardType","resources/dice/d10.png");break;
+            case 12: publishImageUpdate("cardType","resources/dice/d12.png");
+        }
+
+    }
+
+    private void getArmorClass(int ac) {
+        
+        if(ac == 0){
+            publishImageUpdate("ac1", null);
+            publishImageUpdate("ac2", null);
+            return;
+        }
+
+        if(ac < 10){
+            publishImageUpdate("ac1", "resources/glyphs/ac/"+ac+".png");
+            publishImageUpdate("ac2", null);
+            return;
+        }else if(ac >=10 && ac < 20){
+            publishImageUpdate("ac1", "resources/glyphs/ac/1_.png");
+            ac %= 10;
+            publishImageUpdate("ac2", "resources/glyphs/ac/_"+ac+".png");
+            return;
+        }else if(ac >=20 && ac < 30){
+            publishImageUpdate("ac1", "resources/glyphsac//2_.png");
+            ac %= 10;
+            publishImageUpdate("ac2", "resources/glyphs/ac/_"+ac+".png");
+            return;
+        }else if(ac >=30){
+            publishImageUpdate("ac1", "resources/glyphs/ac/3_.png");
+            ac %= 10;
+            publishImageUpdate("ac2", "resources/glyphs/ac/_"+ac+".png");
+            return;
+        }
+
+    }
+
+    /*public void getAttribute(String type){
+        switch (type){
+            case "str": publishImageUpdate("attributeImage", "resources/glyphs/stat/strength.png");
+            case "con": publishImageUpdate("attributeImage", "resources/glyphs/stat/constitution.png");
+            case "dex": publishImageUpdate("attributeImage", "resources/glyphs/stat/dexterity.png");
+            case "intel": publishImageUpdate("attributeImage", "resources/glyphs/stat/intelligence.png");
+            case "wis": publishImageUpdate("attributeImage", "resources/glyphs/stat/wisdom.png");
+            case "rizz": publishImageUpdate("attributeImage", "resources/glyphs/stat/charisma.png");
+        }
+    }*/
+
+    private void publishImageUpdate(String type, String path){
+        EventBus.publish(new ImageUpdateEvent(type, path));
     }
 
 

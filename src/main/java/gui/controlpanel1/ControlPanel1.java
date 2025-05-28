@@ -13,6 +13,9 @@ import javax.swing.event.DocumentListener;
 
 import gui.CardDesignerGUI;
 import abstractclasses.*;
+import events.EventBus;
+import events.ImageUpdateEvent;
+import events.SelectTypePanelUpdateEvent;
 
 public class ControlPanel1 extends ControlPanel {
 
@@ -28,8 +31,10 @@ public class ControlPanel1 extends ControlPanel {
     private JTextField titleTextField;
     private JTextArea infoTextField;
     private JComboBox<String> titleFontSelection,infoFontSelection;
+    private JCheckBox titleStroke;
 
     public void init(CardDesignerGUI parent) {
+        EventBus.subscribe(SelectTypePanelUpdateEvent.class, this::onTypeUpdate);
         setLayout(null);
         this.parent = parent;
         createButtons();
@@ -47,7 +52,7 @@ public class ControlPanel1 extends ControlPanel {
     
         // Item Art VariableTabbedPane with default state weapons
         weapons = new VariableTabbedPane();
-        weapons.init(parent, 0);
+        weapons.init("weapon");
         selectItemArt = weapons;
     
         // Create title input field and font selector
@@ -59,6 +64,10 @@ public class ControlPanel1 extends ControlPanel {
 
     public String getTitleFont(){
         return (String) titleFontSelection.getSelectedItem();
+    }
+
+    public Boolean getTitleStroke(){
+        return titleStroke.isSelected();
     }
 
     public void compose() {
@@ -83,6 +92,10 @@ public class ControlPanel1 extends ControlPanel {
 
         ColorPicker titleColor = new ColorPicker(parent, 420, 290, 30, 30, "title");
         ColorPicker infoColor = new ColorPicker(parent, 420, 335, 30, 30, "info");
+
+        titleStroke = new JCheckBox("Title Outline",false);
+        titleStroke.setBounds(460,290,100,30);
+        add(titleStroke);
         add(titleColor);
         add(infoColor);
 
@@ -203,57 +216,24 @@ public class ControlPanel1 extends ControlPanel {
         cardComponentTabbedPane.addTab("Choose Effect Background",effectSelect.getScrollPane());
     }
 
-    public void itemArtChangeToType(int type){
+    public void onTypeUpdate(SelectTypePanelUpdateEvent e){
+        itemArtChangeToType(e.type);
+    }
+
+    private void itemArtChangeToType(String type){
+        EventBus.publish(new ImageUpdateEvent("cardType","resources/armor.png"));
         remove(selectItemArt);
 
         switch(type){
-            case 0:{
-                selectItemArt = weapons;
-            }break;
-            case 1:{
-                if(armor == null){
-                    armor = new VariableTabbedPane();
-                    armor.init(parent,1);
-                }
-                selectItemArt = armor;
-            }break;
-            case 3:{
-                if(accessoire==null){
-                    accessoire = new VariableTabbedPane();
-                    accessoire.init(parent,3);
-                }
-                selectItemArt = accessoire;
-            }break;
-            case 4:{
-                if(consumable==null){
-                    consumable = new VariableTabbedPane();
-                    consumable.init(parent,4);
-                }
-                selectItemArt = consumable;
-            }break;
-            
-            case 5:{
-                if(effect==null){
-                    effect = new VariableTabbedPane();
-                    effect.init(parent,5);
-                }
-                selectItemArt = effect;
-            }break;
-            case 6:{
-                if(character==null){
-                    character = new VariableTabbedPane();
-                    character.init(parent,6);
-                }
-                selectItemArt = character;
-            }break;
-            case 10:{
-                if(rune==null){
-                    rune = new VariableTabbedPane();
-                    rune.init(parent,10);
-                }
-                selectItemArt = rune;
-            }break;
+            case "weapon": if(weapons == null) {weapons = new VariableTabbedPane(); weapons.init(type);} selectItemArt = weapons;   break;
+            case "armor": if(armor == null) {armor = new VariableTabbedPane(); armor.init(type);} selectItemArt = armor;   break;
+            case "accessoire": if(accessoire == null) {accessoire = new VariableTabbedPane(); accessoire.init(type);} selectItemArt = accessoire;   break;
+            case "consumable": if(consumable == null) {consumable = new VariableTabbedPane(); consumable.init(type);} selectItemArt = consumable;   break;
+            case "rune": if(rune == null) {rune = new VariableTabbedPane(); rune.init(type);} selectItemArt = rune;   break;
+            //case "effect":
+            //case "character":
         }
+
         add(selectItemArt);
         double scale = parent.getFrameScale();
         selectItemArt.setBounds((int) (390 *scale), (int) (0), (int) (360*scale), (int) (245*scale));
@@ -263,7 +243,7 @@ public class ControlPanel1 extends ControlPanel {
 
 
 
-    public int getItemArtType(){
+    public String getItemArtType(){
         return selectItemArt.getType();
     }
 

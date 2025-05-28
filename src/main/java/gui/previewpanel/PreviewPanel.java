@@ -4,6 +4,9 @@ import javax.swing.*;
 import javax.swing.text.Utilities;
 import javax.swing.text.View;*/
 
+import events.EventBus;
+import events.RepaintPanelEvent;
+import events.CardLoadEvent;
 import gui.*;
 import gui.controlpanel1.FontLoader;
 
@@ -29,6 +32,8 @@ public class PreviewPanel {
 
     
       private void init() {
+        EventBus.subscribe(RepaintPanelEvent.class, this::onRepaintEvent);
+        EventBus.subscribe(CardLoadEvent.class, this::onCardLoad);
         scaledWidth = (int) (parent.getFrameScale() * (750*panelRatio));
         scaledHeight = (int) (parent.getFrameScale() * (1050*panelRatio));
 
@@ -82,7 +87,19 @@ public class PreviewPanel {
         rescale(1.0);  
     }
 
-    
+    private void onRepaintEvent(RepaintPanelEvent e){
+        this.repaint();
+    }
+
+    private void onCardLoad(CardLoadEvent e){
+        titleTextDisplay.setText(e.titleText);
+        titleTextDisplay.setFont(e.titleFont);
+        titleTextDisplay.setForeground(e.titleColor);
+
+        infoTextDisplay.setText(e.infoText);
+        infoTextDisplay.setFont(e.infoFont);
+        infoTextDisplay.setForeground(e.infoColor);
+    }
 
     public JLabel getTitleTextDisplay() {
         return titleTextDisplay;
@@ -174,15 +191,6 @@ public class PreviewPanel {
         
     }
 
-    public void updateArmorClass(String str, String font) {
-        if(str.matches("")){
-            parent.updateArmorClass(0);
-            return;
-        }
-        int ac = Integer.parseInt(str);
-        parent.updateArmorClass(ac);
-        
-    }
 
     public void setRangeAndACFont(String font){
 
@@ -318,14 +326,18 @@ public class PreviewPanel {
 
 
     public void loadDefault() {
-        try{
-            parent.setImageComposer("cardFrame",ImageIO.read(new File("resources/frame/default.png")));
-            parent.setImageComposer("cardTitle",ImageIO.read(new File("resources/title/default.png")));
-            parent.setImageComposer("cardTextbox",ImageIO.read(new File("resources/textbox/default.png")));
-            parent.setImageComposer("cardBackground",ImageIO.read(new File("resources/background/default.png")));
-        }catch(IOException e){
-            JOptionPane.showMessageDialog(parent.getFrame(), "Error loading default images.","Error",JOptionPane.ERROR_MESSAGE);
-        }
+        EventBus.publish(new CardLoadEvent(
+            "resources/card_components/frame/default.png",
+            "resources/card_components/textbox/default.png",
+            "resources/card_components/background/default.png",
+            "resources/card_components/title/default.png",
+            "",
+            "",
+            "",
+            null,
+            null,
+            Color.WHITE,
+            Color.WHITE));
     }
 
 }

@@ -1,5 +1,12 @@
 C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\abstractclasses\ControlPanel.java
 C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\abstractclasses\ImageBrowser.java
+C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\events\CardLoadEvent.java
+C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\events\ClearUnrelatedImagesEvent.java
+C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\events\EventBus.java
+C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\events\EventListener.java
+C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\events\ImageUpdateEvent.java
+C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\events\RepaintPanelEvent.java
+C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\events\SelectTypePanelUpdateEvent.java
 C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\gui\CardDesignerGUI.java
 C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\gui\controlpanel1\AttributePanel.java
 C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\gui\controlpanel1\CardImageBrowser.java
@@ -12,6 +19,6 @@ C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\gui\controlpanel
 C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\gui\controlpanel1\VariableTabbedPane.java
 C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\gui\controlpanel2\ControlPanel2.java
 C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\gui\ImageComposer.java
-C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\gui\previewpanel\OutlinedLabel.java
+C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\gui\MenuManager.java
 C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\gui\previewpanel\PreviewPanel.java
 C:\Users\heile\Documents\Programming\CardDesigner\src\main\java\gui\SaveLoader.java

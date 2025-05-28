@@ -1,6 +1,9 @@
 package gui.controlpanel1;
 import javax.swing.*;
 
+import events.EventBus;
+import events.SelectTypePanelUpdateEvent;
+//import events.ImageUpdateEvent;
 import gui.CardDesignerGUI;
 
 import java.awt.*;
@@ -76,30 +79,10 @@ public class SelectTypePanel extends JPanel{
 
         uncheckOtherCheckboxes(selected, checkboxes);
         this.remove(attributePanel);
-        String type = selected.getText();
-        switch(type) {
-            case "Weapon":      parent.onButtonWeapon(); 
-                                this.attributePanel = new AttributePanel(parent, "weapon");
-                                break;
-            case "Armor":       parent.onButtonArmor(); 
-                                this.attributePanel = new AttributePanel(parent, "armor");
-                                break;
-            case "Consumable":  parent.onButtonConsumable(); 
-                                this.attributePanel = new AttributePanel(parent, "consumable"); 
-                                break;
-            case "Clothing":    parent.onButtonClothing(); 
-                                this.attributePanel = new AttributePanel(parent, "other");
-                                break;
-            case "Accessoire":  parent.onButtonAccessoire(); 
-                                this.attributePanel = new AttributePanel(parent, "other");
-                                break;
-            case "Rune":        parent.onButtonRune();
-                                this.attributePanel = new AttributePanel(parent, "rune");
-                                break;
-            case "Effect":      parent.onButtonEffect();
-                                this.attributePanel = new AttributePanel(parent, "effect");
-                                break;
-        }
+        String type = selected.getText().toLowerCase();
+        EventBus.publish(new SelectTypePanelUpdateEvent(type));
+        this.attributePanel = new AttributePanel(parent, type);
+    
         this.add(attributePanel);
         this.repaint();
         ;

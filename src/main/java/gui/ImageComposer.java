@@ -1,11 +1,26 @@
 package gui;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import events.EventBus;
+import events.ImageUpdateEvent;
+import events.RepaintPanelEvent;
+import events.CardLoadEvent;
+import events.ClearUnrelatedImagesEvent;
 
 import java.awt.*;
 
 public class ImageComposer {
     private BufferedImage cardFrame, cardBackground, cardTextbox, cardTitle,cardItemImage, attributeImage,cardType,handedImage, tierGlyph, weaponType, runeSlot,runeCut,armorclass1,armorclass2,effectImage;
+
+    public ImageComposer(){
+        EventBus.subscribe(ImageUpdateEvent.class, this::onImageUpdate);
+        EventBus.subscribe(CardLoadEvent.class, this::onLoadCard);
+    }
 
     public BufferedImage getTier(){
         return tierGlyph;
@@ -65,7 +80,7 @@ public class ImageComposer {
         }catch(IOException ignore){}*/
 
         if (cardItemImage != null) {
-            g2d.drawImage(cardItemImage, (int)(120*scale), (int)(130*scale),  (int)(510*scale),  (int)(510*scale), null);
+            g2d.drawImage(cardItemImage, (int)(90*scale), (int)(130*scale),  (int)(570*scale),  (int)(570*scale), null);
         }
 
         if (cardTextbox != null) {
@@ -73,7 +88,7 @@ public class ImageComposer {
         }
 
         if (cardType != null) {
-            g2d.drawImage(cardType, (int)(530*scale), (int)(465*scale),  (int)(180*scale),  (int)(180*scale), null);
+            g2d.drawImage(cardType, (int)(530*scale), (int)(490*scale),  (int)(180*scale),  (int)(180*scale), null);
         }
 
         if (tierGlyph != null) {
@@ -81,11 +96,11 @@ public class ImageComposer {
         }
 
         if (weaponType != null) {
-            g2d.drawImage(weaponType, (int) (30*scale), (int)(410*scale), (int) (213*scale), (int) (199*scale), null);
+            g2d.drawImage(weaponType, (int) (30*scale), (int)(435*scale), (int) (213*scale), (int) (199*scale), null);
         }
 
         if (attributeImage != null) {
-            g2d.drawImage(attributeImage, (int) (60*scale), (int)(410*scale), (int) (140*scale), (int) (140*scale), null);
+            g2d.drawImage(attributeImage, (int) (60*scale), (int)(435*scale), (int) (140*scale), (int) (140*scale), null);
         }
 
         if (runeSlot != null) {
@@ -97,39 +112,78 @@ public class ImageComposer {
         }
 
         if (runeCut != null) {
-            g2d.drawImage(runeCut, 0, (int)(440*scale), targetWidth, (int)(610*scale), null);
+            g2d.drawImage(runeCut, 0, 0, targetWidth, targetHeight, null);
         }
 
         if (armorclass1 != null) {
-            g2d.drawImage(armorclass1, (int)(570*scale), (int)(520*scale), (int)(100*scale), (int)(100*scale), null);
+            g2d.drawImage(armorclass1, (int)(570*scale), (int)(545*scale), (int)(100*scale), (int)(100*scale), null);
         }
 
         if (armorclass2 != null) {
-            g2d.drawImage(armorclass2, (int)(570*scale), (int)(520*scale), (int)(100*scale), (int)(100*scale), null);
+            g2d.drawImage(armorclass2, (int)(570*scale), (int)(545*scale), (int)(100*scale), (int)(100*scale), null);
         }
 
 
         return finalImage;
     }
 
-    public void setField(String field, BufferedImage i){
+    public void onClearUnrelatedImages(ClearUnrelatedImagesEvent e){
+        setField("cardType",null);
+        setField("ac1",null);
+        setField("ac2",null);
+        setField("cardItemImage",null);
+        setField("runeSlot",null);
+        setField("weaponType",null);
+        setField("attributeImage",null);
+        setField("effectImage",null);
+    }
+
+    public void onImageUpdate(ImageUpdateEvent e){
+        setField(e.type,e.path);
+    }
+
+    public void onLoadCard(CardLoadEvent e){
+            cardFrame = getImageFromFile(e.frameImage) ;
+            cardBackground = getImageFromFile(e.backgroundImage) ;
+            cardTextbox = getImageFromFile(e.textboxImage) ;
+            cardTitle = getImageFromFile(e.titleImage) ;
+    }
+
+
+    private void setField(String field, String path){
         switch(field){
-            case "cardFrame": cardFrame = i ;break;
-            case "cardBackground": cardBackground = i ;break;
-            case "cardTextbox": cardTextbox = i ;break;
-            case "cardTitle": cardTitle = i ;break;
-            case "cardItemImage": cardItemImage = i ;break;
-            case "attributeImage": attributeImage = i ;break;
-            case "cardType": cardType = i ;break;
-            case "handedImage": handedImage = i ;break;
-            case "tierGlyph": tierGlyph = i ;break;
-            case "runeSlot": runeSlot = i ;break;
-            case "weaponType": weaponType = i ;break;
-            case "runeCutTemplate": runeCut = i ;break;
-            case "ac1": armorclass1 = i ;break;
-            case "ac2": armorclass2 = i ;break;
-            case "effect": effectImage = i ;break;
+            case "cardFrame": cardFrame = getImageFromFile(path) ;break;
+            case "cardBackground": cardBackground = getImageFromFile(path) ;break;
+            case "cardTextbox": cardTextbox = getImageFromFile(path) ;break;
+            case "cardTitle": cardTitle = getImageFromFile(path) ;break;
+            case "cardItemImage": cardItemImage = getImageFromFile(path) ;break;
+            case "attributeImage": attributeImage = getImageFromFile(path) ;break;
+            case "cardType": cardType = getImageFromFile(path) ;break;
+            case "handedImage": handedImage = getImageFromFile(path) ;break;
+            case "tierGlyph": tierGlyph = getImageFromFile(path) ;break;
+            case "runeSlot": runeSlot = getImageFromFile(path) ;break;
+            case "weaponType": weaponType = getImageFromFile(path) ;break;
+            case "runeCutTemplate": runeCut = getImageFromFile(path) ;break;
+            case "ac1": armorclass1 = getImageFromFile(path) ;break;
+            case "ac2": armorclass2 = getImageFromFile(path) ;break;
+            case "effect": effectImage = getImageFromFile(path) ;break;
         }
+
+        EventBus.publish(new RepaintPanelEvent());
+    }
+
+    private BufferedImage getImageFromFile(String path){
+        if(path == null){
+            return null;
+        }
+
+        BufferedImage i = null;
+         try{
+            i = ImageIO.read(new File(path));
+        }catch(IOException e){
+            throw new Error("Error on ImageComposer::getImageFromFile ("+path+"); File not found");
+        }
+        return i;
     }
 
     
