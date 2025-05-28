@@ -67,7 +67,6 @@ public class AttributePanel extends JPanel{
         this.add(input);
         createRuneSlotSelection();
         createTierSelection();
-        //createStatSelection();
 
     }
 
