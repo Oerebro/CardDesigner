@@ -6,14 +6,13 @@ import javax.swing.text.View;*/
 
 import events.EventBus;
 import events.RepaintPanelEvent;
+import events.SelectTypePanelUpdateEvent;
 import events.CardLoadEvent;
+import events.ClearUnrelatedImagesEvent;
 import gui.*;
 import gui.controlpanel1.FontLoader;
 
 import java.awt.*;
-import java.io.File;
-import javax.imageio.ImageIO;
-import java.io.IOException;
 
 public class PreviewPanel {
     public JPanel panel;
@@ -31,9 +30,10 @@ public class PreviewPanel {
     }
 
     
-      private void init() {
+    private void init() {
         EventBus.subscribe(RepaintPanelEvent.class, this::onRepaintEvent);
         EventBus.subscribe(CardLoadEvent.class, this::onCardLoad);
+        EventBus.subscribe(SelectTypePanelUpdateEvent.class, this::onTypeChange);
         scaledWidth = (int) (parent.getFrameScale() * (750*panelRatio));
         scaledHeight = (int) (parent.getFrameScale() * (1050*panelRatio));
 
@@ -307,6 +307,10 @@ public class PreviewPanel {
         infoTextDisplay.setBounds((int) (65*scale*panelRatio), (int) (655*scale*panelRatio), (int) (620*scale*panelRatio), (int) (340*scale*panelRatio));
         armorClassDisplay.setBounds((int) (565*scale*panelRatio), (int) (485*scale*panelRatio), (int) (120*scale*panelRatio), (int) (120*scale*panelRatio));
 
+    }
+
+    private void onTypeChange(SelectTypePanelUpdateEvent e){
+        EventBus.publish(new ClearUnrelatedImagesEvent());
     }
 
     public JTextArea cloneTextArea(JTextArea area) {

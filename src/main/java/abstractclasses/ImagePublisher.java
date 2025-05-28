@@ -7,5 +7,6 @@ public abstract class ImagePublisher {
     protected String type,path;
     protected void publishImageUpdate(String type, String path) {
         EventBus.publish(new ImageUpdateEvent(type,path));
+        System.out.println(type+" "+path);
     }
 }

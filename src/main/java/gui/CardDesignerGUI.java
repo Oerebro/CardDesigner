@@ -405,15 +405,6 @@ public class CardDesignerGUI {
         catch (UnsupportedLookAndFeelException e) {
         // handle exception
         }
-        /*catch (ClassNotFoundException e) {
-        // handle exception
-        }
-        catch (InstantiationException e) {
-        // handle exception
-        }
-        catch (IllegalAccessException e) {
-        // handle exception
-        }*/
 
         //run ui thread
         SwingUtilities.invokeLater(CardDesignerGUI::new);

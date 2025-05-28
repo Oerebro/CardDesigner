@@ -26,7 +26,7 @@ public class SelectTypePanel extends JPanel{
         JPanel typePanel = new JPanel();
         typePanel.setBorder(BorderFactory.createTitledBorder("Item Type"));
         typePanel.setLayout(new GridLayout(0, 2, 5, 5));
-        JCheckBox isWeapon = new JCheckBox("Weapon", true);
+        JCheckBox isWeapon = new JCheckBox("Weapon", true);       
         JCheckBox isArmor = new JCheckBox("Armor", false);
         JCheckBox isClothing = new JCheckBox("Clothing", false);
         JCheckBox isAccessoire = new JCheckBox("Accessoire", false);
@@ -34,7 +34,6 @@ public class SelectTypePanel extends JPanel{
         JCheckBox isRune = new JCheckBox("Rune", false);
         JCheckBox isEffect = new JCheckBox("Effect", false);
         JCheckBox hasRuneCut = new JCheckBox("Show Rune Cut Line", false);
-
         hasRuneCut.addActionListener(e->{parent.updateRuneCut(hasRuneCut.isSelected());});
         // Add the checkboxes to the panel
         typePanel.add(isWeapon);
@@ -62,6 +61,7 @@ public class SelectTypePanel extends JPanel{
     }
 
     private ActionListener createCheckboxListener(JCheckBox selectedCheckbox, JCheckBox[] allCheckboxes) {
+        //EventBus.publish(new ClearUnrelatedImagesEvent());
         return e -> {
             uncheckOtherCheckboxes(selectedCheckbox, allCheckboxes);
             updatePanel(selectedCheckbox, allCheckboxes);

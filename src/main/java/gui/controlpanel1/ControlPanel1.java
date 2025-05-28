@@ -13,6 +13,7 @@ import javax.swing.event.DocumentListener;
 
 import gui.CardDesignerGUI;
 import abstractclasses.*;
+import events.ClearUnrelatedImagesEvent;
 import events.EventBus;
 import events.ImageUpdateEvent;
 import events.SelectTypePanelUpdateEvent;
@@ -221,7 +222,9 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     private void itemArtChangeToType(String type){
-        EventBus.publish(new ImageUpdateEvent("cardType","resources/armor.png"));
+        EventBus.publish(new ClearUnrelatedImagesEvent());
+        System.out.println("resources/"+type+".png");
+        EventBus.publish(new ImageUpdateEvent("cardType","resources/"+type+".png"));
         remove(selectItemArt);
 
         switch(type){

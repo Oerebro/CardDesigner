@@ -18,8 +18,10 @@ public class ImageComposer {
     private BufferedImage cardFrame, cardBackground, cardTextbox, cardTitle,cardItemImage, attributeImage,cardType,handedImage, tierGlyph, weaponType, runeSlot,runeCut,armorclass1,armorclass2,effectImage;
 
     public ImageComposer(){
+        EventBus.subscribe(ClearUnrelatedImagesEvent.class, this::onClearUnrelatedImages);
         EventBus.subscribe(ImageUpdateEvent.class, this::onImageUpdate);
         EventBus.subscribe(CardLoadEvent.class, this::onLoadCard);
+        
     }
 
     public BufferedImage getTier(){
@@ -158,7 +160,7 @@ public class ImageComposer {
             case "cardTitle": cardTitle = getImageFromFile(path) ;break;
             case "cardItemImage": cardItemImage = getImageFromFile(path) ;break;
             case "attributeImage": attributeImage = getImageFromFile(path) ;break;
-            case "cardType": cardType = getImageFromFile(path) ;break;
+            case "cardType": cardType = getImageFromFile(path) ;System.out.println(path);break;
             case "handedImage": handedImage = getImageFromFile(path) ;break;
             case "tierGlyph": tierGlyph = getImageFromFile(path) ;break;
             case "runeSlot": runeSlot = getImageFromFile(path) ;break;
