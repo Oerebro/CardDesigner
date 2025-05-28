@@ -1,9 +1,6 @@
 package gui.controlpanel1;
 
-import java.io.File;
 import abstractclasses.*;
-import events.EventBus;
-import events.ImageUpdateEvent;
 
 public class ItemArtImageBrowser extends ImageBrowser{
 
@@ -16,9 +13,5 @@ public class ItemArtImageBrowser extends ImageBrowser{
 
         init();
         rescale(1.0);
-    }
-
-    protected void updateImage(File file) {
-        EventBus.publish(new ImageUpdateEvent("cardItemImage",file.getPath()));
     }
 }

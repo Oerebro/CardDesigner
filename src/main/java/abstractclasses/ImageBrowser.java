@@ -2,6 +2,8 @@ package abstractclasses;
 
 import javax.swing.*;
 
+import events.EventBus;
+import events.ImageUpdateEvent;
 import gui.CardDesignerGUI;
 import gui.controlpanel1.IconLabel;
 
@@ -11,12 +13,11 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;;
 
-public abstract class ImageBrowser {
+public abstract class ImageBrowser extends ImagePublisher {
 
     protected CardDesignerGUI parent;
     protected JPanel filePanel;
     protected JScrollPane scrollPane;
-    protected String path;
     protected int width = 0, height = 0, iconSize = 64, x, y;
 
     protected CardDesignerGUI getParentGUI() {
@@ -82,13 +83,13 @@ public abstract class ImageBrowser {
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                updateImage(file);
+                publishImageUpdate(type,file.getPath());
             }
         });
         return label;
     }
 
     // Abstract methods for subclasses to implement
-    protected abstract void updateImage(File file);
+    
 }
 
