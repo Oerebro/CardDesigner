@@ -1,14 +1,7 @@
 package gui.controlpanel1;
 
 import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.*;
-
-import gui.*;
 import abstractclasses.*;
-import events.EventBus;
-import events.ImageUpdateEvent;
 
 import java.awt.Color;
 
@@ -28,8 +21,8 @@ public class CardImageBrowser extends ImageBrowser{
 
     @Override
     protected IconLabel addMouseListener(IconLabel label, File file) {
-        label.setOpaque(true);  // Important: This allows the background color to show.
-        label.setBackground(Color.LIGHT_GRAY);  // Set light grey background.
+        label.setOpaque(true);
+        label.setBackground(Color.LIGHT_GRAY);
 
         label.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override

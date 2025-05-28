@@ -85,7 +85,6 @@ public class SelectTypePanel extends JPanel{
     
         this.add(attributePanel);
         this.repaint();
-        ;
     }
 
 
