@@ -3,6 +3,7 @@ import javax.swing.*;
 
 import events.EventBus;
 import events.SelectTypePanelUpdateEvent;
+import events.ClearUnrelatedImagesEvent;
 //import events.ImageUpdateEvent;
 import gui.CardDesignerGUI;
 
@@ -63,7 +64,6 @@ public class SelectTypePanel extends JPanel{
 
     private ActionListener createCheckboxListener(JCheckBox selectedCheckbox, JCheckBox[] allCheckboxes) {
         return e -> {
-            uncheckOtherCheckboxes(selectedCheckbox, allCheckboxes);
             updatePanel(selectedCheckbox, allCheckboxes);
         };
     }
@@ -80,6 +80,7 @@ public class SelectTypePanel extends JPanel{
         uncheckOtherCheckboxes(selected, checkboxes);
         this.remove(attributePanel);
         String type = selected.getText().toLowerCase();
+        EventBus.publish(new ClearUnrelatedImagesEvent());
         EventBus.publish(new SelectTypePanelUpdateEvent(type));
         this.attributePanel = new AttributePanel(parent, type);
     

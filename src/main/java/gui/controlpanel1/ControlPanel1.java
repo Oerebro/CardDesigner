@@ -15,6 +15,8 @@ import gui.CardDesignerGUI;
 import abstractclasses.*;
 import events.EventBus;
 import events.ImageUpdateEvent;
+import events.InfoFontUpdate;
+import events.InfoTextUpdate;
 import events.SelectTypePanelUpdateEvent;
 
 public class ControlPanel1 extends ControlPanel {
@@ -152,11 +154,10 @@ public class ControlPanel1 extends ControlPanel {
 
     private void updateInfoPreview() {
         String text = infoTextField.getText();
-        String formattedText = "<html>" + text.replaceAll("\n", "<br>") + "</html>";
-    
         String selectedFontName = (String) infoFontSelection.getSelectedItem();
-        Font font = new Font(selectedFontName, Font.PLAIN, 20); 
-        parent.updateInfoTextDisplay(formattedText, font);
+        Font font = new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 20); 
+        EventBus.publish(new InfoFontUpdate(new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 20)));
+        EventBus.publish(new InfoTextUpdate(text));
         
     }
 
@@ -177,6 +178,8 @@ public class ControlPanel1 extends ControlPanel {
         for (String fontName : fonts.keySet()) {
             infoFontSelection.addItem(fontName);
         }
+
+        EventBus.publish(new InfoFontUpdate(new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 20)));
     }
 
     //this gets all fonts in folder and returns a map for the dropdown menu
@@ -202,12 +205,12 @@ public class ControlPanel1 extends ControlPanel {
     private void createCardComponentSelection(){
         cardComponentTabbedPane = new JTabbedPane();
 
-        frameSelect = new CardImageBrowser(parent,"resources/frame",360,90,600,40, 64,'f');
-        backgroundSelect = new CardImageBrowser(parent,"resources/background",360,90,600,40, 64,'b'); 
-        textboxSelect = new CardImageBrowser(parent,"resources/textbox",360,90,600,40, 64,'t');
-        titleSelect = new CardImageBrowser(parent,"resources/title",360,90,600,40, 64,'h');
+        frameSelect = new CardImageBrowser("resources/card_components/frame",360,90,600,40, 64,"cardFrame");
+        backgroundSelect = new CardImageBrowser("resources/card_components/background",360,90,600,40, 64,"cardBackground"); 
+        textboxSelect = new CardImageBrowser("resources/card_components/textbox",360,90,600,40, 64,"cardTextbox");
+        titleSelect = new CardImageBrowser("resources/card_components/title",360,90,600,40, 64,"cardTitle");
 
-        effectSelect = new CardImageBrowser(parent,"resources/effects",360,90,600,40, 64,'b');
+        effectSelect = new CardImageBrowser("resources/card_components/effects",360,90,600,40, 64,"cardBackground");
 
         cardComponentTabbedPane.addTab("Choose Frame",frameSelect.getScrollPane());
         cardComponentTabbedPane.addTab("Choose Background",backgroundSelect.getScrollPane());
@@ -221,7 +224,8 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     private void itemArtChangeToType(String type){
-        EventBus.publish(new ImageUpdateEvent("cardType","resources/armor.png"));
+        System.out.println("ControlPanel1::itemArtChangeToType");
+        EventBus.publish(new ImageUpdateEvent("cardType","resources/"+type+".png"));
         remove(selectItemArt);
 
         switch(type){

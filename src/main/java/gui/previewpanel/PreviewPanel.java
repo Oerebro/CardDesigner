@@ -1,19 +1,18 @@
 package gui.previewpanel;
 import javax.swing.*;
 /*import javax.swing.text.BadLocationException;
-import javax.swing.text.Utilities;
-import javax.swing.text.View;*/
+import javax.swing.text.Utilities;*/
+import javax.swing.text.View;
 
 import events.EventBus;
+import events.InfoTextUpdate;
 import events.RepaintPanelEvent;
 import events.CardLoadEvent;
 import gui.*;
 import gui.controlpanel1.FontLoader;
 
 import java.awt.*;
-import java.io.File;
-import javax.imageio.ImageIO;
-import java.io.IOException;
+
 
 public class PreviewPanel {
     public JPanel panel;
@@ -54,6 +53,8 @@ public class PreviewPanel {
         object.setLayout(null);
         object.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
 
+
+
         titleTextDisplay = new JLabel("", SwingConstants.CENTER);
         titleTextDisplay.setOpaque(false);
         titleTextDisplay.setForeground(Color.GRAY);
@@ -75,6 +76,11 @@ public class PreviewPanel {
 
         titleTextDisplay.setForeground(Color.WHITE);
         infoTextDisplay.setForeground(Color.WHITE);
+
+        /*testDisplay = new JScalingTextPane(10, 20);
+        testDisplay.setBounds2(65,100,300,200);
+        object.add(testDisplay);*/
+
 
         object.add(titleTextDisplay);
         object.add(infoTextDisplay);
@@ -175,6 +181,7 @@ public class PreviewPanel {
         font = FontLoader.loadFont(font.getName(), 40f);
         Font scaledFont = getScaledFontLabel(str, font, (int)(titleTextDisplay.getWidth()), Integer.MAX_VALUE, titleTextDisplay);
         
+        
         titleTextDisplay.setText("<html><div style='text-align:center;'>" + str + "</div></html>");
         titleTextDisplay.setFont(scaledFont);
         titleTextDisplay.repaint();
@@ -206,6 +213,7 @@ public class PreviewPanel {
         String str = htmlToPlainText(str1);
         //int lineCount = infoTextDisplay.getLineCount()+1; 
         int lineCount = lineCounter(str1);
+        
         int boxHeight = infoTextDisplay.getHeight();
 
         //FontMetrics fm = infoTextDisplay.getFontMetrics(font);
@@ -227,15 +235,22 @@ public class PreviewPanel {
         }
 
         font = FontLoader.loadFont(font.getName(), font.getSize());
-        infoTextDisplay.setText(htmlToPlainText(str));
-        infoTextDisplay.setFont(font);
-        infoTextDisplay.repaint();
+        //infoTextDisplay.setText(htmlToPlainText(str));
+        //infoTextDisplay.setFont(font);
+        
+        EventBus.publish(new InfoTextUpdate(str));
+        //testDisplay.setFont(font);
+        //testDisplay.repaint();
+        
         
     }
 
     private int lineCounter(String str){
         return str.split("<br>").length;
     }
+
+    
+
 
     private static String htmlToPlainText(String html) {
         if (html == null) return "";
@@ -247,7 +262,9 @@ public class PreviewPanel {
             .replaceAll("(?i)<div.*?>", "")
             .replaceAll("(?i)</div>", "\n");
 
-        text = text.replaceAll("<[^>]+>", "");
+        //text = text.replaceAll("<[^>]+>", "");
+        text = text.replaceAll("<html>","");
+        text = text.replaceAll("</html>","");
 
         text = text.replace("&nbsp;", " ")
                 .replace("&lt;", "<")

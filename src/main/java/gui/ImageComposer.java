@@ -5,21 +5,37 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JPanel;
 
 import events.EventBus;
 import events.ImageUpdateEvent;
+import events.InfoTextUpdate;
 import events.RepaintPanelEvent;
 import events.CardLoadEvent;
 import events.ClearUnrelatedImagesEvent;
+import events.InfoTextUpdate;
 
 import java.awt.*;
+import gui.previewpanel.JScalingTextPane;
 
 public class ImageComposer {
     private BufferedImage cardFrame, cardBackground, cardTextbox, cardTitle,cardItemImage, attributeImage,cardType,handedImage, tierGlyph, weaponType, runeSlot,runeCut,armorclass1,armorclass2,effectImage;
+    private JScalingTextPane infoTextPane;
 
     public ImageComposer(){
         EventBus.subscribe(ImageUpdateEvent.class, this::onImageUpdate);
         EventBus.subscribe(CardLoadEvent.class, this::onLoadCard);
+        EventBus.subscribe(InfoTextUpdate.class, this::onInfoTextUpdate);
+        EventBus.subscribe(ClearUnrelatedImagesEvent.class, this::onClearUnrelatedImages);
+
+        
+
+        infoTextPane = new JScalingTextPane(10, 25);
+        infoTextPane.setBounds2(65,655,620,340);
+        infoTextPane.setSize(620,340);
+        
+
+
     }
 
     public BufferedImage getTier(){
@@ -123,11 +139,21 @@ public class ImageComposer {
             g2d.drawImage(armorclass2, (int)(570*scale), (int)(545*scale), (int)(100*scale), (int)(100*scale), null);
         }
 
+        BufferedImage infoText = new BufferedImage((int)(620*scale),  (int)(340*scale), BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D labelGraphics = infoText.createGraphics();
+        infoTextPane.setSize((int)(620 * scale), (int)(340 * scale));
+        infoTextPane.doLayout();
+        infoTextPane.validate();
+        infoTextPane.printAll(labelGraphics);
+        labelGraphics.dispose();
+        g2d.drawImage(infoText, (int) (65*scale), (int)(655*scale),  (int)(620*scale),  (int)(340*scale), null);
 
         return finalImage;
     }
 
     public void onClearUnrelatedImages(ClearUnrelatedImagesEvent e){
+        System.out.println("ImageComposer::clearUnrelatedImages");
         setField("cardType",null);
         setField("ac1",null);
         setField("ac2",null);
@@ -147,6 +173,11 @@ public class ImageComposer {
             cardBackground = getImageFromFile(e.backgroundImage) ;
             cardTextbox = getImageFromFile(e.textboxImage) ;
             cardTitle = getImageFromFile(e.titleImage) ;
+    }
+
+    private void onInfoTextUpdate(InfoTextUpdate e){
+        System.out.println("ImageComposer");
+        EventBus.publish(new RepaintPanelEvent());
     }
 
 
