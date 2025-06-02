@@ -23,19 +23,10 @@ public class ImageComposer {
     private JScalingTextPane infoTextPane;
 
     public ImageComposer(){
+        EventBus.subscribe(ClearUnrelatedImagesEvent.class, this::onClearUnrelatedImages);
         EventBus.subscribe(ImageUpdateEvent.class, this::onImageUpdate);
         EventBus.subscribe(CardLoadEvent.class, this::onLoadCard);
-        EventBus.subscribe(InfoTextUpdate.class, this::onInfoTextUpdate);
-        EventBus.subscribe(ClearUnrelatedImagesEvent.class, this::onClearUnrelatedImages);
-
         
-
-        infoTextPane = new JScalingTextPane(10, 25);
-        infoTextPane.setBounds2(65,655,620,340);
-        infoTextPane.setSize(620,340);
-        
-
-
     }
 
     public BufferedImage getTier(){
@@ -189,7 +180,7 @@ public class ImageComposer {
             case "cardTitle": cardTitle = getImageFromFile(path) ;break;
             case "cardItemImage": cardItemImage = getImageFromFile(path) ;break;
             case "attributeImage": attributeImage = getImageFromFile(path) ;break;
-            case "cardType": cardType = getImageFromFile(path) ;break;
+            case "cardType": cardType = getImageFromFile(path) ;System.out.println(path);break;
             case "handedImage": handedImage = getImageFromFile(path) ;break;
             case "tierGlyph": tierGlyph = getImageFromFile(path) ;break;
             case "runeSlot": runeSlot = getImageFromFile(path) ;break;

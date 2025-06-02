@@ -5,6 +5,13 @@
       "type": "java",
       "name": "CardDesignerGUI",
       "request": "launch",
+      "mainClass": "main.java.gui.CardDesignerGUI",
+      "projectName": "CardDesigner_534b207e"
+    },
+    {
+      "type": "java",
+      "name": "CardDesignerGUI",
+      "request": "launch",
       "mainClass": "gui.CardDesignerGUI",
       "projectName": "card-editor"
     },

@@ -13,6 +13,7 @@ import javax.swing.event.DocumentListener;
 
 import gui.CardDesignerGUI;
 import abstractclasses.*;
+import events.ClearUnrelatedImagesEvent;
 import events.EventBus;
 import events.ImageUpdateEvent;
 import events.InfoFontUpdate;

@@ -16,7 +16,7 @@ public class AttributePanel extends JPanel{
         this.parent = parent; 
         this.setLayout(new GridLayout(0, 1, 5, 5));
 
-        //
+        //EventBus.publish(new ClearUnrelatedImagesEvent());
         
         switch(type){
             case "weapon": createWeaponPanel();break;
