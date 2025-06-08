@@ -57,16 +57,16 @@ public class PreviewPanel {
 
 
 
-        titleTextDisplay = new JLabel("", SwingConstants.CENTER);
+        /*titleTextDisplay = new JLabel("", SwingConstants.CENTER);
         titleTextDisplay.setOpaque(false);
-        titleTextDisplay.setForeground(Color.GRAY);
+        titleTextDisplay.setForeground(Color.GRAY);*/
 
-        infoTextDisplay = new JTextArea();
+        /*infoTextDisplay = new JTextArea();
         infoTextDisplay.setLineWrap(true);
         infoTextDisplay.setWrapStyleWord(true);
         infoTextDisplay.setEditable(false);
         infoTextDisplay.setFocusable(false);
-        infoTextDisplay.setBorder(null);
+        infoTextDisplay.setBorder(null);*/
 
         armorClassDisplay = new JLabel("", SwingConstants.CENTER);
 
@@ -74,18 +74,18 @@ public class PreviewPanel {
 
         armorClassDisplay.setForeground(Color.BLACK);
 
-        infoTextDisplay.setOpaque(false);
+        //infoTextDisplay.setOpaque(false);
 
-        titleTextDisplay.setForeground(Color.WHITE);
-        infoTextDisplay.setForeground(Color.WHITE);
+        //titleTextDisplay.setForeground(Color.WHITE);
+        //infoTextDisplay.setForeground(Color.WHITE);
 
         /*testDisplay = new JScalingTextPane(10, 20);
         testDisplay.setBounds2(65,100,300,200);
         object.add(testDisplay);*/
 
 
-        object.add(titleTextDisplay);
-        object.add(infoTextDisplay);
+        //object.add(titleTextDisplay);
+        //object.add(infoTextDisplay);
         object.add(armorClassDisplay);
 
         panel = new JPanel(new BorderLayout());
@@ -100,13 +100,13 @@ public class PreviewPanel {
     }
 
     private void onCardLoad(CardLoadEvent e){
-        titleTextDisplay.setText(e.titleText);
+        /*titleTextDisplay.setText(e.titleText);
         titleTextDisplay.setFont(e.titleFont);
         titleTextDisplay.setForeground(e.titleColor);
 
         infoTextDisplay.setText(e.infoText);
         infoTextDisplay.setFont(e.infoFont);
-        infoTextDisplay.setForeground(e.infoColor);
+        infoTextDisplay.setForeground(e.infoColor);*/
     }
 
     public JLabel getTitleTextDisplay() {
@@ -223,11 +223,6 @@ public class PreviewPanel {
         int lineHeight = (int) font.getSize2D();
         int availableLines = (boxHeight / lineHeight)-lineCount-1;
 
-        //System.out.println("height: "+boxHeight+" lineheight: "+lineHeight);
-        //System.out.println("total lines: "+(boxHeight/lineHeight)+" used lines: "+lineCount+" available lines: "+availableLines);
-        
-
-
         if(availableLines <= 1){
             while (lineHeight * lineCount > boxHeight && font.getSize() > 1) {
                 lineHeight = (int) font.getSize2D();
@@ -322,8 +317,8 @@ public class PreviewPanel {
     }
 
     public void rescaleComponents(double scale){
-        titleTextDisplay.setBounds((int) (80*scale*panelRatio), (int) (20*scale*panelRatio), (int) (590*scale*panelRatio), (int) (80*scale*panelRatio));
-        infoTextDisplay.setBounds((int) (65*scale*panelRatio), (int) (655*scale*panelRatio), (int) (620*scale*panelRatio), (int) (340*scale*panelRatio));
+        //titleTextDisplay.setBounds((int) (80*scale*panelRatio), (int) (20*scale*panelRatio), (int) (590*scale*panelRatio), (int) (80*scale*panelRatio));
+        //infoTextDisplay.setBounds((int) (65*scale*panelRatio), (int) (655*scale*panelRatio), (int) (620*scale*panelRatio), (int) (340*scale*panelRatio));
         armorClassDisplay.setBounds((int) (565*scale*panelRatio), (int) (485*scale*panelRatio), (int) (120*scale*panelRatio), (int) (120*scale*panelRatio));
 
     }
@@ -350,10 +345,10 @@ public class PreviewPanel {
 
     public void loadDefault() {
         EventBus.publish(new CardLoadEvent(
-            "resources/card_components/frame/default.png",
-            "resources/card_components/textbox/default.png",
-            "resources/card_components/background/default.png",
-            "resources/card_components/title/default.png",
+            "resources/img/card_components/frame/default.png",
+            "resources/img/card_components/textbox/default.png",
+            "resources/img/card_components/background/default.png",
+            "resources/img/card_components/title/default.png",
             "",
             "",
             "",

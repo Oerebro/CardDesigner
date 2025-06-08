@@ -1,6 +1,7 @@
 package gui;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,6 +13,7 @@ import java.util.Date;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 
+import events.CardLoadEvent;
 import events.EventBus;
 import events.ImageUpdateEvent;
 import gui.controlpanel1.*;
@@ -59,99 +61,18 @@ public class CardDesignerGUI {
 
     public BufferedImage getComposedCard(double scale){
         return imageComposer.composeCard(getFrameScale());
-    }
+    }     
 
-
-    public void onButtonWeapon(){
-        //clearUnrelatedFields();
-        try{
-            setImageComposer("cardType",ImageIO.read(new File("resources/dice/d6.png")));
-        }catch(IOException e){
-            throw new Error("Error on Checkbox Weapon; Icon File not found");
-        }
-        //controlPanel.itemArtChangeToType(0);
-        
-    }
-
-    public void onButtonRune(){
-        //clearUnrelatedFields();
-        try{
-            setImageComposer("cardType",ImageIO.read(new File("resources/glyphs/rune.png")));
-        }catch(IOException e){
-            throw new Error("Error on Checkbox Rune; Icon File not found");
-        }
-        //controlPanel.itemArtChangeToType(10);
-    }
-
-    public void onButtonEffect(){
-        setImageComposer("cardType",null);
-        //controlPanel.itemArtChangeToType(5);
-    }
-
-    public void onButtonCharacter(){
-        try{
-            setImageComposer("character",ImageIO.read(new File("resources/character.png")));
-        }catch(IOException e){
-            throw new Error("Error on Checkbox Effects; Icon File not found");
-        }
-        //controlPanel.itemArtChangeToType(6);
-    }
-
-    public void onButtonArmor(){
-        EventBus.publish(new ImageUpdateEvent("cardType","resources/armor.png"));
-
-        /*if(controlPanel.getItemArtType()!=1){
-            controlPanel.itemArtChangeToType(1);
-            setImageComposer("cardItemImage",null);
-        }*/
-        
-    }
-
-    public void onButtonClothing(){
-        //clearUnrelatedFields();
-        try{
-           setImageComposer("cardType",ImageIO.read(new File("resources/clothing.png")));
-        }catch(IOException e){
-            throw new Error("Error on Checkbox Clothing; Icon File not found");
-        }
-        /*if(controlPanel.getItemArtType()!=1){
-            controlPanel.itemArtChangeToType(1);
-            setImageComposer("cardItemImage",null);
-        }*/
-    }
-
-    public void onButtonAccessoire(){
-        //clearUnrelatedFields();
-        try{
-            setImageComposer("cardType",ImageIO.read(new File("resources/accessoire.png")));
-        }catch(IOException e){
-            throw new Error("Error on Checkbox Accessoire; Icon File not found");
-        }
-        //controlPanel.itemArtChangeToType(3);
-        //updateTier(0);
-    }
-
-    public void onButtonConsumable(){
-        //clearUnrelatedFields();
-        try{
-            setImageComposer("cardType",ImageIO.read(new File("resources/consumable.png")));
-        }catch(IOException e){
-            throw new Error("Error on Checkbox Consumable; Icon File not found");
-        }
-        //controlPanel.itemArtChangeToType(4);
-    }
-        
-
-
-    public CardDesignerGUI() {
-        
+    public CardDesignerGUI() {        
         imageComposer = new ImageComposer();
         
         frame = new JFrame("Card Designer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1920, 1080);
         frame.setLayout(null);
-        
+
+        createTopMenuBar(frame);
+
         // Preview Panel on the left
         previewPanel = new PreviewPanel(this);
         previewPanel.loadDefault();
@@ -206,6 +127,101 @@ public class CardDesignerGUI {
         controlPanel2.rescale(scale);
     }
 
+    private void createTopMenuBar(JFrame frame){
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem newCardItem = new JMenuItem("New Card...");
+        JMenuItem saveItem = new JMenuItem("Save");
+        JMenuItem loadItem = new JMenuItem("Load");
+        JMenuItem exitItem = new JMenuItem("Exit");
+
+        newCardItem.addActionListener(e -> {
+            EventBus.publish(new CardLoadEvent(
+            "resources/img/card_components/frame/default.png",
+            "resources/img/card_components/textbox/default.png",
+            "resources/img/card_components/background/default.png",
+            "resources/img/card_components/title/default.png",
+            "",
+            "",
+            "",
+            null,
+            null,
+            Color.WHITE,
+            Color.WHITE));
+        });
+
+        saveItem.addActionListener(e -> {
+            saveCard();
+        });
+
+        loadItem.addActionListener(e -> {
+            loadCard();
+        });
+
+        // 1. Create an action for saving
+        Action saveAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveCard();
+            }
+        };
+
+        // 2. Bind Ctrl+S to the action
+        KeyStroke saveKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+        frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(saveKeyStroke, "saveAction");
+        frame.getRootPane().getActionMap().put("saveAction", saveAction);
+
+
+        fileMenu.add(newCardItem);
+        fileMenu.add(saveItem);
+        fileMenu.add(loadItem);
+        fileMenu.addSeparator();
+        fileMenu.add(exitItem);
+        menuBar.add(fileMenu);
+        frame.setJMenuBar(menuBar);
+    }
+
+    private void saveCard(){
+        File saveDir = new File("saved");
+        if (!saveDir.exists()) {
+            saveDir.mkdirs();
+        }
+        JFileChooser fileChooser = new JFileChooser(saveDir);
+        fileChooser.setDialogTitle("Save Card Configuration");
+
+        int userSelection = fileChooser.showSaveDialog(frame);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            // Ensure it ends with .card
+            if (!fileToSave.getName().toLowerCase().endsWith(".card")) {
+                fileToSave = new File(fileToSave.getAbsolutePath() + ".card");
+            }
+            imageComposer.saveConfig(fileToSave);
+        }
+    }
+
+    private void loadCard() {
+        File savedDir = new File("saved");
+        if (!savedDir.exists()) {
+            savedDir.mkdirs(); // Ensure the directory exists
+        }
+
+        JFileChooser fileChooser = new JFileChooser(savedDir);
+        fileChooser.setDialogTitle("Load Card Configuration");
+
+        // Filter for .card files only
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Card Files (*.card)", "card");
+        fileChooser.setFileFilter(filter);
+
+        int result = fileChooser.showOpenDialog(frame); // 'frame' is your main JFrame
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            imageComposer.loadConfig(selectedFile);
+        }
+    }
+
     public void exportImage() {
         /*int targetWidth = 750;
         int targetHeight = 1050;
@@ -224,31 +240,6 @@ public class CardDesignerGUI {
         //g2d.fillRect(0, 0, targetWidth, targetHeight);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (previewPanel.getTitleTextDisplay() != null) {
-            JLabel p = previewPanel.copyTitleTextDisplay(scale);
-            
-            BufferedImage titleText = new BufferedImage(p.getWidth(), p.getHeight(), BufferedImage.TYPE_INT_ARGB);
-
-            Graphics2D labelGraphics = titleText.createGraphics();
-            p.paint(labelGraphics);
-            labelGraphics.dispose();
-            if(controlPanel.getTitleStroke()){
-                titleText = drawStroke(titleText,3,Color.WHITE);
-            }
-            g2d.drawImage(titleText, (int) (80*scale), (int) (20*scale),  (int) (590*scale),  (int) (80*scale), null);
-        }
-
-        if (previewPanel.getInfoTextDisplay() != null) {
-            JTextArea p = previewPanel.copyInfoTextDisplay(scale);
-
-            BufferedImage infoText = new BufferedImage((int)(620*scale),  (int)(340*scale), BufferedImage.TYPE_INT_ARGB);
-
-            Graphics2D labelGraphics = infoText.createGraphics();
-            p.paint(labelGraphics);
-            labelGraphics.dispose();
-            g2d.drawImage(infoText, (int) (65*scale), (int)(655*scale),  (int)(620*scale),  (int)(340*scale), null);
-        }
-
         try {
             File outputfile = new File("export//"+generateDateTimeString()+".png");
             ImageIO.write(finalImage, "PNG", outputfile);
@@ -262,48 +253,9 @@ public class CardDesignerGUI {
         
     }
 
-    private BufferedImage drawStroke(BufferedImage src, int strokeWidth, Color color) {
-        int w = src.getWidth();
-        int h = src.getHeight();
+    
 
-        BufferedImage result = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = result.createGraphics();
-
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setComposite(AlphaComposite.SrcOver);
-
-        // Draw offset copies to simulate a soft stroke (cheap blur)
-        for (int dx = -strokeWidth; dx <= strokeWidth; dx++) {
-            for (int dy = -strokeWidth; dy <= strokeWidth; dy++) {
-                if (dx * dx + dy * dy <= strokeWidth * strokeWidth) {
-                    g.drawImage(tintAlpha(src, color), dx, dy, null);
-                }
-            }
-        }
-
-        // Draw the original image on top
-        g.drawImage(src, 0, 0, null);
-        g.dispose();
-        return result;
-    }
-
-    private BufferedImage tintAlpha(BufferedImage src, Color color) {
-        int w = src.getWidth();
-        int h = src.getHeight();
-        BufferedImage tinted = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
-        for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
-                int argb = src.getRGB(x, y);
-                int alpha = (argb >> 24) & 0xFF;
-                if (alpha > 0) {
-                    tinted.setRGB(x, y, (alpha << 24) | (color.getRGB() & 0x00FFFFFF));
-                }
-            }
-        }
-
-        return tinted;
-    }
+    
 
 
 
@@ -329,17 +281,17 @@ public class CardDesignerGUI {
         switch (num){
             case 0: setImageComposer("runeSlot",null);break;
             case 1: try{
-                        setImageComposer("runeSlot",ImageIO.read(new File("resources/glyphs/runecharge_1.png")));
+                        setImageComposer("runeSlot",ImageIO.read(new File("resources/glyphs/runecharge/1.png")));
                     }catch(IOException e){
                         throw new Error("Error on RuneSlots; Icon File not found");
                     }break;
             case 2: try{
-                        setImageComposer("runeSlot",ImageIO.read(new File("resources/glyphs/runecharge_2.png")));
+                        setImageComposer("runeSlot",ImageIO.read(new File("resources/glyphs/runecharge/2.png")));
                     }catch(IOException e){
                         throw new Error("Error on RuneSlots; Icon File not found");
                     }break;
             case 3: try{
-                        setImageComposer("runeSlot",ImageIO.read(new File("resources/glyphs/runecharge_3.png")));
+                        setImageComposer("runeSlot",ImageIO.read(new File("resources/glyphs/runecharge/3.png")));
                     }catch(IOException e){
                         throw new Error("Error on RuneSlots; Icon File not found");
                     }
@@ -375,17 +327,7 @@ public class CardDesignerGUI {
 
     }
 
-    public void updateRuneCut(Boolean isCut){
-        if(isCut){
-            try{
-                setImageComposer("runeCutTemplate",ImageIO.read(new File("resources/misc/rune_cut.png")));
-            }catch(IOException e){
-                throw new Error("Error on RuneCut; Icon File not found");
-            }
-        }else{
-             setImageComposer("runeCutTemplate",null);
-        }
-    }
+    
 
     
 

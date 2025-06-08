@@ -10,13 +10,27 @@ import gui.*;
 import java.awt.*;
 public class AttributePanel extends JPanel{
     private final CardDesignerGUI parent;
+    private String type;
+    JTextField armorClassInput;
     //private Font rangeAndACFont;
+
+    //Rune Types
+    JCheckBox melee,ranged,mixed,armor;
+
+    //weapon type
+    JCheckBox isMelee,isRanged, isThrowable;
+
+    JCheckBox d4,d6,d8,d10,d12;
+
+    //runeslots
+    JCheckBox none_slot,one_slot,two_slot,three_slot;
+
+    JCheckBox tier0,tier1,tier2,tier3,tier4;
 
     public AttributePanel(CardDesignerGUI parent, String type) {
         this.parent = parent; 
         this.setLayout(new GridLayout(0, 1, 5, 5));
-
-        //EventBus.publish(new ClearUnrelatedImagesEvent());
+        this.type = type;
         
         switch(type){
             case "weapon": createWeaponPanel();break;
@@ -27,44 +41,85 @@ public class AttributePanel extends JPanel{
         }
     }
 
-    public void setRangeAndACFont(String font){
-        //rangeAndACFont = FontLoader.loadFont(font, 20f);
+    public String getType(){
+        return type;
+    }
+
+    public int getDice(){
+        if(d6.isSelected())
+            return 6;
+        if(d8.isSelected())
+            return 8;
+        if(d10.isSelected())
+            return 10;
+        if(d12.isSelected())
+            return 12;
+
+        return 4;  
+    }
+
+    public int getTier(){
+        if(tier1.isSelected())
+            return 1;
+        if(tier2.isSelected())
+            return 2;
+        if(tier3.isSelected())
+            return 3;
+        if(tier4.isSelected())
+            return 4;
+
+        return 0;  
+    }
+
+    public int getRuneSlots(){
+        if(one_slot.isSelected())
+            return 1;
+        if(two_slot.isSelected())
+            return 2;
+        if(three_slot.isSelected())
+            return 3;
+
+        return 0;  
+    }
+
+    public int getArmorClass(){
+        return Integer.parseInt(armorClassInput.getText());
     }
 
     private void createArmorPanel(){
-        JTextField input = new JTextField();
-        input.setBorder(BorderFactory.createTitledBorder("Armor Class"));
+        armorClassInput = new JTextField();
+        armorClassInput.setBorder(BorderFactory.createTitledBorder("Armor Class"));
 
-        input.getDocument().addDocumentListener(new DocumentListener() {
+        armorClassInput.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                if(input.getText().matches("")){
-                    getArmorClass(0);
+                if(armorClassInput.getText().matches("")){
+                    getArmorClassImage(0);
                     return;
                 }
-                getArmorClass(Integer.parseInt(input.getText()));
+                getArmorClassImage(Integer.parseInt(armorClassInput.getText()));
             }
     
             @Override
             public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                if(input.getText().matches("")){
-                    getArmorClass(0);
+                if(armorClassInput.getText().matches("")){
+                    getArmorClassImage(0);
                     return;
                 }
-                getArmorClass(Integer.parseInt(input.getText()));
+                getArmorClassImage(Integer.parseInt(armorClassInput.getText()));
             }
     
             @Override
             public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                if(input.getText().matches("")){
-                    getArmorClass(0);
+                if(armorClassInput.getText().matches("")){
+                    getArmorClassImage(0);
                     return;
                 }
-                getArmorClass(Integer.parseInt(input.getText()));
+                getArmorClassImage(Integer.parseInt(armorClassInput.getText()));
             }
         });
 
-        this.add(input);
+        this.add(armorClassInput);
         createRuneSlotSelection();
         createTierSelection();
 
@@ -105,9 +160,9 @@ public class AttributePanel extends JPanel{
         
         JPanel weaponType = new JPanel();
         weaponType.setBorder(BorderFactory.createTitledBorder("Weapon Type"));
-        JCheckBox isMelee = new JCheckBox("Melee", true);
-        JCheckBox isRanged = new JCheckBox("Ranged", false);
-        JCheckBox isThrowable = new JCheckBox("Throwable", false);
+        isMelee = new JCheckBox("Melee", true);
+        isRanged = new JCheckBox("Ranged", false);
+        isThrowable = new JCheckBox("Throwable", false);
         
         JCheckBox[] weaponTypes = {isMelee,isRanged,isThrowable};
         for(JCheckBox x:weaponTypes){
@@ -126,10 +181,10 @@ public class AttributePanel extends JPanel{
     private void createRuneTypeSelection(){
         JPanel runeTypes = new JPanel();
         runeTypes.setBorder(BorderFactory.createTitledBorder("Type"));
-        JCheckBox melee = new JCheckBox("Melee",true);
-        JCheckBox ranged = new JCheckBox("Ranged",false);
-        JCheckBox mixed = new JCheckBox("Either",false);
-        JCheckBox armor = new JCheckBox("Armor",false);
+        melee = new JCheckBox("Melee",true);
+        ranged = new JCheckBox("Ranged",false);
+        mixed = new JCheckBox("Either",false);
+        armor = new JCheckBox("Armor",false);
 
 
         JCheckBox[] runeTypesArr = {melee,ranged,mixed,armor};
@@ -158,11 +213,11 @@ public class AttributePanel extends JPanel{
         JPanel dice = new JPanel();
         dice.setBorder(BorderFactory.createTitledBorder("Weapon Dice"));
 
-        JCheckBox d4 = new JCheckBox("D4",false);
-        JCheckBox d6 = new JCheckBox("D6",false);
-        JCheckBox d8 = new JCheckBox("D8",false);
-        JCheckBox d10 = new JCheckBox("D10",false);
-        JCheckBox d12 = new JCheckBox("D12",false);
+        d4 = new JCheckBox("D4",false);
+        d6 = new JCheckBox("D6",false);
+        d8 = new JCheckBox("D8",false);
+        d10 = new JCheckBox("D10",false);
+        d12 = new JCheckBox("D12",false);
 
         JCheckBox[] diceSelect = {d4,d6,d8,d10,d12};
 
@@ -191,10 +246,10 @@ public class AttributePanel extends JPanel{
         JPanel runeSlots = new JPanel();
         runeSlots.setBorder(BorderFactory.createTitledBorder("Rune Charges"));
 
-        JCheckBox none_slot = new JCheckBox("none", true);
-        JCheckBox one_slot = new JCheckBox("1", false);
-        JCheckBox two_slot = new JCheckBox("2", false);
-        JCheckBox three_slot = new JCheckBox("3", false);
+        none_slot = new JCheckBox("none", true);
+        one_slot = new JCheckBox("1", false);
+        two_slot = new JCheckBox("2", false);
+        three_slot = new JCheckBox("3", false);
 
         JCheckBox[] runeSlotsArr = { none_slot,one_slot,two_slot,three_slot};
         for(JCheckBox x:runeSlotsArr){
@@ -218,11 +273,11 @@ public class AttributePanel extends JPanel{
     private void createTierSelection(){
         JPanel tier = new JPanel();
         tier.setBorder(BorderFactory.createTitledBorder("Tier"));
-        JCheckBox tier0 = new JCheckBox("Tier 0",true);
-        JCheckBox tier1 = new JCheckBox("Tier 1",false);
-        JCheckBox tier2 = new JCheckBox("Tier 2",false);
-        JCheckBox tier3 = new JCheckBox("Tier 3",false);
-        JCheckBox tier4 = new JCheckBox("Tier 4",false);
+        tier0 = new JCheckBox("Tier 0",true);
+        tier1 = new JCheckBox("Tier 1",false);
+        tier2 = new JCheckBox("Tier 2",false);
+        tier3 = new JCheckBox("Tier 3",false);
+        tier4 = new JCheckBox("Tier 4",false);
 
         JCheckBox[] tiers = {tier0,tier1,tier2,tier3,tier4};
 
@@ -294,7 +349,7 @@ public class AttributePanel extends JPanel{
 
     }
 
-    private void getArmorClass(int ac) {
+    private void getArmorClassImage(int ac) {
         
         if(ac == 0){
             publishImageUpdate("ac1", null);

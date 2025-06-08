@@ -2,6 +2,7 @@ package gui.previewpanel;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.Style;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 import gui.controlpanel1.FontLoader;
 import events.EventBus;
+import events.InfoColorUpdate;
 import events.InfoTextUpdate;
 import events.RepaintPanelEvent;
 import events.InfoFontUpdate;
@@ -23,6 +25,14 @@ public class JScalingTextPane extends JScrollPane {
 
     private static final Map<String, String> ICON_MAP = new HashMap<>();
 
+    public String getFontName(){
+        return textPane.getFont().getName();
+    }
+
+    public String getText(){
+        return textPane.getText();
+    }
+
     public JScalingTextPane(int maxNumLines, int maxSizeFont) {
         loadIconsFromDirectory();
         this.maxNumLines = maxNumLines;
@@ -30,6 +40,7 @@ public class JScalingTextPane extends JScrollPane {
 
         EventBus.subscribe(InfoTextUpdate.class, this::onTextUpdate);
         EventBus.subscribe(InfoFontUpdate.class, this::onFontUpdate);
+        EventBus.subscribe(InfoColorUpdate.class, this::onColorUpdate);
 
         textPane = new JTextPane();
         Font baseFont = UIManager.getFont("Label.font");
@@ -39,10 +50,13 @@ public class JScalingTextPane extends JScrollPane {
         textPane.setFont(baseFont.deriveFont((float) maxSizeFont));
         textPane.setForeground(Color.WHITE);
         textPane.setBorder(null);
+        DefaultCaret caret = (DefaultCaret) textPane.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+
         this.setBorder(null);
         this.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        //System.out.println(textPane.getFont().getSize());
+
         this.setViewportView(textPane);
 
         this.setOpaque(false);
@@ -105,17 +119,22 @@ public class JScalingTextPane extends JScrollPane {
                             ImageIcon icon = new ImageIcon(ICON_MAP.get(key));
                             Image scaled = icon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH);
                             StyleConstants.setIcon(iconStyle, new ImageIcon(scaled));
-                            doc.insertString(doc.getLength(), "ignored", iconStyle);
-                            doc.insertString(doc.getLength(), " ", defaultStyle);
+                            doc.insertString(doc.getLength(), " ", defaultStyle); // optional space before icon
+                            doc.insertString(doc.getLength(), word, iconStyle);
+                            doc.insertString(doc.getLength(), " ", defaultStyle); // optional space after icon
                             continue;
                         }
                     }
                     line.append(word).append(" ");
                 }
+
+                // Always insert a linebreak, even for empty lines
                 if (line.length() > 0) {
-                    doc.insertString(doc.getLength(), line.toString() + "\n", defaultStyle);
+                    doc.insertString(doc.getLength(), line.toString(), defaultStyle);
                 }
+                doc.insertString(doc.getLength(), "\n", defaultStyle);
             }
+
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -126,15 +145,22 @@ public class JScalingTextPane extends JScrollPane {
         Font font = textPane.getFont().deriveFont((float) maxSizeFont);
 
         int lineCount = getLineCount(text);
-        int paneHeight = this.getHeight();
-        int lineHeight = (int) font.getSize2D();
-
-        while (lineCount * lineHeight > paneHeight && font.getSize() > 1) {
-            font = font.deriveFont((float) font.getSize() - 1);
-            lineHeight = (int) font.getSize2D();
+        if(lineCount<=11){
+            lineCount=11;
         }
+        int paneHeight = this.getHeight();
+        int lineHeight = (int) (font.getSize2D()* 1.25f);
+        System.out.println("font before scale: "+font.getSize2D());
+        System.out.println((lineCount * lineHeight) +" "+ paneHeight);
+        
 
-        textPane.setFont(FontLoader.loadFont(font.getName(), font.getSize()));
+        while ((lineCount * lineHeight) > paneHeight && font.getSize() > 1) {
+            font = font.deriveFont((float) font.getSize() - 1);
+            lineHeight = (int) (font.getSize2D()* 1.25f);
+        }
+        System.out.println((lineCount * lineHeight) +" "+ paneHeight);
+        System.out.println("font after scale: "+font.getSize2D());
+        textPane.setFont(font);
         text = unwrapText(text);
         textPane.setText(text);
     }
@@ -145,7 +171,11 @@ public class JScalingTextPane extends JScrollPane {
 
     private void onFontUpdate(InfoFontUpdate e){
         textPane.setFont(FontLoader.loadFont(e.font.getName(), maxSizeFont));
-        System.out.println(textPane.getFont());
+        EventBus.publish(new RepaintPanelEvent());
+    }
+
+    private void onColorUpdate(InfoColorUpdate e){
+        textPane.setForeground(e.color);
         EventBus.publish(new RepaintPanelEvent());
     }
 
@@ -192,15 +222,16 @@ public class JScalingTextPane extends JScrollPane {
     }
 
     private void onTextUpdate(InfoTextUpdate event){
-        System.out.println("JScalingTextPane::onTextUpdate\n"+event.str);
         String text = wrapText(event.str);
+        Font font = textPane.getFont();
+        if(text == null){
+            text = "";
+        }
         int lineCount = getLineCount(text);
-        if(lineCount > maxNumLines){
+        if(lineCount > maxNumLines || font.getSize2D() > (getHeight()/maxNumLines)){
              scaleFontToFit(text);
         }
         setFormattedText(text);
-        
-        //EventBus.publish(new RepaintPanelEvent());             // Step 2: insert icons and style
         this.repaint();
         textPane.repaint();
         this.revalidate();

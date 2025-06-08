@@ -2,6 +2,9 @@ package gui.controlpanel1;
 
 import javax.swing.*;
 
+import events.EventBus;
+import events.InfoColorUpdate;
+import events.TitleColorUpdate;
 import gui.*;
 
 import java.awt.*;
@@ -21,9 +24,11 @@ public class ColorPicker extends JButton{
                     this.setBackground(selected);
                     
                     switch(type){
-                        case "title": parent.setTitleColor(selected);break;
-                        case "info": parent.setInfoColor(selected);break;
+                        case "title": EventBus.publish(new TitleColorUpdate(selected));break;
+                        case "info":  EventBus.publish(new InfoColorUpdate(selected));break;
                     }
+
+
                 }
             });
     }

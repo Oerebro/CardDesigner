@@ -12,13 +12,19 @@ import javax.swing.*;
 import javax.swing.event.DocumentListener;
 
 import gui.CardDesignerGUI;
+import gui.ImageComposerConfig;
 import abstractclasses.*;
-import events.ClearUnrelatedImagesEvent;
+import events.GetCardAttributesEvent;
 import events.EventBus;
 import events.ImageUpdateEvent;
 import events.InfoFontUpdate;
 import events.InfoTextUpdate;
+import events.LoadConfigEvent;
+import events.RepaintPanelEvent;
 import events.SelectTypePanelUpdateEvent;
+import events.TitleFontUpdate;
+import events.TitleTextUpdate;
+import events.ToggleTitleBorder;
 
 public class ControlPanel1 extends ControlPanel {
 
@@ -36,8 +42,13 @@ public class ControlPanel1 extends ControlPanel {
     private JComboBox<String> titleFontSelection,infoFontSelection;
     private JCheckBox titleStroke;
 
+    
+
     public void init(CardDesignerGUI parent) {
         EventBus.subscribe(SelectTypePanelUpdateEvent.class, this::onTypeUpdate);
+        EventBus.subscribe(LoadConfigEvent.class, this::onLoadConfig);
+        
+        
         setLayout(null);
         this.parent = parent;
         createButtons();
@@ -45,9 +56,7 @@ public class ControlPanel1 extends ControlPanel {
         rescale(1.0);
     }
 
-    public void setRangeAndACFont(String font){
-        selectItemTypePanel.setRangeAndACFont(font);
-    }
+    
 
     private void createButtons() {
         createCardComponentSelection();
@@ -64,6 +73,8 @@ public class ControlPanel1 extends ControlPanel {
         createTextFieldsAndPreview();
         
     }
+
+    
 
     public String getTitleFont(){
         return (String) titleFontSelection.getSelectedItem();
@@ -98,6 +109,7 @@ public class ControlPanel1 extends ControlPanel {
 
         titleStroke = new JCheckBox("Title Outline",false);
         titleStroke.setBounds(460,290,100,30);
+        titleStroke.addActionListener(e->{EventBus.publish(new ToggleTitleBorder(titleStroke.isSelected()));});
         add(titleStroke);
         add(titleColor);
         add(infoColor);
@@ -143,21 +155,20 @@ public class ControlPanel1 extends ControlPanel {
         
     }
     
-    private void updateTitlePreview() {
-        
+    private void updateTitlePreview() {    
         String text = titleTextField.getText();
         String selectedFontName = (String) titleFontSelection.getSelectedItem();
         Font font = new Font(selectedFontName, Font.PLAIN, 72);
         
-        parent.updateTitleTextDisplay(text, font);
-        parent.setRangeAndACFont(selectedFontName);
+        EventBus.publish(new TitleFontUpdate(font));
+        EventBus.publish(new TitleTextUpdate(text));
     }
 
     private void updateInfoPreview() {
         String text = infoTextField.getText();
         String selectedFontName = (String) infoFontSelection.getSelectedItem();
-        Font font = new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 20); 
-        EventBus.publish(new InfoFontUpdate(new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 20)));
+        Font font = new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 72); 
+        EventBus.publish(new InfoFontUpdate(font));
         EventBus.publish(new InfoTextUpdate(text));
         
     }
@@ -170,6 +181,8 @@ public class ControlPanel1 extends ControlPanel {
         for (String fontName : fonts.keySet()) {
             titleFontSelection.addItem(fontName);
         }
+
+        EventBus.publish(new TitleFontUpdate(new Font((String) titleFontSelection.getSelectedItem(), Font.PLAIN, 72)));
     }
 
     private void createInfoFontSelection(){
@@ -180,7 +193,7 @@ public class ControlPanel1 extends ControlPanel {
             infoFontSelection.addItem(fontName);
         }
 
-        EventBus.publish(new InfoFontUpdate(new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 20)));
+        EventBus.publish(new InfoFontUpdate(new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 72)));
     }
 
     //this gets all fonts in folder and returns a map for the dropdown menu
@@ -206,12 +219,12 @@ public class ControlPanel1 extends ControlPanel {
     private void createCardComponentSelection(){
         cardComponentTabbedPane = new JTabbedPane();
 
-        frameSelect = new CardImageBrowser("resources/card_components/frame",360,90,600,40, 64,"cardFrame");
-        backgroundSelect = new CardImageBrowser("resources/card_components/background",360,90,600,40, 64,"cardBackground"); 
-        textboxSelect = new CardImageBrowser("resources/card_components/textbox",360,90,600,40, 64,"cardTextbox");
-        titleSelect = new CardImageBrowser("resources/card_components/title",360,90,600,40, 64,"cardTitle");
+        frameSelect = new CardImageBrowser("resources/img/card_components/frame",360,90,600,40, 64,"cardFrame");
+        backgroundSelect = new CardImageBrowser("resources/img/card_components/background",360,90,600,40, 64,"cardBackground"); 
+        textboxSelect = new CardImageBrowser("resources/img/card_components/textbox",360,90,600,40, 64,"cardTextbox");
+        titleSelect = new CardImageBrowser("resources/img/card_components/title",360,90,600,40, 64,"cardTitle");
 
-        effectSelect = new CardImageBrowser("resources/card_components/effects",360,90,600,40, 64,"cardBackground");
+        effectSelect = new CardImageBrowser("resources/img/card_components/effects",360,90,600,40, 64,"cardBackground");
 
         cardComponentTabbedPane.addTab("Choose Frame",frameSelect.getScrollPane());
         cardComponentTabbedPane.addTab("Choose Background",backgroundSelect.getScrollPane());
@@ -225,7 +238,6 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     private void itemArtChangeToType(String type){
-        System.out.println("ControlPanel1::itemArtChangeToType");
         EventBus.publish(new ImageUpdateEvent("cardType","resources/"+type+".png"));
         remove(selectItemArt);
 
@@ -271,5 +283,16 @@ public class ControlPanel1 extends ControlPanel {
 
         //absolute pos of the controlpanel within the window frame
         setBounds((int)(575 * scale), (int)(10 * scale), (int)(1210 * scale), (int)(1070 * scale));
+    }
+
+    private void onLoadConfig(LoadConfigEvent e){
+        ImageComposerConfig config = e.config;
+
+        infoTextField.setText(config.infoText);
+        titleTextField.setText(config.titleText);
+
+        titleFontSelection.setSelectedItem(config.titleFont);
+
+        EventBus.publish(new RepaintPanelEvent());
     }
 }
