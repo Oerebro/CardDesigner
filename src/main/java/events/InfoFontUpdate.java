@@ -1,11 +1,9 @@
 package events;
 
-import java.awt.Font;
-
 public class InfoFontUpdate {
-    public final Font font;
+    public final String fontFamily;
 
-    public InfoFontUpdate(Font font) {
-        this.font = font;
+    public InfoFontUpdate(String fontFamily) {
+        this.fontFamily = fontFamily;
     }
 }

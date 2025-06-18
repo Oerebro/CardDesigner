@@ -3,9 +3,9 @@ package events;
 import java.awt.Font;
 
 public class TitleFontUpdate {
-    public final Font font;
+    public final String fontFamily;
 
-    public TitleFontUpdate(Font font) {
-        this.font = font;
+    public TitleFontUpdate(String fontFamily) {
+        this.fontFamily = fontFamily;
     }
 }

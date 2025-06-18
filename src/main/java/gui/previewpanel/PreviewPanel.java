@@ -33,7 +33,6 @@ public class PreviewPanel {
     
     private void init() {
         EventBus.subscribe(RepaintPanelEvent.class, this::onRepaintEvent);
-        EventBus.subscribe(CardLoadEvent.class, this::onCardLoad);
         EventBus.subscribe(SelectTypePanelUpdateEvent.class, this::onTypeChange);
         scaledWidth = (int) (parent.getFrameScale() * (750*panelRatio));
         scaledHeight = (int) (parent.getFrameScale() * (1050*panelRatio));
@@ -80,7 +79,7 @@ public class PreviewPanel {
         //infoTextDisplay.setForeground(Color.WHITE);
 
         /*testDisplay = new JScalingTextPane(10, 20);
-        testDisplay.setBounds2(65,100,300,200);
+        testDisplay.setBounds(65,100,300,200);
         object.add(testDisplay);*/
 
 
@@ -97,16 +96,6 @@ public class PreviewPanel {
 
     private void onRepaintEvent(RepaintPanelEvent e){
         this.repaint();
-    }
-
-    private void onCardLoad(CardLoadEvent e){
-        /*titleTextDisplay.setText(e.titleText);
-        titleTextDisplay.setFont(e.titleFont);
-        titleTextDisplay.setForeground(e.titleColor);
-
-        infoTextDisplay.setText(e.infoText);
-        infoTextDisplay.setFont(e.infoFont);
-        infoTextDisplay.setForeground(e.infoColor);*/
     }
 
     public JLabel getTitleTextDisplay() {
@@ -343,20 +332,9 @@ public class PreviewPanel {
     }
 
 
-    public void loadDefault() {
-        EventBus.publish(new CardLoadEvent(
-            "resources/img/card_components/frame/default.png",
-            "resources/img/card_components/textbox/default.png",
-            "resources/img/card_components/background/default.png",
-            "resources/img/card_components/title/default.png",
-            "",
-            "",
-            "",
-            null,
-            null,
-            Color.WHITE,
-            Color.WHITE));
-    }
+    /*public void loadDefault() {
+        EventBus.publish(new CardLoadEvent());
+    }*/
 
 }
 

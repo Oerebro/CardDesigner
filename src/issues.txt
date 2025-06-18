@@ -1,3 +1,12 @@
+Fontselections now load the names of font families.
+Font families consist of 3 Fonts, regular, bold, italic.
+fontUpdates now only carry the name of the font family
+
+Make all switch() statements use int constants instead of String;
+
+
+
+
 ISSUES
 -after <icon> no linebreak can be added
 -automatic wordwrapping doesn't properly work

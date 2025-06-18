@@ -14,57 +14,31 @@ import java.util.Date;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import events.CardLoadEvent;
+import events.CardTypeUpdate;
 import events.EventBus;
-import events.ImageUpdateEvent;
+import gui.card_types.*;
 import gui.controlpanel1.*;
 import gui.controlpanel2.*;
+import gui.image_composers.*;
 import gui.previewpanel.*;
 
 
 public class CardDesignerGUI {
     public JFrame frame;
-    //private JLabel frameLabel, backgroundLabel, textBoxLabel;
-    private ImageComposer imageComposer;
+    private CardComposer imageComposer;
     private PreviewPanel previewPanel;
     ControlPanel1 controlPanel;
     ControlPanel2 controlPanel2;
 
-    public void setTitleColor(Color color){
-        previewPanel.updateTitleColor(color);
-    }
-
-    public void setInfoColor(Color color){
-        previewPanel.updateInfoColor(color);
-    }
-
-    /*public void loadImagePreviewPanel(String i){
-        previewPanel.loadImage(i);
-    }*/
-    
-    public JPanel getPreviewPanel() {
-        return previewPanel.panel;
-    }
 
     public Frame getFrame(){
         return frame;
     }
+  
 
-
-    public void setRangeAndACFont(String font){
-        previewPanel.setRangeAndACFont(font);
-    }
-
-    public void setImageComposer(String field, BufferedImage i){
-        //imageComposer.setField(field,i);
-        previewPanel.repaint();
-    }
-
-    public BufferedImage getComposedCard(double scale){
-        return imageComposer.composeCard(getFrameScale());
-    }     
-
-    public CardDesignerGUI() {        
-        imageComposer = new ImageComposer();
+    public CardDesignerGUI() {     
+        EventBus.subscribe(CardTypeUpdate.class, this::onCardTypeUpdate);   
+        setImageComposerType(Card.W_MELEE);
         
         frame = new JFrame("Card Designer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,7 +49,8 @@ public class CardDesignerGUI {
 
         // Preview Panel on the left
         previewPanel = new PreviewPanel(this);
-        previewPanel.loadDefault();
+        //previewPanel.loadDefault();
+        
         
 
         // Control Panel on the right
@@ -93,6 +68,7 @@ public class CardDesignerGUI {
         frame.setLayout(null);
 
         SwingUtilities.invokeLater(() -> {
+            EventBus.publish(new CardLoadEvent());
             frame.addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
@@ -136,19 +112,7 @@ public class CardDesignerGUI {
         JMenuItem exitItem = new JMenuItem("Exit");
 
         newCardItem.addActionListener(e -> {
-            EventBus.publish(new CardLoadEvent(
-            "resources/img/card_components/frame/default.png",
-            "resources/img/card_components/textbox/default.png",
-            "resources/img/card_components/background/default.png",
-            "resources/img/card_components/title/default.png",
-            "",
-            "",
-            "",
-            null,
-            null,
-            Color.WHITE,
-            Color.WHITE));
-        });
+            EventBus.publish(new CardLoadEvent());});
 
         saveItem.addActionListener(e -> {
             saveCard();
@@ -230,9 +194,9 @@ public class CardDesignerGUI {
         double previewScaleHeight = 1050.0*0.7;*/
 
         //if higher resolution card is wanted
-        double scale = 1.0;
+        double scale = 3.0;
 
-        BufferedImage finalImage = imageComposer.composeCard(1.0);
+        BufferedImage finalImage = getComposedCard(scale);
 
         Graphics2D g2d = finalImage.createGraphics();
 
@@ -253,13 +217,6 @@ public class CardDesignerGUI {
         
     }
 
-    
-
-    
-
-
-
-
     public static String generateDateTimeString() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
         Date now = new Date();
@@ -275,9 +232,27 @@ public class CardDesignerGUI {
         previewPanel.updateRangeText(str, font);
     }
 
+    private void onCardTypeUpdate(CardTypeUpdate e){
+        setImageComposerType(e.type);
+    }
+
+    private void setImageComposerType(int type){
+        switch(type){
+            case Card.W_MELEE: imageComposer = new WeaponMeleeCardComposer(); break;
+            case Card.W_RANGED: imageComposer = new WeaponRangedCardComposer(); break;
+            case Card.W_THROWABLE: imageComposer = new WeaponThrowableCardComposer(); break;
+            case Card.CHARACTER: imageComposer = new CharacterCardComposer(); break;
+            case Card.EFFECT: imageComposer = new EffectCardComposer(); break;
+            case Card.ARMOR: imageComposer = new ArmorCardComposer(); break;
+            case Card.CONSUMABLE: imageComposer = new ConsumableCardComposer(); break;
+            case Card.RUNE: imageComposer = new RuneCardComposer(); break;
+            case Card.ACCESSOIRE: imageComposer = new AccessoireCardComposer(); break;
+
+        }
+    }
     
 
-    public void updateRuneSlots(int num){
+    /*public void updateRuneSlots(int num){
         switch (num){
             case 0: setImageComposer("runeSlot",null);break;
             case 1: try{
@@ -326,10 +301,13 @@ public class CardDesignerGUI {
         
 
     }
+    */
 
     
 
-    
+    public BufferedImage getComposedCard(double scale){
+        return imageComposer.composeCard(scale);
+    }
 
 
 

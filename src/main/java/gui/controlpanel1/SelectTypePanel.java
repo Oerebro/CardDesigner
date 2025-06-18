@@ -1,20 +1,16 @@
 package gui.controlpanel1;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import events.EventBus;
-import events.GetCardAttributesEvent;
-import events.ImageUpdateEvent;
+import events.ItemImageUpdateEvent;
 import events.SelectTypePanelUpdateEvent;
 import events.ClearUnrelatedImagesEvent;
 //import events.ImageUpdateEvent;
 import gui.CardDesignerGUI;
-import gui.ImageComposerConfig;
+import gui.card_types.*;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 
 public class SelectTypePanel extends JPanel{
     private final CardDesignerGUI parent;
@@ -23,46 +19,10 @@ public class SelectTypePanel extends JPanel{
     JCheckBox[] checkboxes;
 
     public SelectTypePanel(CardDesignerGUI parent) {
-        EventBus.subscribe(GetCardAttributesEvent.class, this::onGetCardAttributes);
         this.parent = parent; 
         createCheckBoxPanel();
     }
 
-    private void onGetCardAttributes(GetCardAttributesEvent e){
-        ImageComposerConfig config = e.config;
-        String type = attributePanel.getType();
-        config.type = type;
-        
-        switch(type){
-            case "weapon": 
-                config.dice = attributePanel.getDice();
-                config.tier = attributePanel.getTier();
-                config.runeSlots = attributePanel.getRuneSlots();
-                //config.attribute = attributePanel.getAttribute(); 
-                break;
-            case "armor": 
-                config.ac = attributePanel.getArmorClass();
-                config.tier = attributePanel.getTier();
-                config.runeSlots = attributePanel.getRuneSlots();
-                break;
-            case "consumable": 
-                //config.ac = attributePanel.getArmorClass();
-                config.tier = attributePanel.getTier();
-                //config.runeSlots = attributePanel.getRuneSlots();
-                break;
-            case "rune": 
-                //config.ac = attributePanel.getArmorClass();
-                config.tier = attributePanel.getTier();
-                //config.runeSlots = attributePanel.getRuneSlots();
-                break;
-            case "other": 
-                config.ac = attributePanel.getArmorClass();
-                config.tier = attributePanel.getTier();
-                config.runeSlots = attributePanel.getRuneSlots();
-                break;
-        }
-
-    }
 
     public void createCheckBoxPanel() {
         JPanel typePanel = new JPanel();
@@ -119,9 +79,9 @@ public class SelectTypePanel extends JPanel{
 
     private void updateRuneCut(Boolean isCut){
         if(isCut){
-            EventBus.publish(new ImageUpdateEvent("runeCutTemplate", "resources/misc/rune_cut.png"));
+            EventBus.publish(new ItemImageUpdateEvent(Card.RUNECUT, "resources/misc/rune_cut.png"));
         }else{
-            EventBus.publish(new ImageUpdateEvent("runeCutTemplate", null));
+            EventBus.publish(new ItemImageUpdateEvent(Card.RUNECUT, null));
         }
     }
 

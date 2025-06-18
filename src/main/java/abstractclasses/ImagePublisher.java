@@ -1,11 +1,12 @@
 package abstractclasses;
 
 import events.EventBus;
-import events.ImageUpdateEvent;
+import events.ItemImageUpdateEvent;
 
 public abstract class ImagePublisher {
-    protected String type,path;
-    protected void publishImageUpdate(String type, String path) {
-        EventBus.publish(new ImageUpdateEvent(type,path));
+    protected String path;
+    protected int type;
+    protected void publishImageUpdate(int type, String path) {
+        EventBus.publish(new ItemImageUpdateEvent(type,path));
     }
 }

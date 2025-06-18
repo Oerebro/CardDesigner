@@ -3,7 +3,7 @@ package abstractclasses;
 import javax.swing.*;
 
 import events.EventBus;
-import events.ImageUpdateEvent;
+import events.ItemImageUpdateEvent;
 import gui.CardDesignerGUI;
 import gui.controlpanel1.IconLabel;
 

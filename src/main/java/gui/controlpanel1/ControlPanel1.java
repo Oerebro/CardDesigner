@@ -3,8 +3,15 @@ package gui.controlpanel1;
 //import java.io.File;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.Font; 
 
 //import javax.imageio.ImageIO;
@@ -13,10 +20,11 @@ import javax.swing.event.DocumentListener;
 
 import gui.CardDesignerGUI;
 import gui.ImageComposerConfig;
+import gui.card_types.Card;
 import abstractclasses.*;
 import events.GetCardAttributesEvent;
 import events.EventBus;
-import events.ImageUpdateEvent;
+import events.ItemImageUpdateEvent;
 import events.InfoFontUpdate;
 import events.InfoTextUpdate;
 import events.LoadConfigEvent;
@@ -25,6 +33,7 @@ import events.SelectTypePanelUpdateEvent;
 import events.TitleFontUpdate;
 import events.TitleTextUpdate;
 import events.ToggleTitleBorder;
+import gui.controlpanel1.FontLoader;
 
 public class ControlPanel1 extends ControlPanel {
 
@@ -158,79 +167,71 @@ public class ControlPanel1 extends ControlPanel {
     private void updateTitlePreview() {    
         String text = titleTextField.getText();
         String selectedFontName = (String) titleFontSelection.getSelectedItem();
-        Font font = new Font(selectedFontName, Font.PLAIN, 72);
+        //Font font = new Font(selectedFontName, Font.PLAIN, 72);
         
-        EventBus.publish(new TitleFontUpdate(font));
+        EventBus.publish(new TitleFontUpdate(selectedFontName));
         EventBus.publish(new TitleTextUpdate(text));
     }
 
     private void updateInfoPreview() {
         String text = infoTextField.getText();
         String selectedFontName = (String) infoFontSelection.getSelectedItem();
-        Font font = new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 72); 
-        EventBus.publish(new InfoFontUpdate(font));
+        //Font font = new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 72); 
+        EventBus.publish(new InfoFontUpdate(selectedFontName));
         EventBus.publish(new InfoTextUpdate(text));
         
     }
 
-    //this creates a dropdown menu for fonts next to the title text input
     private void createTitleFontSelection(){
-        titleFontSelection = new JComboBox<>();
-        Map<String,Font> fonts = loadFonts();
-
-        for (String fontName : fonts.keySet()) {
-            titleFontSelection.addItem(fontName);
-        }
-
-        EventBus.publish(new TitleFontUpdate(new Font((String) titleFontSelection.getSelectedItem(), Font.PLAIN, 72)));
+        titleFontSelection = createFontSelection();
+        EventBus.publish(new TitleFontUpdate((String) titleFontSelection.getSelectedItem()));
     }
 
     private void createInfoFontSelection(){
-        infoFontSelection = new JComboBox<>();
-        Map<String,Font> fonts = loadFonts();
-
-        for (String fontName : fonts.keySet()) {
-            infoFontSelection.addItem(fontName);
-        }
-
-        EventBus.publish(new InfoFontUpdate(new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 72)));
+        infoFontSelection = createFontSelection();
+        EventBus.publish(new InfoFontUpdate((String) infoFontSelection.getSelectedItem()));
     }
 
-    //this gets all fonts in folder and returns a map for the dropdown menu
-    private Map<String, Font> loadFonts() {
-        Map<String, Font> fonts = new HashMap<>();
-        File fontFolder = new File("resources/misc/fonts");
-        if (fontFolder.exists() && fontFolder.isDirectory()) {
-            File[] files = fontFolder.listFiles((dir, name) -> name.toLowerCase().endsWith(".ttf") || name.toLowerCase().endsWith(".otf"));
-            if (files != null) {
-                for (File file : files) {
-                    try (FileInputStream fis = new FileInputStream(file)) {
-                        Font font = Font.createFont(Font.TRUETYPE_FONT, fis).deriveFont(24f);
-                        fonts.put(file.getName(), font);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+    private JComboBox<String> createFontSelection(){
+       File folder = new File("resources/misc/fonts");
+        if (!folder.exists() || !folder.isDirectory()) {
+            System.out.println("Folder not found.");
+            return new JComboBox<>(new String[0]);
+        }
+
+        Pattern pattern = Pattern.compile("(.+)-(?i)(regular|bold|italic)\\.(ttf|otf)$");
+        Set<String> familyNames = new HashSet<String>();
+
+        File[] files = folder.listFiles();
+        if (files == null) return new JComboBox<>(new String[0]);
+
+        for (int i = 0; i < files.length; i++) {
+            String name = files[i].getName();
+            Matcher matcher = pattern.matcher(name);
+            if (matcher.matches()) {
+                familyNames.add(matcher.group(1));
             }
         }
-        return fonts;
+        List<String> sortedList = new ArrayList<>(familyNames);
+        Collections.sort(sortedList);
+        return new JComboBox<>(sortedList.toArray(new String[0]));
     }
 
     private void createCardComponentSelection(){
         cardComponentTabbedPane = new JTabbedPane();
 
-        frameSelect = new CardImageBrowser("resources/img/card_components/frame",360,90,600,40, 64,"cardFrame");
-        backgroundSelect = new CardImageBrowser("resources/img/card_components/background",360,90,600,40, 64,"cardBackground"); 
-        textboxSelect = new CardImageBrowser("resources/img/card_components/textbox",360,90,600,40, 64,"cardTextbox");
-        titleSelect = new CardImageBrowser("resources/img/card_components/title",360,90,600,40, 64,"cardTitle");
+        frameSelect = new CardImageBrowser("resources/img/card_components/frame",360,90,600,40, 64,Card.FRAME_IMAGE);
+        backgroundSelect = new CardImageBrowser("resources/img/card_components/background",360,90,600,40, 64,Card.BACKGROUND_IMAGE); 
+        //textboxSelect = new CardImageBrowser("resources/img/card_components/textbox",360,90,600,40, 64,"cardTextbox");
+        //titleSelect = new CardImageBrowser("resources/img/card_components/title",360,90,600,40, 64,"cardTitle");
 
-        effectSelect = new CardImageBrowser("resources/img/card_components/effects",360,90,600,40, 64,"cardBackground");
+        //effectSelect = new CardImageBrowser("resources/img/card_components/effects",360,90,600,40, 64,"cardBackground");
 
         cardComponentTabbedPane.addTab("Choose Frame",frameSelect.getScrollPane());
         cardComponentTabbedPane.addTab("Choose Background",backgroundSelect.getScrollPane());
-        cardComponentTabbedPane.addTab("Choose Textbox",textboxSelect.getScrollPane());
-        cardComponentTabbedPane.addTab("Choose Title",titleSelect.getScrollPane());
-        cardComponentTabbedPane.addTab("Choose Effect Background",effectSelect.getScrollPane());
+        //cardComponentTabbedPane.addTab("Choose Textbox",textboxSelect.getScrollPane());
+        //cardComponentTabbedPane.addTab("Choose Title",titleSelect.getScrollPane());
+        //cardComponentTabbedPane.addTab("Choose Effect Background",effectSelect.getScrollPane());
     }
 
     public void onTypeUpdate(SelectTypePanelUpdateEvent e){
@@ -238,7 +239,7 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     private void itemArtChangeToType(String type){
-        EventBus.publish(new ImageUpdateEvent("cardType","resources/"+type+".png"));
+        //EventBus.publish(new ImageUpdateEvent(CARD,"resources/"+type+".png"));
         remove(selectItemArt);
 
         switch(type){
@@ -258,8 +259,6 @@ public class ControlPanel1 extends ControlPanel {
         selectItemArt.repaint();
     }
 
-
-
     public String getItemArtType(){
         return selectItemArt.getType();
     }
@@ -268,7 +267,7 @@ public class ControlPanel1 extends ControlPanel {
         //these rescales should be done in a better way, but they work atm
         frameSelect.rescale(scale);
         backgroundSelect.rescale(scale);
-        textboxSelect.rescale(scale);
+        //textboxSelect.rescale(scale);
 
         //set the absolute position of these menus within the controlpanel
         cardComponentTabbedPane.setBounds((int)(10 * scale), (int)(0), (int)(360 * scale), (int)(245 * scale));   
