@@ -47,22 +47,27 @@ public class OneLineTextPane extends JLabel {
                 EventBus.subscribe(TitleTextUpdate.class, this::onTitleTextUpdate);
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 EventBus.subscribe(TitleColorUpdate.class, this::onTitleColorUpdate);
+                setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.CENTER);
                 break;
             case RANGE:
                 EventBus.subscribe(RangeTextUpdate.class, this::onRangeTextUpdate);
-                EventBus.subscribe(InfoFontUpdate.class, this::onInfoFontUpdate);
+                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
+                //setVerticalAlignment(SwingConstants.LEFT);
+                setHorizontalAlignment(SwingConstants.LEFT);
+                break;
             case TYPE:
                 EventBus.subscribe(TypeTextUpdate.class, this::onTypeTextUpdate);
-                EventBus.subscribe(InfoFontUpdate.class, this::onInfoFontUpdate);
+                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
+                //setVerticalAlignment(SwingConstants.LEFT);
+                setHorizontalAlignment(SwingConstants.LEFT);
                 break;
         }
 
         
-        setVerticalAlignment(SwingConstants.CENTER);
-        setHorizontalAlignment(SwingConstants.CENTER);
+        
     }
 
     private void onTitleTextUpdate(TitleTextUpdate e){
@@ -95,7 +100,7 @@ public class OneLineTextPane extends JLabel {
 
     private void textUpdate(String str){
         //this.setFont(getScaledFontLabel(str, getFont(), getWidth(), getHeight(), this));
-        this.setText(str);
+        this.setText(str.replaceAll("<->", "—").replaceAll("<\\.>", "•"));
         this.revalidate();
         this.repaint();
         EventBus.publish(new RepaintPanelEvent());
@@ -155,7 +160,7 @@ public class OneLineTextPane extends JLabel {
         float descentRatio = .3f;
         int descentOffset = (int) (lineHeight * descentRatio);
 
-        setBorder(new EmptyBorder(descentOffset, 0, 0, 0));
+        if(type == TITLE) setBorder(new EmptyBorder(descentOffset, 0, 0, 0));
         return baseFont.deriveFont((float) fontSize);
     }
 }

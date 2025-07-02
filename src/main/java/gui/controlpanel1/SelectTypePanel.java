@@ -7,6 +7,7 @@ import events.SelectTypePanelUpdateEvent;
 import events.ClearUnrelatedImagesEvent;
 //import events.ImageUpdateEvent;
 import gui.CardDesignerGUI;
+import gui.GlobalVar;
 import gui.card_types.*;
 
 import java.awt.*;
@@ -79,9 +80,9 @@ public class SelectTypePanel extends JPanel{
 
     private void updateRuneCut(Boolean isCut){
         if(isCut){
-            EventBus.publish(new ItemImageUpdateEvent(Card.RUNECUT, "resources/misc/rune_cut.png"));
+            EventBus.publish(new ItemImageUpdateEvent(GlobalVar.RUNECUT, "resources/misc/rune_cut.png"));
         }else{
-            EventBus.publish(new ItemImageUpdateEvent(Card.RUNECUT, null));
+            EventBus.publish(new ItemImageUpdateEvent(GlobalVar.RUNECUT, null));
         }
     }
 
@@ -90,7 +91,7 @@ public class SelectTypePanel extends JPanel{
         uncheckOtherCheckboxes(selected, checkboxes);
         this.remove(attributePanel);
         String type = selected.getText().toLowerCase();
-        EventBus.publish(new ClearUnrelatedImagesEvent());
+        //EventBus.publish(new ClearUnrelatedImagesEvent());
         EventBus.publish(new SelectTypePanelUpdateEvent(type));
         this.attributePanel = new AttributePanel(parent, type);
     

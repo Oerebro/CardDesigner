@@ -11,15 +11,26 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import events.CardLoadEvent;
 import events.CardTypeUpdate;
 import events.EventBus;
+import events.RepaintPanelEvent;
 import gui.card_types.*;
 import gui.controlpanel1.*;
 import gui.controlpanel2.*;
 import gui.image_composers.*;
+import gui.image_composers.cardTypes.CharacterCardComposer;
+import gui.image_composers.cardTypes.EffectCardComposer;
+import gui.image_composers.cardTypes.itemTypes.AccessoireCardComposer;
+import gui.image_composers.cardTypes.itemTypes.ConsumableCardComposer;
+import gui.image_composers.cardTypes.itemTypes.RuneCardComposer;
+import gui.image_composers.cardTypes.itemTypes.equippableTypes.ArmorCardComposer;
+import gui.image_composers.cardTypes.itemTypes.equippableTypes.weaponTypes.WeaponMeleeCardComposer;
+import gui.image_composers.cardTypes.itemTypes.equippableTypes.weaponTypes.WeaponRangedCardComposer;
+import gui.image_composers.cardTypes.itemTypes.equippableTypes.weaponTypes.WeaponThrowableCardComposer;
 import gui.previewpanel.*;
 
 
@@ -38,7 +49,7 @@ public class CardDesignerGUI {
 
     public CardDesignerGUI() {     
         EventBus.subscribe(CardTypeUpdate.class, this::onCardTypeUpdate);   
-        setImageComposerType(Card.W_MELEE);
+        setImageComposerType(GlobalVar.W_MELEE);
         
         frame = new JFrame("Card Designer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -161,7 +172,13 @@ public class CardDesignerGUI {
             if (!fileToSave.getName().toLowerCase().endsWith(".card")) {
                 fileToSave = new File(fileToSave.getAbsolutePath() + ".card");
             }
-            imageComposer.saveConfig(fileToSave);
+            
+
+            try {
+                new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(fileToSave, imageComposer.saveConfig() );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -182,7 +199,7 @@ public class CardDesignerGUI {
 
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            imageComposer.loadConfig(selectedFile);
+            imageComposer.loadFromConfig(selectedFile);
         }
     }
 
@@ -193,8 +210,8 @@ public class CardDesignerGUI {
         double previewScaleWidth = 750.0*0.7;
         double previewScaleHeight = 1050.0*0.7;*/
 
-        //if higher resolution card is wanted
-        double scale = 3.0;
+        //WHY DOES THIS STUPID THING WORK PERFECTLY WITH 0.7 RESOLUTION BUT NOT ANYTHING ELSE??? The stupid effing font just doesnt scale up.
+        double scale = 1;
 
         BufferedImage finalImage = getComposedCard(scale);
 
@@ -238,71 +255,21 @@ public class CardDesignerGUI {
 
     private void setImageComposerType(int type){
         switch(type){
-            case Card.W_MELEE: imageComposer = new WeaponMeleeCardComposer(); break;
-            case Card.W_RANGED: imageComposer = new WeaponRangedCardComposer(); break;
-            case Card.W_THROWABLE: imageComposer = new WeaponThrowableCardComposer(); break;
-            case Card.CHARACTER: imageComposer = new CharacterCardComposer(); break;
-            case Card.EFFECT: imageComposer = new EffectCardComposer(); break;
-            case Card.ARMOR: imageComposer = new ArmorCardComposer(); break;
-            case Card.CONSUMABLE: imageComposer = new ConsumableCardComposer(); break;
-            case Card.RUNE: imageComposer = new RuneCardComposer(); break;
-            case Card.ACCESSOIRE: imageComposer = new AccessoireCardComposer(); break;
+            case GlobalVar.W_MELEE: imageComposer = new WeaponMeleeCardComposer(); break;
+            case GlobalVar.W_RANGED: imageComposer = new WeaponRangedCardComposer(); break;
+            case GlobalVar.W_THROWABLE: imageComposer = new WeaponThrowableCardComposer(); break;
+            case GlobalVar.CHARACTER: imageComposer = new CharacterCardComposer(); break;
+            case GlobalVar.EFFECT: imageComposer = new EffectCardComposer(); break;
+            case GlobalVar.ARMOR: imageComposer = new ArmorCardComposer(); break;
+            case GlobalVar.CONSUMABLE: imageComposer = new ConsumableCardComposer(); break;
+            case GlobalVar.RUNE: imageComposer = new RuneCardComposer(); break;
+            case GlobalVar.ACCESSOIRE: imageComposer = new AccessoireCardComposer(); break;
 
         }
+
+        //EventBus.publish(new RepaintPanelEvent());
     }
     
-
-    /*public void updateRuneSlots(int num){
-        switch (num){
-            case 0: setImageComposer("runeSlot",null);break;
-            case 1: try{
-                        setImageComposer("runeSlot",ImageIO.read(new File("resources/glyphs/runecharge/1.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on RuneSlots; Icon File not found");
-                    }break;
-            case 2: try{
-                        setImageComposer("runeSlot",ImageIO.read(new File("resources/glyphs/runecharge/2.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on RuneSlots; Icon File not found");
-                    }break;
-            case 3: try{
-                        setImageComposer("runeSlot",ImageIO.read(new File("resources/glyphs/runecharge/3.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on RuneSlots; Icon File not found");
-                    }
-        }
-
-    }
-
-        public void updateRuneType(String type){
-        switch (type){
-            case "melee": try{
-                        setImageComposer("weaponType",ImageIO.read(new File("resources/glyphs/ui_rune_melee.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on RuneType; Icon File not found");
-                    }break;
-            case "ranged": try{
-                        setImageComposer("weaponType",ImageIO.read(new File("resources/glyphs/ui_rune_ranged.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on RuneType; Icon File not found");
-                    }break;
-            case "mixed": try{
-                        setImageComposer("weaponType",ImageIO.read(new File("resources/glyphs/ui_rune_mixed.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on RuneType; Icon File not found");
-                    }break;
-            case "armor": try{
-                        setImageComposer("weaponType",ImageIO.read(new File("resources/glyphs/ui_rune_clothing.png")));
-                    }catch(IOException e){
-                        throw new Error("Error on RuneType; Icon File not found");
-                    }
-        }
-
-        
-
-    }
-    */
-
     
 
     public BufferedImage getComposedCard(double scale){

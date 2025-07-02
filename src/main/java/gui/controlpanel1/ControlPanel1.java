@@ -19,8 +19,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentListener;
 
 import gui.CardDesignerGUI;
-import gui.ImageComposerConfig;
-import gui.card_types.Card;
+import gui.GlobalVar;
 import abstractclasses.*;
 import events.GetCardAttributesEvent;
 import events.EventBus;
@@ -30,9 +29,11 @@ import events.InfoTextUpdate;
 import events.LoadConfigEvent;
 import events.RepaintPanelEvent;
 import events.SelectTypePanelUpdateEvent;
+import events.TextLoadEvent;
 import events.TitleFontUpdate;
 import events.TitleTextUpdate;
 import events.ToggleTitleBorder;
+import events.TypeTextUpdate;
 import gui.controlpanel1.FontLoader;
 
 public class ControlPanel1 extends ControlPanel {
@@ -44,18 +45,29 @@ public class ControlPanel1 extends ControlPanel {
     private SelectTypePanel selectItemTypePanel;
 
     private JTabbedPane cardComponentTabbedPane;
-    private ImageBrowser frameSelect, backgroundSelect, textboxSelect, titleSelect,effectSelect;
+    private ImageBrowser frameSelect, backgroundSelect, textboxSelect, titleSelect,effectSelect, crownSelect;
     private VariableTabbedPane selectItemArt, weapons,rune, armor, accessoire, consumable,effect,character;
-    private JTextField titleTextField;
+    private JTextField titleTextField,typeTextField;
     private JTextArea infoTextField;
     private JComboBox<String> titleFontSelection,infoFontSelection;
     private JCheckBox titleStroke;
+    private ColorPicker titleColor, infoColor;
 
+    private int[] titleFieldBounds = {10,290,305,30};
+    private int[] typeFieldBounds = {10,335,305,30};
+    private int[] infoFieldBounds = {10,380,305,205};
+
+    private int[] titleFontBounds = {320,290,90,30};
+    private int[] infoFontBounds = {320, 380, 90, 30};
+
+    private int[] titleColorBounds = {420, 290, 30, 30};
+    private int[] infoColorBounds = { 420, 380, 30, 30};
     
 
     public void init(CardDesignerGUI parent) {
         EventBus.subscribe(SelectTypePanelUpdateEvent.class, this::onTypeUpdate);
         EventBus.subscribe(LoadConfigEvent.class, this::onLoadConfig);
+        EventBus.subscribe(TextLoadEvent.class, this::onTextLoad);
         
         
         setLayout(null);
@@ -65,7 +77,13 @@ public class ControlPanel1 extends ControlPanel {
         rescale(1.0);
     }
 
-    
+    private void onTextLoad(TextLoadEvent e){
+        switch(e.type){
+            case TextLoadEvent.INFO: infoTextField.setText(e.text); break;
+            case TextLoadEvent.TITLE: titleTextField.setText(e.text); break;
+            case TextLoadEvent.TYPE: typeTextField.setText(e.text); break;
+        }
+    }
 
     private void createButtons() {
         createCardComponentSelection();
@@ -106,6 +124,10 @@ public class ControlPanel1 extends ControlPanel {
         //titleTextField.setBounds(10, 290, 260, 30);
         add(titleTextField);
 
+        typeTextField = new JTextField();
+        //titleTextField.setBounds(10, 290, 260, 30);
+        add(typeTextField);
+
         infoTextField = new JTextArea();
         infoTextField.setPreferredSize(new java.awt.Dimension(485, 320));
         infoTextField.setLineWrap(true);
@@ -113,8 +135,8 @@ public class ControlPanel1 extends ControlPanel {
         infoTextField.setBorder(UIManager.getBorder("TextField.border"));
         add(infoTextField);
 
-        ColorPicker titleColor = new ColorPicker(parent, 420, 290, 30, 30, "title");
-        ColorPicker infoColor = new ColorPicker(parent, 420, 335, 30, 30, "info");
+        titleColor = new ColorPicker(parent, 420, 290, 30, 30, "title");
+        infoColor = new ColorPicker(parent, 420, 335, 30, 30, "info");
 
         titleStroke = new JCheckBox("Title Outline",false);
         titleStroke.setBounds(460,290,100,30);
@@ -142,6 +164,23 @@ public class ControlPanel1 extends ControlPanel {
             }
         });
 
+        typeTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                updateTypePreview();
+            }
+    
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                updateTypePreview();
+            }
+    
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                updateTypePreview();
+            }
+        });
+
         infoTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
@@ -163,6 +202,8 @@ public class ControlPanel1 extends ControlPanel {
         infoFontSelection.addActionListener(e -> updateInfoPreview());
         
     }
+
+    
     
     private void updateTitlePreview() {    
         String text = titleTextField.getText();
@@ -171,6 +212,14 @@ public class ControlPanel1 extends ControlPanel {
         
         EventBus.publish(new TitleFontUpdate(selectedFontName));
         EventBus.publish(new TitleTextUpdate(text));
+    }
+
+    private void updateTypePreview() {    
+        String text = typeTextField.getText();
+        //String selectedFontName = (String) titleFontSelection.getSelectedItem();
+        //Font font = new Font(selectedFontName, Font.PLAIN, 72);
+        
+        EventBus.publish(new TypeTextUpdate(text));
     }
 
     private void updateInfoPreview() {
@@ -220,18 +269,20 @@ public class ControlPanel1 extends ControlPanel {
     private void createCardComponentSelection(){
         cardComponentTabbedPane = new JTabbedPane();
 
-        frameSelect = new CardImageBrowser("resources/img/card_components/frame",360,90,600,40, 64,Card.FRAME_IMAGE);
-        backgroundSelect = new CardImageBrowser("resources/img/card_components/background",360,90,600,40, 64,Card.BACKGROUND_IMAGE); 
-        //textboxSelect = new CardImageBrowser("resources/img/card_components/textbox",360,90,600,40, 64,"cardTextbox");
-        //titleSelect = new CardImageBrowser("resources/img/card_components/title",360,90,600,40, 64,"cardTitle");
+        frameSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"frame",360,90,600,40, 64,GlobalVar.FRAME_IMAGE);
+        backgroundSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"background",360,90,600,40, 64,GlobalVar.BACKGROUND_IMAGE); 
+        textboxSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"textbox",360,90,600,40, 64,GlobalVar.TEXTBOX_IMAGE);
+        titleSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"title",360,90,600,40, 64,GlobalVar.TITLE_IMAGE);
+        crownSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"crowns",360,90,600,40, 64,GlobalVar.CROWN_IMAGE);
 
-        //effectSelect = new CardImageBrowser("resources/img/card_components/effects",360,90,600,40, 64,"cardBackground");
+        effectSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"effects",360,90,600,40, 64,GlobalVar.BACKGROUND_IMAGE);
 
         cardComponentTabbedPane.addTab("Choose Frame",frameSelect.getScrollPane());
         cardComponentTabbedPane.addTab("Choose Background",backgroundSelect.getScrollPane());
-        //cardComponentTabbedPane.addTab("Choose Textbox",textboxSelect.getScrollPane());
-        //cardComponentTabbedPane.addTab("Choose Title",titleSelect.getScrollPane());
-        //cardComponentTabbedPane.addTab("Choose Effect Background",effectSelect.getScrollPane());
+        cardComponentTabbedPane.addTab("Choose Textbox",textboxSelect.getScrollPane());
+        cardComponentTabbedPane.addTab("Choose Title",titleSelect.getScrollPane());
+        cardComponentTabbedPane.addTab("Choose Crown",crownSelect.getScrollPane());
+        cardComponentTabbedPane.addTab("Choose Effect Background",effectSelect.getScrollPane());
     }
 
     public void onTypeUpdate(SelectTypePanelUpdateEvent e){
@@ -274,14 +325,23 @@ public class ControlPanel1 extends ControlPanel {
         selectItemArt.setBounds((int) (390 *scale), (int) (0), (int) (360*scale), (int) (245*scale));
         selectItemTypePanel.setBounds((int) (770 *scale), (int) (0), (int) (300*scale), (int) (500*scale));
 
-        titleFontSelection.setBounds((int) (320 *scale), (int) (290*scale), (int) (90*scale), (int) (30*scale));
-        infoFontSelection.setBounds((int) (320 *scale), (int) (335*scale), (int) (90*scale), (int) (30*scale));
-        titleTextField.setBounds((int) (10 *scale), (int) (290*scale), (int) (305*scale), (int) (30*scale));
-        infoTextField.setBounds((int) (10 *scale), (int) (335*scale), (int) (305*scale), (int) (205*scale));
+        setComponentBounds(titleFontSelection, titleFontBounds, scale);
+        setComponentBounds(infoFontSelection, infoFontBounds, scale);
+
+        setComponentBounds(titleTextField, titleFieldBounds, scale);
+        setComponentBounds(typeTextField, typeFieldBounds, scale);
+        setComponentBounds(infoTextField, infoFieldBounds, scale);
+
+        setComponentBounds(infoColor, infoColorBounds, scale);
+        setComponentBounds(titleColor, titleColorBounds, scale);
 
 
         //absolute pos of the controlpanel within the window frame
         setBounds((int)(575 * scale), (int)(10 * scale), (int)(1210 * scale), (int)(1070 * scale));
+    }
+
+    private void setComponentBounds(JComponent c, int[] bounds, double scale){
+        c.setBounds((int)(bounds[0]*scale),(int)(bounds[1]*scale),(int)(bounds[2]*scale),(int)(bounds[3]*scale));
     }
 
     private void onLoadConfig(LoadConfigEvent e){

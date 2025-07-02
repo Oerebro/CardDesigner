@@ -313,7 +313,7 @@ public class PreviewPanel {
     }
 
     private void onTypeChange(SelectTypePanelUpdateEvent e){
-        EventBus.publish(new ClearUnrelatedImagesEvent());
+        //EventBus.publish(new ClearUnrelatedImagesEvent());
     }
 
     public JTextArea cloneTextArea(JTextArea area) {

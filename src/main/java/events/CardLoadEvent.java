@@ -2,17 +2,21 @@ package events;
 
 import java.awt.Color;
 
+import gui.GlobalVar;
+
 public class CardLoadEvent {
-    public String frameImage;
-    public String backgroundImage;
+    public String frameImage, backgroundImage, titleImage, crownImage, textBoxImage;
     public String titleText,rangeText,infoText, typeText;
     public Color titleColor, infoColor = Color.WHITE;
     public int runeCharges, tier, uses, dice, ac, type, attribute,rangeType;
 
     //default
     public CardLoadEvent() {
-        frameImage = "resources/img/card_components/frame/default.png";
-        backgroundImage = "resources/img/card_components/background/default.png";
+        frameImage = GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"frame/default.png";
+        backgroundImage = GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"background/default.png";
+        titleImage = GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"title/default.png";
+        crownImage = GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"crowns/default.png";
+        textBoxImage = GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"textbox/default.png";
         titleText = "";
         rangeText = "";
         infoText = "";

@@ -16,6 +16,7 @@ import events.EventBus;
 import events.InfoColorUpdate;
 import events.InfoTextUpdate;
 import events.RepaintPanelEvent;
+import events.TextLoadEvent;
 import events.InfoFontUpdate;
 
 public class JScalingTextPane extends JScrollPane {
@@ -135,7 +136,7 @@ public class JScalingTextPane extends JScrollPane {
     
 
     private void setFormattedText(String rawText) {
-        System.out.println("format text");
+        rawText = rawText.replaceAll("<->", "—").replaceAll("<\\.>", "•");
         StyledDocument doc = textPane.getStyledDocument();
         try {
             doc.remove(0, doc.getLength());
@@ -188,7 +189,7 @@ public class JScalingTextPane extends JScrollPane {
                                 Icon offsetIcon = new TextLineIcon(scaledIcon, (int)(lineHeight*0.15));
                                 StyleConstants.setIcon(iconStyle, offsetIcon);
                                 doc.insertString(doc.getLength(), "", defaultStyle);
-                                doc.insertString(doc.getLength(), key, iconStyle);
+                                doc.insertString(doc.getLength(), "<"+key+">", iconStyle);
                                 doc.insertString(doc.getLength(), "", defaultStyle);
                             } else {
                                 doc.insertString(doc.getLength(), "<" + key + ">", defaultStyle);
@@ -228,22 +229,19 @@ public class JScalingTextPane extends JScrollPane {
         Font font = textPane.getFont().deriveFont((float) maxSizeFont);
         int lineHeight = (int) (font.getSize2D() * 1.25f);
 
-        while ((lineCount * lineHeight) > paneHeight && font.getSize() > 1) {
+        while ((lineCount * lineHeight) > (paneHeight * 0.9)  && font.getSize() > 1) {
             font = font.deriveFont((float) font.getSize() - 1);
             lineHeight = (int) (font.getSize2D() * 1.25f);
         }
 
         currentFont = font.deriveFont((float) font.getSize());
         textPane.setFont(font);
-        text = unwrapText(text);
-        
-        textPane.setText(text);
         updateStylesFontSize(font.getSize());;
     }
 
     public void scaleFont(){
         scaleFontToFit(textPane.getText());
-        //setFormattedText(textPane.getText());
+        setFormattedText(textPane.getText());
     }
 
     private int getLineCount(String str) {
@@ -401,7 +399,8 @@ public class JScalingTextPane extends JScrollPane {
 
 
     public void setBounds(int x, int y, int width, int height, double scale) {
-        //maxSizeFont = (int) (100 * scale);
+        currentFont = textPane.getFont();
+        maxSizeFont = (int) (100 * scale);
         super.setBounds(x, y, width, height);
         this.setPreferredSize(new Dimension(width, height));
         textPane.setBounds(0,0, width, height);

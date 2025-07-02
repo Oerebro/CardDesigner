@@ -7,6 +7,7 @@ import events.ItemImageUpdateEvent;
 import events.RuneChargesUpdate;
 import events.TierUpdate;
 import events.CardTypeUpdate;
+import events.DiceUpdateEvent;
 import gui.*;
 import gui.card_types.*;
 
@@ -134,7 +135,7 @@ public class AttributePanel extends JPanel{
         this.add(input);
         createTierSelection();
 
-         EventBus.publish(new CardTypeUpdate(Card.CONSUMABLE));
+         EventBus.publish(new CardTypeUpdate(GlobalVar.CONSUMABLE));
 
     }
 
@@ -151,7 +152,7 @@ public class AttributePanel extends JPanel{
         createTierSelection();
         createStatSelection();
 
-        EventBus.publish(new CardTypeUpdate(Card.W_MELEE));
+        EventBus.publish(new CardTypeUpdate(GlobalVar.W_MELEE));
     }
 
     private void createRunePanel(){
@@ -172,9 +173,9 @@ public class AttributePanel extends JPanel{
             x.addActionListener(e->{uncheckOtherCheckboxes(x,weaponTypes);});
         }
 
-        isMelee.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(Card.W_MELEE));});
-        isRanged.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(Card.W_RANGED));});
-        isThrowable.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(Card.W_THROWABLE));});
+        isMelee.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_MELEE));});
+        isRanged.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_RANGED));});
+        isThrowable.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_THROWABLE));});
         weaponType.add(isMelee);
         weaponType.add(isRanged);
         weaponType.add(isThrowable);
@@ -196,10 +197,10 @@ public class AttributePanel extends JPanel{
             x.addActionListener(e->{uncheckOtherCheckboxes(x,runeTypesArr);});
         }
 
-        ranged.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(Card.W_RANGED));;});
-        melee.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(Card.W_MELEE));});
-        mixed.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(Card.W_THROWABLE));});
-        armor.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(Card.ARMOR));});
+        ranged.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_RANGED));;});
+        melee.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_MELEE));});
+        mixed.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_THROWABLE));});
+        armor.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.ARMOR));});
 
         runeTypes.add(melee);
         runeTypes.add(ranged);
@@ -228,11 +229,11 @@ public class AttributePanel extends JPanel{
             x.addActionListener(e->{uncheckOtherCheckboxes(x,diceSelect);});
         }
 
-        d4.addActionListener(e -> {getDice(4);});
-        d6.addActionListener(e -> {getDice(6);});
-        d8.addActionListener(e -> {getDice(8);});
-        d10.addActionListener(e -> {getDice(10);});
-        d12.addActionListener(e -> {getDice(12);});
+        d4.addActionListener(e -> {EventBus.publish(new DiceUpdateEvent(4));});
+        d6.addActionListener(e -> {EventBus.publish(new DiceUpdateEvent(6));});
+        d8.addActionListener(e -> {EventBus.publish(new DiceUpdateEvent(8));});
+        d10.addActionListener(e -> {EventBus.publish(new DiceUpdateEvent(10));});
+        d12.addActionListener(e -> {EventBus.publish(new DiceUpdateEvent(12));});
 
         dice.add(d4);
         dice.add(d6);
@@ -243,7 +244,6 @@ public class AttributePanel extends JPanel{
         this.add(dice);
 
     }
-
 
     private void createRuneSlotSelection(){
         JPanel runeSlots = new JPanel();
@@ -322,13 +322,13 @@ public class AttributePanel extends JPanel{
             x.addActionListener(e->{uncheckOtherCheckboxes(x,attributes);});
         }
 
-        publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/strength.png");
-        str.addActionListener(e -> {publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/strength.png");});
-        con.addActionListener(e -> {publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/constitution.png");});
-        dex.addActionListener(e -> {publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/dexterity.png");});
-        intel.addActionListener(e -> {publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/intelligence.png");});
-        wis.addActionListener(e -> {publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/wisdom.png");});
-        rizz.addActionListener(e -> {publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/charisma.png");});
+        publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");
+        str.addActionListener(e -> {publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");});
+        con.addActionListener(e -> {publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"constitution.png");});
+        dex.addActionListener(e -> {publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"dexterity.png");});
+        intel.addActionListener(e -> {publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"intelligence.png");});
+        wis.addActionListener(e -> {publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"wisdom.png");});
+        rizz.addActionListener(e -> {publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"charisma.png");});
 
         attribute.add(str);
         attribute.add(con);
@@ -342,12 +342,12 @@ public class AttributePanel extends JPanel{
 
     private void getDice(int num){
         switch (num){
-            case 0: publishImageUpdate(Card.DICE,null);break;
-            case 4: publishImageUpdate(Card.DICE,"resources/dice/d4.png");break;
-            case 6: publishImageUpdate(Card.DICE,"resources/dice/d6.png");break;
-            case 8: publishImageUpdate(Card.DICE,"resources/dice/d8.png");break;
-            case 10: publishImageUpdate(Card.DICE,"resources/dice/d10.png");break;
-            case 12: publishImageUpdate(Card.DICE,"resources/dice/d12.png");
+            case 0: publishImageUpdate(GlobalVar.DICE,null);break;
+            case 4: publishImageUpdate(GlobalVar.DICE,GlobalVar.DICE_IMAGE_PATH+"4.png");break;
+            case 6: publishImageUpdate(GlobalVar.DICE,GlobalVar.DICE_IMAGE_PATH+"6.png");break;
+            case 8: publishImageUpdate(GlobalVar.DICE,GlobalVar.DICE_IMAGE_PATH+"8.png");break;
+            case 10: publishImageUpdate(GlobalVar.DICE,GlobalVar.DICE_IMAGE_PATH+"10.png");break;
+            case 12: publishImageUpdate(GlobalVar.DICE,GlobalVar.DICE_IMAGE_PATH+"12.png");
         }
 
     }
@@ -355,29 +355,29 @@ public class AttributePanel extends JPanel{
     private void getArmorClassImage(int ac) {
         
         if(ac == 0){
-            publishImageUpdate(Card.ARMOR1, null);
-            publishImageUpdate(Card.ARMOR2, null);
+            publishImageUpdate(GlobalVar.ARMOR1, null);
+            publishImageUpdate(GlobalVar.ARMOR2, null);
             return;
         }
 
         if(ac < 10){
-            publishImageUpdate(Card.ARMOR1, "resources/glyphs/ac/"+ac+".png");
-            publishImageUpdate(Card.ARMOR2, null);
+            publishImageUpdate(GlobalVar.ARMOR1, GlobalVar.AC_IMAGE_PATH+ac+".png");
+            publishImageUpdate(GlobalVar.ARMOR2, null);
             return;
         }else if(ac >=10 && ac < 20){
-            publishImageUpdate(Card.ARMOR1, "resources/glyphs/ac/1_.png");
+            publishImageUpdate(GlobalVar.ARMOR1, GlobalVar.AC_IMAGE_PATH+"1_.png");
             ac %= 10;
-            publishImageUpdate(Card.ARMOR2, "resources/glyphs/ac/_"+ac+".png");
+            publishImageUpdate(GlobalVar.ARMOR2, GlobalVar.AC_IMAGE_PATH+"_"+ac+".png");
             return;
         }else if(ac >=20 && ac < 30){
-            publishImageUpdate(Card.ARMOR1, "resources/glyphsac//2_.png");
+            publishImageUpdate(GlobalVar.ARMOR1, GlobalVar.AC_IMAGE_PATH+"2_.png");
             ac %= 10;
-            publishImageUpdate(Card.ARMOR2, "resources/glyphs/ac/_"+ac+".png");
+            publishImageUpdate(GlobalVar.ARMOR2, GlobalVar.AC_IMAGE_PATH+"_"+ac+".png");
             return;
         }else if(ac >=30){
-            publishImageUpdate(Card.ARMOR1, "resources/glyphs/ac/3_.png");
+            publishImageUpdate(GlobalVar.ARMOR1, GlobalVar.AC_IMAGE_PATH+"3_.png");
             ac %= 10;
-            publishImageUpdate(Card.ARMOR2, "resources/glyphs/ac/_"+ac+".png");
+            publishImageUpdate(GlobalVar.ARMOR2, GlobalVar.AC_IMAGE_PATH+"_"+ac+".png");
             return;
         }
 
@@ -385,12 +385,12 @@ public class AttributePanel extends JPanel{
 
     /*public void getAttribute(String type){
         switch (type){
-            case "str": publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/strength.png");
-            case "con": publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/constitution.png");
-            case "dex": publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/dexterity.png");
-            case "intel": publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/intelligence.png");
-            case "wis": publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/wisdom.png");
-            case "rizz": publishImageUpdate(Card.ATTRIBUTE, "resources/glyphs/stat/charisma.png");
+            case "str": publishImageUpdate(Card.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");
+            case "con": publishImageUpdate(Card.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"constitution.png");
+            case "dex": publishImageUpdate(Card.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"dexterity.png");
+            case "intel": publishImageUpdate(Card.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"intelligence.png");
+            case "wis": publishImageUpdate(Card.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"wisdom.png");
+            case "rizz": publishImageUpdate(Card.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"charisma.png");
         }
     }*/
 
