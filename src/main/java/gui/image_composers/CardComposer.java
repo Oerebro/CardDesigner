@@ -15,6 +15,7 @@ import events.InfoColorUpdate;
 import events.InfoTextUpdate;
 import events.RepaintPanelEvent;
 import events.TextLoadEvent;
+import events.TextUpdate;
 import events.TitleTextUpdate;
 import events.ToggleTitleBorder;
 import events.CardLoadEvent;
@@ -55,7 +56,7 @@ public class CardComposer extends Loggable{
     protected int titleX,titleY, titleW, titleH;
     protected int infoX,infoY, infoW, infoH;
 
-    protected boolean titleBorder;
+    //protected boolean hasTitleBorder;
 
 
     public CardComposer(int type){
@@ -73,7 +74,7 @@ public class CardComposer extends Loggable{
         this.type = type;
         log("type" + type);
         
-        titleBorder = false;
+        hasTitleBorder = false;
 
         
 
@@ -92,9 +93,10 @@ public class CardComposer extends Loggable{
 
         EventBus.subscribe(ItemImageUpdateEvent.class, this::onImageUpdate);
         EventBus.subscribe(CardLoadEvent.class, this::onLoadCard);
-        EventBus.subscribe(InfoTextUpdate.class, this::onInfoTextUpdate);
+        EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
         EventBus.subscribe(ToggleTitleBorder.class, this::toggleTitleBorder);
+        
 
     }
 
@@ -105,7 +107,7 @@ public class CardComposer extends Loggable{
     protected void init(){};
 
     protected void toggleTitleBorder(ToggleTitleBorder e){
-        titleBorder = e.bool;
+        hasTitleBorder = e.bool;
         EventBus.publish(new RepaintPanelEvent());
     }
 
@@ -139,8 +141,8 @@ public class CardComposer extends Loggable{
 
     protected void onLoadCard(CardLoadEvent e){
         //this.type=e.type;
-        EventBus.publish(new TitleTextUpdate(e.titleText));
-        EventBus.publish(new InfoTextUpdate(e.infoText));
+        EventBus.publish(new TextUpdate(GlobalVar.titleTextUpdate,e.titleText));
+        EventBus.publish(new TextUpdate(GlobalVar.infoTextUpdate,e.infoText));
         setField(GlobalVar.BACKGROUND_IMAGE, e.backgroundImage);
         setField(GlobalVar.FRAME_IMAGE, e.frameImage);
 
@@ -150,7 +152,8 @@ public class CardComposer extends Loggable{
 
     }
 
-    protected void onInfoTextUpdate(InfoTextUpdate e){
+    protected void onTextUpdate(TextUpdate e){
+        if(e.type != GlobalVar.infoTextUpdate)
         EventBus.publish(new RepaintPanelEvent());
     }
 
@@ -278,7 +281,7 @@ public class CardComposer extends Loggable{
         config.titleText = titleTextPane.getText();
         config.typeText = typeTextPane.getText();
         config.type = this.type;
-        //config.hasTitleBorder = hasTitleBorder;
+        config.hasTitleBorder = hasTitleBorder;
 
         return config;
     }

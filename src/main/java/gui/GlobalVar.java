@@ -23,7 +23,7 @@ public class GlobalVar {
     public static final int ARMOR2 = 17;
 
     public static final int DICE = 18;
-    public static final int ATTRIBUTE = 19;
+    public static final int ATTRIBUTE_BASE = 19;
     
 
     public static final int TIER = 20;
@@ -38,6 +38,7 @@ public class GlobalVar {
     public static final int TEXTBOX_IMAGE = 28;
 
     public static final int RANGE_TYPE = 29;
+    public static final int ATTRIBUTE = 30;
 
 
     public static final String DICE_IMAGE_PATH = "resources/glyphs/dice/d";
@@ -49,5 +50,14 @@ public class GlobalVar {
     public static final String CARD_COMPONENTS_IMAGE_PATH = "resources/img/card_components/";
 
     public static final String CARD_SAVE_DIR = "saved/";
+
+    //EVENT SUBTYPES
+
+        //text updates
+        public static final int infoTextUpdate = 110;
+        public static final int titleTextUpdate = 111;
+        public static final int typeTextUpdate = 112;
+        public static final int rangeNormalTextUpdate = 113;
+        public static final int rangeMaxTextUpdate = 114;
     
 }

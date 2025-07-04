@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 
 import events.CardLoadEvent;
 import events.EventBus;
-import events.InfoTextUpdate;
 import events.ItemImageUpdateEvent;
 import events.RepaintPanelEvent;
 import events.TextLoadEvent;
@@ -84,7 +83,7 @@ public class ItemCardComposer extends CardComposer{
         titleTextPane.repaint(); 
         titleTextPane.printAll(labelGraphics);
         labelGraphics.dispose();
-        if(titleBorder){
+        if(hasTitleBorder){
             titleText = drawStroke(titleText,3,Color.WHITE);
         }
         g2d.drawImage(titleText,(int) (titleFieldBounds[0] * scale), (int) (titleFieldBounds[1] * scale), (int) (titleFieldBounds[2] * scale), (int) (titleFieldBounds[3] * scale), null);

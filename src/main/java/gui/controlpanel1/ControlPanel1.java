@@ -30,6 +30,7 @@ import events.LoadConfigEvent;
 import events.RepaintPanelEvent;
 import events.SelectTypePanelUpdateEvent;
 import events.TextLoadEvent;
+import events.TextUpdate;
 import events.TitleFontUpdate;
 import events.TitleTextUpdate;
 import events.ToggleTitleBorder;
@@ -211,7 +212,7 @@ public class ControlPanel1 extends ControlPanel {
         //Font font = new Font(selectedFontName, Font.PLAIN, 72);
         
         EventBus.publish(new TitleFontUpdate(selectedFontName));
-        EventBus.publish(new TitleTextUpdate(text));
+        EventBus.publish(new TextUpdate(GlobalVar.titleTextUpdate,text));
     }
 
     private void updateTypePreview() {    
@@ -219,7 +220,7 @@ public class ControlPanel1 extends ControlPanel {
         //String selectedFontName = (String) titleFontSelection.getSelectedItem();
         //Font font = new Font(selectedFontName, Font.PLAIN, 72);
         
-        EventBus.publish(new TypeTextUpdate(text));
+        EventBus.publish(new TextUpdate(GlobalVar.typeTextUpdate,text));
     }
 
     private void updateInfoPreview() {
@@ -227,7 +228,7 @@ public class ControlPanel1 extends ControlPanel {
         String selectedFontName = (String) infoFontSelection.getSelectedItem();
         //Font font = new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 72); 
         EventBus.publish(new InfoFontUpdate(selectedFontName));
-        EventBus.publish(new InfoTextUpdate(text));
+        EventBus.publish(new TextUpdate(GlobalVar.infoTextUpdate,text));
         
     }
 

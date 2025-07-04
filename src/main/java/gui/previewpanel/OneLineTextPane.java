@@ -3,34 +3,28 @@ package gui.previewpanel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.util.EventListener;
-import java.util.function.Consumer;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import events.EventBus;
 import events.InfoColorUpdate;
 import events.InfoFontUpdate;
-import events.LoadConfigEvent;
 import events.RepaintPanelEvent;
 import events.TitleColorUpdate;
 import events.TitleFontUpdate;
-import events.TitleTextUpdate;
-import events.TypeTextUpdate;
+import events.TextUpdate;
+import gui.GlobalVar;
 import gui.controlpanel1.FontLoader;
-import gui.controlpanel1.FontFamily;
-import events.RangeTextUpdate;
 
 
 public class OneLineTextPane extends JLabel {
-    private int maxSizeFont,x,y,height,width;
     private int type;
 
     public static final int TITLE = 1;
-    public static final int RANGE = 2;
+    public static final int RANGE_NORMAL = 2;
+    public static final int RANGE_MAX = 4;
     public static final int TYPE = 3;
     
 
@@ -39,29 +33,35 @@ public class OneLineTextPane extends JLabel {
         this.setBounds(x,y,width,height);
         this.setSize(width,height);
         this.setLayout(null);
-        this.setOpaque(false);
+        this.setOpaque(true);
+
+        this.setText("");
         
-        
+        EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         switch(type){
             case TITLE:
-                EventBus.subscribe(TitleTextUpdate.class, this::onTitleTextUpdate);
+                
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 EventBus.subscribe(TitleColorUpdate.class, this::onTitleColorUpdate);
                 setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.CENTER);
                 break;
-            case RANGE:
-                EventBus.subscribe(RangeTextUpdate.class, this::onRangeTextUpdate);
+            case RANGE_NORMAL:
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
-                //setVerticalAlignment(SwingConstants.LEFT);
+                setVerticalAlignment(SwingConstants.CENTER);
+                setHorizontalAlignment(SwingConstants.LEFT);
+                break;
+            case RANGE_MAX:
+                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
+                EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
+                setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.LEFT);
                 break;
             case TYPE:
-                EventBus.subscribe(TypeTextUpdate.class, this::onTypeTextUpdate);
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
-                //setVerticalAlignment(SwingConstants.LEFT);
+                setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.LEFT);
                 break;
         }
@@ -70,17 +70,6 @@ public class OneLineTextPane extends JLabel {
         
     }
 
-    private void onTitleTextUpdate(TitleTextUpdate e){
-        textUpdate(e.str);
-    }
-
-    private void onRangeTextUpdate(RangeTextUpdate e){
-        textUpdate(e.str);
-    }
-
-    private void onTypeTextUpdate(TypeTextUpdate e){
-        textUpdate(e.str);
-    }
 
     private void onTitleColorUpdate(TitleColorUpdate e){
         setColor(e.color);
@@ -98,12 +87,19 @@ public class OneLineTextPane extends JLabel {
 
     
 
-    private void textUpdate(String str){
-        //this.setFont(getScaledFontLabel(str, getFont(), getWidth(), getHeight(), this));
-        this.setText(str.replaceAll("<->", "—").replaceAll("<\\.>", "•"));
-        this.revalidate();
-        this.repaint();
-        EventBus.publish(new RepaintPanelEvent());
+    private void onTextUpdate(TextUpdate e){
+        if( e.type == GlobalVar.titleTextUpdate && this.type==TITLE 
+            || e.type == GlobalVar.rangeNormalTextUpdate && this.type==RANGE_NORMAL 
+            || e.type == GlobalVar.rangeMaxTextUpdate && this.type==RANGE_MAX
+            || e.type == GlobalVar.typeTextUpdate && this.type == TYPE)
+            {
+                String str = e.text;
+                //this.setFont(getScaledFontLabel(str, getFont(), getWidth(), getHeight(), this));
+                this.setText(str.replaceAll("<->", "—").replaceAll("<\\.>", "•"));
+                this.revalidate();
+                this.repaint();
+                EventBus.publish(new RepaintPanelEvent());
+        }
     }
 
     private void onTitleFontUpdate(TitleFontUpdate e){
@@ -157,10 +153,16 @@ public class OneLineTextPane extends JLabel {
         } while (metrics.stringWidth(text) > maxWidth-15 || metrics.getHeight() > maxHeight-1);
 
         int lineHeight = metrics.getHeight();
-        float descentRatio = .3f;
+        float descentRatio = .2f;
+        if(type== TITLE){
+            descentRatio = .3f;
+        }
+
         int descentOffset = (int) (lineHeight * descentRatio);
 
-        if(type == TITLE) setBorder(new EmptyBorder(descentOffset, 0, 0, 0));
+        setBorder(new EmptyBorder(descentOffset, 0, 0, 0));
+
+        
         return baseFont.deriveFont((float) fontSize);
     }
 }

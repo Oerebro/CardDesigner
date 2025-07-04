@@ -224,7 +224,7 @@ public class PreviewPanel {
         //infoTextDisplay.setText(htmlToPlainText(str));
         //infoTextDisplay.setFont(font);
         
-        EventBus.publish(new InfoTextUpdate(str));
+        EventBus.publish(new TextUpdate(GlobalVar.infoTextUpdatestr));
         //testDisplay.setFont(font);
         //testDisplay.repaint();
         

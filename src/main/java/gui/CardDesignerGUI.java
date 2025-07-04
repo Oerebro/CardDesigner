@@ -182,6 +182,8 @@ public class CardDesignerGUI {
         }
     }
 
+
+
     private void loadCard() {
         File savedDir = new File("saved");
         if (!savedDir.exists()) {

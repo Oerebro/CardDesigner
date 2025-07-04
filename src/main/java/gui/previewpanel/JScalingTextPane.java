@@ -11,12 +11,12 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import gui.GlobalVar;
 import gui.controlpanel1.FontLoader;
 import events.EventBus;
 import events.InfoColorUpdate;
-import events.InfoTextUpdate;
+import events.TextUpdate;
 import events.RepaintPanelEvent;
-import events.TextLoadEvent;
 import events.InfoFontUpdate;
 
 public class JScalingTextPane extends JScrollPane {
@@ -72,7 +72,7 @@ public class JScalingTextPane extends JScrollPane {
 
         stylesInit();
 
-        EventBus.subscribe(InfoTextUpdate.class, this::onTextUpdate);
+        EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         EventBus.subscribe(InfoFontUpdate.class, this::onFontUpdate);
         EventBus.subscribe(InfoColorUpdate.class, this::onColorUpdate);
         
@@ -373,9 +373,10 @@ public class JScalingTextPane extends JScrollPane {
         return result.toString().replaceAll("\\s+$", "");
     }
 
-     private void onTextUpdate(InfoTextUpdate event) {
+     private void onTextUpdate(TextUpdate event) {
+        if(event.type != GlobalVar.infoTextUpdate) return;
        
-        String text = event.str;
+        String text = event.text;
         text = wrapText(text);
 
 

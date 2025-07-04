@@ -1,0 +1,97 @@
+package gui.image_composers.cardTypes.itemTypes.equippableTypes;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+
+import events.EventBus;
+import events.TitleFontUpdate;
+import gui.GlobalVar;
+import gui.Loggable;
+import gui.previewpanel.OneLineTextPane;
+
+public class AttributeLabel extends Loggable {
+    private BufferedImage baseLabel, attributeIcon;
+    private OneLineTextPane rangeNormal, rangeMax;
+    private int attribute;
+
+    private int[] rangeNormalBounds = {169,47,42+10,55};
+    private int[] rangeMaxBounds = {213,47,77+10,55};
+    private int[] bounds = {0,0,305,105};
+
+    public AttributeLabel(int attribute, int x, int y, int width, int height, double scale){
+        //EventBus.subscribe(TitleFontUpdate.class, this::onFontUpdate);
+        //this.setOpaque(true);
+        //this.setBounds(x,y,width,height);
+        setAttribute(attribute);
+        setBaseLabel(GlobalVar.W_RANGED);
+
+        rangeNormal = new OneLineTextPane(OneLineTextPane.RANGE_NORMAL, 50, (int)(rangeNormalBounds[0]*scale), (int)(rangeNormalBounds[1]*scale), (int)(rangeNormalBounds[2]*scale), (int)(rangeNormalBounds[3]*scale));
+        rangeMax = new OneLineTextPane(OneLineTextPane.RANGE_MAX, 50, (int)(rangeMaxBounds[0]*scale), (int)(rangeMaxBounds[1]*scale), (int)(rangeMaxBounds[2]*scale), (int)(rangeMaxBounds[3]*scale));
+
+        rangeNormal.setText("1");
+        rangeMax.setText("180");
+        rangeNormal.setForeground(Color.BLACK);
+        rangeMax.setForeground(Color.BLACK);
+    }
+
+    private void setAttribute(int att){
+        this.attribute = att;
+    }
+
+
+    public BufferedImage paint(double scale){
+        log("paint");
+        BufferedImage image = new BufferedImage((int) (bounds[2]*scale), (int) (bounds[3]*scale), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+        g2d.drawImage(baseLabel, (int) (bounds[0] * scale), (int) (bounds[1] * scale),  (int) (bounds[2] * scale),(int) (bounds[3] * scale), null);
+
+        BufferedImage text = new BufferedImage((int) (rangeNormalBounds[2] * scale),(int) (rangeNormalBounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D text2d = text.createGraphics();
+
+        rangeNormal.setSize((int)(rangeNormalBounds[2] * scale), (int)(rangeNormalBounds[3] * scale));
+        rangeNormal.doLayout();
+        rangeNormal.printAll(text2d);
+        g2d.drawImage(text, (int) (rangeNormalBounds[0] * scale), (int) (rangeNormalBounds[1] * scale),  (int) (rangeNormalBounds[2] * scale),(int) (rangeNormalBounds[3] * scale), null);
+
+        text = new BufferedImage((int) (rangeMaxBounds[2] * scale),(int) (rangeMaxBounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
+        text2d = text.createGraphics();
+        rangeMax.setSize((int)(rangeMaxBounds[2] * scale), (int)(rangeMaxBounds[3] * scale));
+        rangeMax.doLayout();      
+        rangeMax.printAll(text2d);
+        g2d.drawImage(text, (int) (rangeMaxBounds[0] * scale), (int) (rangeMaxBounds[1] * scale),  (int) (rangeMaxBounds[2] * scale),(int) (rangeMaxBounds[3] * scale), null);
+
+        text2d.dispose();
+        g2d.dispose();
+
+        return image;
+    }
+
+    private void setBaseLabel(int type){
+        String path = GlobalVar.RANGETYPE_IMAGE_PATH;
+
+        switch (type) {
+            case GlobalVar.W_MELEE:
+                path += "melee.png";
+                break;
+        
+            case GlobalVar.W_RANGED:
+                path += "ranged.png";
+                break;
+        }
+
+        try{
+            baseLabel = ImageIO.read(new File(path));
+        }catch(IOException e){
+            System.out.println("Error on AttributeLabel::getImageFromFile ("+path+"); File not found");
+     
+        }
+
+    }
+    
+}

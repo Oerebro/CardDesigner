@@ -18,14 +18,16 @@ import java.awt.*;
 
 public class WeaponCardComposer extends EquippableCardComposer{
 
-    protected BufferedImage diceImage, attributeImage, rangeTypeImage;
+    protected BufferedImage diceImage, attributeBaseImage, rangeTypeImage;
+    protected AttributeLabel attributeLabel;
 
     protected int dice, attribute, rangeType;
     protected OneLineTextPane rangeTextPane;
     private int[] diceFieldBounds = {530,450,180,180};
     private int[] tierFieldBounds = {550,450,180,180};
     private int[] rangeTypeBounds = {0,470,305,105};
-    private int[] attributeFieldBounds = {0,470,305,105};
+    private int[] attributeBaseFieldBounds = {0,470,305,105};
+    private int[] attributeIconBounds = {0,470,305,105};
 
     public int getDice(){
         return dice;
@@ -40,6 +42,7 @@ public class WeaponCardComposer extends EquippableCardComposer{
         this.dice = 4;
         setRangeType(type);
         EventBus.subscribe(DiceUpdateEvent.class, this::onDiceUpdate);
+        attributeLabel = new AttributeLabel(GlobalVar.STRENGTH, 0,470,305,120,1.0);
     }
 
     @Override
@@ -51,14 +54,19 @@ public class WeaponCardComposer extends EquippableCardComposer{
 
         Graphics2D g2d = finalImage.createGraphics();
 
-
+/* 
         if (rangeTypeImage != null) {
             g2d.drawImage(rangeTypeImage, (int)(rangeTypeBounds[0]*scale), (int)(rangeTypeBounds[1]*scale), (int)(rangeTypeBounds[2]*scale), (int)(rangeTypeBounds[3]*scale), null);
         }
 
-        /*if (attributeImage != null) {
-            g2d.drawImage(attributeImage, (int)(attributeFieldBounds[0]*scale), (int)(attributeFieldBounds[1]*scale), (int)(attributeFieldBounds[2]*scale), (int)(attributeFieldBounds[3]*scale), null);
-        }*/
+        if (attributeBaseImage != null) {
+            g2d.drawImage(attributeBaseImage, (int)(attributeBaseFieldBounds[0]*scale), (int)(attributeBaseFieldBounds[1]*scale), (int)(attributeBaseFieldBounds[2]*scale), (int)(attributeBaseFieldBounds[3]*scale), null);
+        }
+*/
+        BufferedImage attributeImage = attributeLabel.paint(scale);
+        if (attributeImage != null) {
+            g2d.drawImage(attributeImage, (int)(attributeIconBounds[0]*scale), (int)(attributeIconBounds[1]*scale), (int)(attributeIconBounds[2]*scale), (int)(attributeIconBounds[3]*scale), null);
+        }
 
         if (diceImage != null) {
             g2d.drawImage(diceImage, (int)(diceFieldBounds[0]*scale), (int)(diceFieldBounds[1]*scale), (int)(diceFieldBounds[2]*scale), (int)(diceFieldBounds[3]*scale), null);
@@ -76,7 +84,7 @@ public class WeaponCardComposer extends EquippableCardComposer{
     protected void setField(int field, String path){
         switch(field){
             case GlobalVar.DICE: diceImage = getImageFromFile(path); EventBus.publish(new RepaintPanelEvent());break;
-            case GlobalVar.ATTRIBUTE: attributeImage = getImageFromFile(path); attribute = getAttribute(path); EventBus.publish(new RepaintPanelEvent()); break;
+            //case GlobalVar.ATTRIBUTE: attributeImage = getImageFromFile(path); attribute = getAttribute(path); EventBus.publish(new RepaintPanelEvent()); break;
             case GlobalVar.RANGE_TYPE: rangeTypeImage = getImageFromFile(path); EventBus.publish(new RepaintPanelEvent()); break;
             default: super.setField(field, path);
         }
