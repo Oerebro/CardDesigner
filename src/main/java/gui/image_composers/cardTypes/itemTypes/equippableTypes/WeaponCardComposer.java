@@ -42,7 +42,7 @@ public class WeaponCardComposer extends EquippableCardComposer{
         this.dice = 4;
         setRangeType(type);
         EventBus.subscribe(DiceUpdateEvent.class, this::onDiceUpdate);
-        attributeLabel = new AttributeLabel(GlobalVar.STRENGTH, 0,470,305,120,1.0);
+        attributeLabel = new AttributeLabel(GlobalVar.STRENGTH, GlobalVar.DAMAGE_MAGIC, 0,470,305,120,1.0);
     }
 
     @Override
@@ -93,14 +93,13 @@ public class WeaponCardComposer extends EquippableCardComposer{
     }
 
     protected void setRangeType(int type){
-        log(type);
 
         this.rangeType = type;
 
         switch(type){
-            case GlobalVar.W_MELEE: setField(GlobalVar.RANGE_TYPE, GlobalVar.RANGETYPE_IMAGE_PATH+"melee.png"); break;
-            case GlobalVar.W_THROWABLE: setField(GlobalVar.RANGE_TYPE, GlobalVar.RANGETYPE_IMAGE_PATH+"ranged.png"); break;
-            case GlobalVar.W_RANGED: setField(GlobalVar.RANGE_TYPE, GlobalVar.RANGETYPE_IMAGE_PATH+"ranged.png"); break;
+            case GlobalVar.W_MELEE: setField(GlobalVar.RANGE_TYPE, GlobalVar.ATTRIBUTE_LABEL_COMPONENTS+"melee.png"); break;
+            case GlobalVar.W_THROWABLE: setField(GlobalVar.RANGE_TYPE, GlobalVar.ATTRIBUTE_LABEL_COMPONENTS+"ranged.png"); break;
+            case GlobalVar.W_RANGED: setField(GlobalVar.RANGE_TYPE, GlobalVar.ATTRIBUTE_LABEL_COMPONENTS+"ranged.png"); break;
             
         }
 

@@ -33,7 +33,7 @@ public class OneLineTextPane extends JLabel {
         this.setBounds(x,y,width,height);
         this.setSize(width,height);
         this.setLayout(null);
-        this.setOpaque(true);
+        //this.setOpaque(true);
 
         this.setText("");
         

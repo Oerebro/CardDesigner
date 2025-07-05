@@ -39,6 +39,9 @@ public class GlobalVar {
 
     public static final int RANGE_TYPE = 29;
     public static final int ATTRIBUTE = 30;
+    public static final int DAMAGE_MELEE = 31;
+    public static final int DAMAGE_RANGED = 32;
+    public static final int DAMAGE_MAGIC = 33;
 
 
     public static final String DICE_IMAGE_PATH = "resources/glyphs/dice/d";
@@ -46,7 +49,7 @@ public class GlobalVar {
     public static final String AC_IMAGE_PATH = "resources/glyphs/ac/";
     public static final String TIER_IMAGE_PATH = "resources/glyphs/tier/";
     public static final String RUNECHARGE_IMAGE_PATH = "resources/glyphs/runecharge/";
-    public static final String RANGETYPE_IMAGE_PATH = "resources/glyphs/range_type/";
+    public static final String ATTRIBUTE_LABEL_COMPONENTS = "resources/glyphs/AttributeLabel/";
     public static final String CARD_COMPONENTS_IMAGE_PATH = "resources/img/card_components/";
 
     public static final String CARD_SAVE_DIR = "saved/";

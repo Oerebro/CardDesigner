@@ -18,7 +18,6 @@ public class WeaponRangedCardComposer extends WeaponCardComposer{
 
     @Override
     public BufferedImage composeCard(double scale){
-        //log(cardBackgroundPath);
         BufferedImage finalImage = super.composeCard(scale);
 
         targetWidth = (int) (baseWidth * scale);

@@ -16,19 +16,22 @@ import gui.Loggable;
 import gui.previewpanel.OneLineTextPane;
 
 public class AttributeLabel extends Loggable {
-    private BufferedImage baseLabel, attributeIcon;
+    private BufferedImage baseLabel, attributeIcon, damageTypeIcon;
     private OneLineTextPane rangeNormal, rangeMax;
-    private int attribute;
+    private int attribute, damageType;
 
     private int[] rangeNormalBounds = {169,47,42+10,55};
     private int[] rangeMaxBounds = {213,47,77+10,55};
     private int[] bounds = {0,0,305,105};
+    private int[] damageTypeBounds = {123,54,44,44};
+    private int[] attributeIconBounds = {0,0,305,105};
 
-    public AttributeLabel(int attribute, int x, int y, int width, int height, double scale){
+    public AttributeLabel(int attribute, int damageType, int x, int y, int width, int height, double scale){
         //EventBus.subscribe(TitleFontUpdate.class, this::onFontUpdate);
         //this.setOpaque(true);
         //this.setBounds(x,y,width,height);
         setAttribute(attribute);
+        setDamageType(damageType);
         setBaseLabel(GlobalVar.W_RANGED);
 
         rangeNormal = new OneLineTextPane(OneLineTextPane.RANGE_NORMAL, 50, (int)(rangeNormalBounds[0]*scale), (int)(rangeNormalBounds[1]*scale), (int)(rangeNormalBounds[2]*scale), (int)(rangeNormalBounds[3]*scale));
@@ -44,16 +47,37 @@ public class AttributeLabel extends Loggable {
         this.attribute = att;
     }
 
+    private void setDamageType(int type){
+        this.damageType = type;
+
+        switch(type){
+            case GlobalVar.DAMAGE_MAGIC:
+                damageTypeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_LABEL_COMPONENTS+"damage_magic.png");
+                break;
+            case GlobalVar.DAMAGE_MELEE:
+                damageTypeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_LABEL_COMPONENTS+"damage_melee.png");
+                break;
+            case GlobalVar.DAMAGE_RANGED:
+                damageTypeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_LABEL_COMPONENTS+"damage_ranged.png");
+        }
+    }
+
 
     public BufferedImage paint(double scale){
-        log("paint");
         BufferedImage image = new BufferedImage((int) (bounds[2]*scale), (int) (bounds[3]*scale), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = image.createGraphics();
         g2d.drawImage(baseLabel, (int) (bounds[0] * scale), (int) (bounds[1] * scale),  (int) (bounds[2] * scale),(int) (bounds[3] * scale), null);
 
+        if(damageTypeIcon != null){
+            g2d.drawImage(damageTypeIcon, (int) (damageTypeBounds[0] * scale), (int) (damageTypeBounds[1] * scale),  (int) (damageTypeBounds[2] * scale),(int) (damageTypeBounds[3] * scale), null);
+        }
+
+        if(attributeIcon != null){
+            g2d.drawImage(attributeIcon, (int) (attributeIconBounds[0] * scale), (int) (attributeIconBounds[1] * scale),  (int) (attributeIconBounds[2] * scale),(int) (attributeIconBounds[3] * scale), null);
+        }
+
         BufferedImage text = new BufferedImage((int) (rangeNormalBounds[2] * scale),(int) (rangeNormalBounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
         Graphics2D text2d = text.createGraphics();
-
         rangeNormal.setSize((int)(rangeNormalBounds[2] * scale), (int)(rangeNormalBounds[3] * scale));
         rangeNormal.doLayout();
         rangeNormal.printAll(text2d);
@@ -73,7 +97,7 @@ public class AttributeLabel extends Loggable {
     }
 
     private void setBaseLabel(int type){
-        String path = GlobalVar.RANGETYPE_IMAGE_PATH;
+        String path = GlobalVar.ATTRIBUTE_LABEL_COMPONENTS;
 
         switch (type) {
             case GlobalVar.W_MELEE:
@@ -84,14 +108,18 @@ public class AttributeLabel extends Loggable {
                 path += "ranged.png";
                 break;
         }
+            baseLabel = loadImageFromFile(path);
 
+    }
+
+    private BufferedImage loadImageFromFile(String path){
+        BufferedImage i = null;
         try{
-            baseLabel = ImageIO.read(new File(path));
+            i = ImageIO.read(new File(path));
         }catch(IOException e){
             System.out.println("Error on AttributeLabel::getImageFromFile ("+path+"); File not found");
-     
         }
-
+        return i;
     }
     
 }

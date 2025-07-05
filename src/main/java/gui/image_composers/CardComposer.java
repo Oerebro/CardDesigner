@@ -72,7 +72,6 @@ public class CardComposer extends Loggable{
         infoH = 295;
 
         this.type = type;
-        log("type" + type);
         
         hasTitleBorder = false;
 
@@ -272,7 +271,6 @@ public class CardComposer extends Loggable{
     }
 
     protected CardConfig writeToConfig(CardConfig config){
-        log("write type "+type);
         config.cardFramePath = cardFramePath;
         config.cardBackgroundPath = cardBackgroundPath;
         config.cardTitlePath = cardTitlePath;
