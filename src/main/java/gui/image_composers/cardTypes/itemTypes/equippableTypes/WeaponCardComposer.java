@@ -42,7 +42,7 @@ public class WeaponCardComposer extends EquippableCardComposer{
         this.dice = 4;
         setRangeType(type);
         EventBus.subscribe(DiceUpdateEvent.class, this::onDiceUpdate);
-        attributeLabel = new AttributeLabel(GlobalVar.STRENGTH, GlobalVar.DAMAGE_MAGIC, 0,470,305,120,1.0);
+        attributeLabel = new AttributeLabel(GlobalVar.STRENGTH, GlobalVar.DAMAGE_MELEE, 0,470,305,120,1.0);
     }
 
     @Override

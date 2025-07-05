@@ -24,7 +24,7 @@ public class AttributeLabel extends Loggable {
     private int[] rangeMaxBounds = {213,47,77+10,55};
     private int[] bounds = {0,0,305,105};
     private int[] damageTypeBounds = {123,54,44,44};
-    private int[] attributeIconBounds = {0,0,305,105};
+    private int[] attributeIconBounds = {27,13,85,85};
 
     public AttributeLabel(int attribute, int damageType, int x, int y, int width, int height, double scale){
         //EventBus.subscribe(TitleFontUpdate.class, this::onFontUpdate);
@@ -45,6 +45,23 @@ public class AttributeLabel extends Loggable {
 
     private void setAttribute(int att){
         this.attribute = att;
+
+        switch(att){
+            case GlobalVar.STRENGTH:
+                attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");
+                break;
+            case GlobalVar.DEXTERITY:
+                attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"dexterity.png");
+                break;
+            case GlobalVar.CONSTITUTION:
+                attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"constitution.png");
+            case GlobalVar.INTELLIGENCE:
+                attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"intelligence.png");
+            case GlobalVar.WISDOM:
+                attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"wisdom.png");
+            case GlobalVar.CHARISMA:
+                attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"charisma.png");
+        }
     }
 
     private void setDamageType(int type){
