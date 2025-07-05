@@ -23,8 +23,8 @@ public class WeaponCardComposer extends EquippableCardComposer{
 
     protected int dice, attribute, rangeType;
     protected OneLineTextPane rangeTextPane;
-    private int[] diceFieldBounds = {530,450,180,180};
-    private int[] tierFieldBounds = {550,450,180,180};
+    private int[] diceFieldBounds = {530,440,180,180};
+    private int[] tierFieldBounds = {550,440,180,180};
     private int[] rangeTypeBounds = {0,470,305,105};
     private int[] attributeBaseFieldBounds = {0,470,305,105};
     private int[] attributeIconBounds = {0,470,305,105};

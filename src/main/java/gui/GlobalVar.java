@@ -43,6 +43,10 @@ public class GlobalVar {
     public static final int DAMAGE_RANGED = 32;
     public static final int DAMAGE_MAGIC = 33;
 
+    public static final int TITLE_BORDER = 34;
+    public static final int INFO_BORDER = 35;
+    public static final int TYPE_BORDER = 36;
+
 
     public static final String DICE_IMAGE_PATH = "resources/glyphs/dice/d";
     public static final String ATTRIBUTE_IMAGE_PATH = "resources/glyphs/attributes/";

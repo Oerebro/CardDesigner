@@ -12,12 +12,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import events.EventBus;
 import events.ItemImageUpdateEvent;
 import events.InfoColorUpdate;
-import events.InfoTextUpdate;
 import events.RepaintPanelEvent;
 import events.TextLoadEvent;
 import events.TextUpdate;
-import events.TitleTextUpdate;
-import events.ToggleTitleBorder;
+import events.ToggleTextBorder;
 import events.CardLoadEvent;
 
 import java.awt.*;
@@ -34,7 +32,7 @@ public class CardComposer extends Loggable{
     protected String cardFramePath, cardBackgroundPath,cardTypePath,overlayPath,runeCutPath, cardTextBoxPath, cardTitlePath, cardCrownPath;
     protected JScalingTextPane infoTextPane;
     protected OneLineTextPane titleTextPane,typeTextPane;
-    protected Boolean hasTitleBorder, hasRuneCut;
+    protected Boolean hasTitleBorder, hasRuneCut, hasInfoBorder, hasTypeBorder;
 
     protected String TYPEIMAGEPATH = "reconfigs/glyphs/";
     protected String ARMOR_TYPEIMAGE = "armor.png";
@@ -65,6 +63,8 @@ public class CardComposer extends Loggable{
         this.type = type;
         
         hasTitleBorder = false;
+        hasTypeBorder = false;
+        hasInfoBorder = false;
 
         
 
@@ -89,7 +89,7 @@ public class CardComposer extends Loggable{
         EventBus.subscribe(CardLoadEvent.class, this::onLoadCard);
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
-        EventBus.subscribe(ToggleTitleBorder.class, this::toggleTitleBorder);
+        EventBus.subscribe(ToggleTextBorder.class, this::toggleTextBorder);
         
 
     }
@@ -100,8 +100,13 @@ public class CardComposer extends Loggable{
 
     protected void init(){};
 
-    protected void toggleTitleBorder(ToggleTitleBorder e){
-        hasTitleBorder = e.bool;
+    protected void toggleTextBorder(ToggleTextBorder e){
+        switch(e.type){
+            case GlobalVar.TITLE_BORDER: hasTitleBorder = e.bool; break;
+            case GlobalVar.INFO_BORDER: hasInfoBorder = e.bool; break;
+            case GlobalVar.TYPE_BORDER: hasTypeBorder = e.bool; break;
+
+        }
         EventBus.publish(new RepaintPanelEvent());
     }
 

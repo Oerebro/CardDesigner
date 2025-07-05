@@ -35,13 +35,13 @@ public class AttributeLabel extends Loggable {
         this.attribute = GlobalVar.STRENGTH;
         attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");
         setDamageType(damageType);
-        setBaseLabel(GlobalVar.W_RANGED);
+        setBaseLabel(GlobalVar.W_MELEE);
 
         rangeNormal = new OneLineTextPane(OneLineTextPane.RANGE_NORMAL, 50, (int)(rangeNormalBounds[0]*scale), (int)(rangeNormalBounds[1]*scale), (int)(rangeNormalBounds[2]*scale), (int)(rangeNormalBounds[3]*scale));
         rangeMax = new OneLineTextPane(OneLineTextPane.RANGE_MAX, 50, (int)(rangeMaxBounds[0]*scale), (int)(rangeMaxBounds[1]*scale), (int)(rangeMaxBounds[2]*scale), (int)(rangeMaxBounds[3]*scale));
 
-        rangeNormal.setText("1");
-        rangeMax.setText("180");
+        rangeNormal.setText("5");
+        rangeMax.setText("");
         rangeNormal.setForeground(Color.BLACK);
         rangeMax.setForeground(Color.BLACK);
     }

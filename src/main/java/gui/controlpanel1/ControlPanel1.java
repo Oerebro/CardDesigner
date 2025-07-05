@@ -33,7 +33,7 @@ import events.TextLoadEvent;
 import events.TextUpdate;
 import events.TitleFontUpdate;
 import events.TitleTextUpdate;
-import events.ToggleTitleBorder;
+import events.ToggleTextBorder;
 import events.TypeTextUpdate;
 import gui.controlpanel1.FontLoader;
 
@@ -51,7 +51,7 @@ public class ControlPanel1 extends ControlPanel {
     private JTextField titleTextField,typeTextField;
     private JTextArea infoTextField;
     private JComboBox<String> titleFontSelection,infoFontSelection;
-    private JCheckBox titleStroke;
+    private JCheckBox titleStroke, infoStroke, typeStroke;
     private ColorPicker titleColor, infoColor;
 
     private int[] titleFieldBounds = {10,290,305,30};
@@ -141,8 +141,18 @@ public class ControlPanel1 extends ControlPanel {
 
         titleStroke = new JCheckBox("Title Outline",false);
         titleStroke.setBounds(460,290,100,30);
-        titleStroke.addActionListener(e->{EventBus.publish(new ToggleTitleBorder(titleStroke.isSelected()));});
+        titleStroke.addActionListener(e->{EventBus.publish(new ToggleTextBorder(GlobalVar.TITLE_BORDER,titleStroke.isSelected()));});
+
+        typeStroke = new JCheckBox("Type Info Outline",false);
+        typeStroke.setBounds(460,335,100,30);
+        typeStroke.addActionListener(e->{EventBus.publish(new ToggleTextBorder(GlobalVar.TYPE_BORDER,typeStroke.isSelected()));});
+
+        infoStroke = new JCheckBox("Rules Text Outline",false);
+        infoStroke.setBounds(460,380,100,30);
+        infoStroke.addActionListener(e->{EventBus.publish(new ToggleTextBorder(GlobalVar.INFO_BORDER,infoStroke.isSelected()));});
         add(titleStroke);
+        add(typeStroke);
+        add(infoStroke);
         add(titleColor);
         add(infoColor);
 

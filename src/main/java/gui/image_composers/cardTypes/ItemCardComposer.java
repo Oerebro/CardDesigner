@@ -57,6 +57,9 @@ public class ItemCardComposer extends CardComposer{
         typeTextPane.validate();
         typeTextPane.printAll(labelGraphics);
         labelGraphics.dispose();
+        if(hasTypeBorder){
+            typeText = drawStroke(typeText,3,Color.WHITE);
+        }
         g2d.drawImage(typeText, (int) (typeFieldBounds[0]*scale), (int)(typeFieldBounds[1]*scale),  (int)(typeFieldBounds[2]*scale),  (int)(typeFieldBounds[3]*scale), null);
 
 
@@ -69,6 +72,9 @@ public class ItemCardComposer extends CardComposer{
         infoTextPane.repaint(); 
         infoTextPane.printAll(labelGraphics);
         labelGraphics.dispose();
+        if(hasInfoBorder){
+            infoText = drawStroke(infoText,3,Color.WHITE);
+        }
         g2d.drawImage(infoText, (int) (infoFieldBounds[0] * scale), (int) (infoFieldBounds[1] * scale),  (int) (infoFieldBounds[2] * scale),(int) (infoFieldBounds[3] * scale), null);
         
         BufferedImage titleText = new BufferedImage((int) (titleFieldBounds[2] * scale), (int) (titleFieldBounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
