@@ -9,7 +9,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import events.AttributeUpdate;
 import events.EventBus;
+import events.RepaintPanelEvent;
 import events.TitleFontUpdate;
 import gui.GlobalVar;
 import gui.Loggable;
@@ -27,10 +29,11 @@ public class AttributeLabel extends Loggable {
     private int[] attributeIconBounds = {27,13,85,85};
 
     public AttributeLabel(int attribute, int damageType, int x, int y, int width, int height, double scale){
-        //EventBus.subscribe(TitleFontUpdate.class, this::onFontUpdate);
+        EventBus.subscribe(AttributeUpdate.class, this::setAttribute);
         //this.setOpaque(true);
         //this.setBounds(x,y,width,height);
-        setAttribute(attribute);
+        this.attribute = GlobalVar.STRENGTH;
+        attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");
         setDamageType(damageType);
         setBaseLabel(GlobalVar.W_RANGED);
 
@@ -43,10 +46,11 @@ public class AttributeLabel extends Loggable {
         rangeMax.setForeground(Color.BLACK);
     }
 
-    private void setAttribute(int att){
-        this.attribute = att;
+    private void setAttribute(AttributeUpdate e){
+        log("att");
+        this.attribute = e.type;
 
-        switch(att){
+        switch(attribute){
             case GlobalVar.STRENGTH:
                 attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");
                 break;
@@ -55,13 +59,18 @@ public class AttributeLabel extends Loggable {
                 break;
             case GlobalVar.CONSTITUTION:
                 attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"constitution.png");
+                break;
             case GlobalVar.INTELLIGENCE:
                 attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"intelligence.png");
+                break;
             case GlobalVar.WISDOM:
                 attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"wisdom.png");
+                break;
             case GlobalVar.CHARISMA:
                 attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"charisma.png");
+                break;
         }
+        EventBus.publish(new RepaintPanelEvent());
     }
 
     private void setDamageType(int type){
@@ -77,6 +86,8 @@ public class AttributeLabel extends Loggable {
             case GlobalVar.DAMAGE_RANGED:
                 damageTypeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_LABEL_COMPONENTS+"damage_ranged.png");
         }
+
+        EventBus.publish(new RepaintPanelEvent());
     }
 
 

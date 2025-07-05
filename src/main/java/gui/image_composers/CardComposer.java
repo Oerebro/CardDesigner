@@ -53,23 +53,14 @@ public class CardComposer extends Loggable{
 
     protected int targetWidth, targetHeight;
 
-    protected int titleX,titleY, titleW, titleH;
-    protected int infoX,infoY, infoW, infoH;
+    protected int[] typeFieldBounds = {50,605,650,40};
+    protected int[] titleFieldBounds = {57,70,632,50};
+    protected int[] infoFieldBounds = {55,665,640,295};
 
     //protected boolean hasTitleBorder;
 
 
     public CardComposer(int type){
-
-        titleX = 40;
-        titleY = 50;
-        titleW = 670;
-        titleH = 50;
-
-        infoX = 55;
-        infoY = 665;
-        infoW = 640;
-        infoH = 295;
 
         this.type = type;
         
@@ -78,12 +69,16 @@ public class CardComposer extends Loggable{
         
 
         infoTextPane = new JScalingTextPane(9, 72);
-        infoTextPane.setBounds(infoX,infoY,infoW,infoH);
-        infoTextPane.setSize(infoW,infoH);
+        infoTextPane.setBounds(infoFieldBounds[0],infoFieldBounds[1],infoFieldBounds[2],infoFieldBounds[3]);
+        infoTextPane.setSize(infoFieldBounds[2],infoFieldBounds[3]);
 
 
-        titleTextPane = new OneLineTextPane(OneLineTextPane.TITLE, 200, titleX,titleY,titleW,titleH);
+        titleTextPane = new OneLineTextPane(OneLineTextPane.TITLE, 200, titleFieldBounds[0],titleFieldBounds[1],titleFieldBounds[2],titleFieldBounds[3]);
         titleTextPane.setForeground(Color.WHITE);
+
+        typeTextPane = new OneLineTextPane(OneLineTextPane.TYPE, 200, typeFieldBounds[0],typeFieldBounds[1],typeFieldBounds[2],typeFieldBounds[3]);
+        typeTextPane.setOpaque(false);
+        typeTextPane.setForeground(Color.WHITE);
 
         //titleTextPane.setBounds(80,20,590,80);
         //titleTextPane.setBounds(0,100,590,80);

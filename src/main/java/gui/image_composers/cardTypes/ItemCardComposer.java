@@ -21,10 +21,7 @@ public class ItemCardComposer extends CardComposer{
     protected String cardItemImagePath;
     //protected OneLineTextPane typeTextPane;
 
-    private int[] titleFieldBounds = {57,70,632,50};
-    private int[] typeFieldBounds = {50,610,650,40};
-    //private int[] infoFieldBounds = {10,380,305,205};
-    private int[] infoFieldBounds = {55,670,640,295};
+    
     
 
     public String getItemImagePath(){
@@ -34,9 +31,7 @@ public class ItemCardComposer extends CardComposer{
     public ItemCardComposer(int type){
         super(type);
 
-        typeTextPane = new OneLineTextPane(OneLineTextPane.TYPE, 200, typeFieldBounds[0],typeFieldBounds[1],typeFieldBounds[2],typeFieldBounds[3]);
-        typeTextPane.setOpaque(false);
-        typeTextPane.setForeground(Color.WHITE);
+        
     }
 
     @Override

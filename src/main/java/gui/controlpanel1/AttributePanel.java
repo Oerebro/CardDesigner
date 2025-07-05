@@ -6,6 +6,7 @@ import events.EventBus;
 import events.ItemImageUpdateEvent;
 import events.RuneChargesUpdate;
 import events.TierUpdate;
+import events.AttributeUpdate;
 import events.CardTypeUpdate;
 import events.DiceUpdateEvent;
 import gui.*;
@@ -150,7 +151,7 @@ public class AttributePanel extends JPanel{
         createDiceSelection();
         createRuneSlotSelection();
         createTierSelection();
-        createStatSelection();
+        createAttributeSelection();
 
         EventBus.publish(new CardTypeUpdate(GlobalVar.W_MELEE));
     }
@@ -305,7 +306,7 @@ public class AttributePanel extends JPanel{
 
     
 
-    private void createStatSelection(){
+    private void createAttributeSelection(){
         JPanel attribute = new JPanel();
         attribute.setBorder(BorderFactory.createTitledBorder("Damage Attribute"));
         attribute.setLayout(new GridLayout(0, 3, 5, 5));
@@ -323,12 +324,12 @@ public class AttributePanel extends JPanel{
         }
 
         publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");
-        str.addActionListener(e -> {publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");});
-        con.addActionListener(e -> {publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"constitution.png");});
-        dex.addActionListener(e -> {publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"dexterity.png");});
-        intel.addActionListener(e -> {publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"intelligence.png");});
-        wis.addActionListener(e -> {publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"wisdom.png");});
-        rizz.addActionListener(e -> {publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"charisma.png");});
+        str.addActionListener(e -> {EventBus.publish(new AttributeUpdate(GlobalVar.STRENGTH));});
+        con.addActionListener(e -> {EventBus.publish(new AttributeUpdate(GlobalVar.CONSTITUTION));});
+        dex.addActionListener(e -> {EventBus.publish(new AttributeUpdate(GlobalVar.DEXTERITY));});
+        intel.addActionListener(e -> {EventBus.publish(new AttributeUpdate(GlobalVar.INTELLIGENCE));});
+        wis.addActionListener(e -> {EventBus.publish(new AttributeUpdate(GlobalVar.WISDOM));});
+        rizz.addActionListener(e -> {EventBus.publish(new AttributeUpdate(GlobalVar.CHARISMA));});
 
         attribute.add(str);
         attribute.add(con);
