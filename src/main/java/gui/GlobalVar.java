@@ -1,53 +1,70 @@
 package gui;
 
 public class GlobalVar {
-    public static final int CHARACTER = 0;
-    public static final int EFFECT = 1;
-    public static final int WEAPON = 2;
-    public static final int ARMOR = 3;
-    public static final int CONSUMABLE = 4;
-    public static final int RUNE = 5;
-    public static final int ACCESSOIRE = 6;
-    public static final int W_MELEE = 7;
-    public static final int W_RANGED = 8;
-    public static final int W_THROWABLE = 9;
+    // Block 1: General Types
+    public static final int CHARACTER = 101;
+    public static final int EFFECT = 102;
+    public static final int WEAPON = 103;
+    public static final int ARMOR = 104;
+    public static final int CONSUMABLE = 105;
+    public static final int RUNE = 106;
+    public static final int ACCESSOIRE = 107;
 
-    public static final int STRENGTH = 10;
-    public static final int CONSTITUTION = 11;
-    public static final int DEXTERITY = 12;
-    public static final int WISDOM = 13;
-    public static final int INTELLIGENCE = 14;
-    public static final int CHARISMA = 15;
+    // Block 2: Weapon Types
+    public static final int W_MELEE = 201;
+    public static final int W_RANGED = 202;
+    public static final int W_THROWABLE = 203;
+    public static final int W_MAGIC = 204;
 
-    public static final int ARMOR1 = 16;
-    public static final int ARMOR2 = 17;
+    // Block 3: Attributes
+    public static final int STRENGTH = 301;
+    public static final int CONSTITUTION = 302;
+    public static final int DEXTERITY = 303;
+    public static final int WISDOM = 304;
+    public static final int INTELLIGENCE = 305;
+    public static final int CHARISMA = 306;
 
-    public static final int DICE = 18;
-    public static final int ATTRIBUTE_BASE = 19;
-    
+    // Block 4: Armor Values
+    public static final int ARMOR1 = 401;
+    public static final int ARMOR2 = 402;
 
-    public static final int TIER = 20;
-    public static final int RUNECHARGES = 21;
-    public static final int RUNECUT = 22;
+    // Block 5: Dice and Attribute Base
+    public static final int DICE = 501;
+    public static final int ATTRIBUTE_BASE = 502;
 
-    public static final int ITEM_IMAGE = 23;
-    public static final int FRAME_IMAGE = 24;
-    public static final int BACKGROUND_IMAGE = 25;
-    public static final int TITLE_IMAGE = 26;
-    public static final int CROWN_IMAGE = 27;
-    public static final int TEXTBOX_IMAGE = 28;
+    // Block 6: Rune Data
+    public static final int TIER = 601;
+    public static final int RUNECHARGES = 602;
+    public static final int RUNECUT = 603;
 
-    public static final int RANGE_TYPE = 29;
-    public static final int ATTRIBUTE = 30;
-    public static final int DAMAGE_MELEE = 31;
-    public static final int DAMAGE_RANGED = 32;
-    public static final int DAMAGE_MAGIC = 33;
+    // Block 7: Image Components
+    public static final int ITEM_IMAGE = 701;
+    public static final int FRAME_IMAGE = 702;
+    public static final int BACKGROUND_IMAGE = 703;
+    public static final int TITLE_IMAGE = 704;
+    public static final int CROWN_IMAGE = 705;
+    public static final int TEXTBOX_IMAGE = 706;
 
-    public static final int TITLE_BORDER = 34;
-    public static final int INFO_BORDER = 35;
-    public static final int TYPE_BORDER = 36;
+    // Block 8: Combat Stats
+    public static final int RANGE_TYPE = 801;
+    public static final int ATTRIBUTE = 802;
+    public static final int DAMAGE_MELEE = 803;
+    public static final int DAMAGE_RANGED = 804;
+    public static final int DAMAGE_MAGIC = 805;
 
+    // Block 9: Borders
+    public static final int TITLE_BORDER = 901;
+    public static final int INFO_BORDER = 902;
+    public static final int TYPE_BORDER = 903;
 
+    // Block 10: Event Subtypes
+    public static final int INFO_TEXT_UPDATE = 1001;
+    public static final int TITLE_TEXT_UPDATE = 1002;
+    public static final int TYPE_TEXT_UPDATE = 1003;
+    public static final int RANGE_NORMAL_TEXT_UPDATE = 1004;
+    public static final int RANGE_MAX_TEXT_UPDATE = 1005;
+
+    // Paths
     public static final String DICE_IMAGE_PATH = "resources/glyphs/dice/d";
     public static final String ATTRIBUTE_IMAGE_PATH = "resources/glyphs/attributes/";
     public static final String AC_IMAGE_PATH = "resources/glyphs/ac/";
@@ -57,14 +74,4 @@ public class GlobalVar {
     public static final String CARD_COMPONENTS_IMAGE_PATH = "resources/img/card_components/";
 
     public static final String CARD_SAVE_DIR = "saved/";
-
-    //EVENT SUBTYPES
-
-        //text updates
-        public static final int infoTextUpdate = 110;
-        public static final int titleTextUpdate = 111;
-        public static final int typeTextUpdate = 112;
-        public static final int rangeNormalTextUpdate = 113;
-        public static final int rangeMaxTextUpdate = 114;
-    
 }

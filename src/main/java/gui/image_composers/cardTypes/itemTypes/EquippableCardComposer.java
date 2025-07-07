@@ -31,7 +31,7 @@ public class EquippableCardComposer extends ItemCardComposer{
 
     public EquippableCardComposer(int type){
         super(type);
-
+        runeCharges = 0;
         EventBus.subscribe(RuneChargesUpdate.class, this::onRuneChargeUpdate);
         EventBus.subscribe(TierUpdate.class, this::onTierUpdate);
     }

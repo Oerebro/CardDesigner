@@ -256,6 +256,7 @@ public class CardDesignerGUI {
     }
 
     private void setImageComposerType(int type){
+
         switch(type){
             case GlobalVar.W_MELEE: imageComposer = new WeaponMeleeCardComposer(); break;
             case GlobalVar.W_RANGED: imageComposer = new WeaponRangedCardComposer(); break;
@@ -269,7 +270,8 @@ public class CardDesignerGUI {
 
         }
 
-        //EventBus.publish(new RepaintPanelEvent());
+        //this will load the stuff from the previous card / load defaults
+        EventBus.publish(new CardLoadEvent());
     }
     
     

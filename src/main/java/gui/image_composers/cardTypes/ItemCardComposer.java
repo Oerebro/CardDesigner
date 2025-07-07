@@ -58,7 +58,7 @@ public class ItemCardComposer extends CardComposer{
         typeTextPane.printAll(labelGraphics);
         labelGraphics.dispose();
         if(hasTypeBorder){
-            typeText = drawStroke(typeText,3,Color.WHITE);
+            typeText = drawStroke(typeText,(int)(3*scale),Color.WHITE);
         }
         g2d.drawImage(typeText, (int) (typeFieldBounds[0]*scale), (int)(typeFieldBounds[1]*scale),  (int)(typeFieldBounds[2]*scale),  (int)(typeFieldBounds[3]*scale), null);
 
@@ -73,7 +73,7 @@ public class ItemCardComposer extends CardComposer{
         infoTextPane.printAll(labelGraphics);
         labelGraphics.dispose();
         if(hasInfoBorder){
-            infoText = drawStroke(infoText,3,Color.WHITE);
+            infoText = drawStroke(infoText,(int)(3*scale),Color.WHITE);
         }
         g2d.drawImage(infoText, (int) (infoFieldBounds[0] * scale), (int) (infoFieldBounds[1] * scale),  (int) (infoFieldBounds[2] * scale),(int) (infoFieldBounds[3] * scale), null);
         
@@ -85,7 +85,7 @@ public class ItemCardComposer extends CardComposer{
         titleTextPane.printAll(labelGraphics);
         labelGraphics.dispose();
         if(hasTitleBorder){
-            titleText = drawStroke(titleText,3,Color.WHITE);
+            titleText = drawStroke(titleText,(int)(3*scale),Color.WHITE);
         }
         g2d.drawImage(titleText,(int) (titleFieldBounds[0] * scale), (int) (titleFieldBounds[1] * scale), (int) (titleFieldBounds[2] * scale), (int) (titleFieldBounds[3] * scale), null);
         g2d.dispose();
@@ -97,7 +97,7 @@ public class ItemCardComposer extends CardComposer{
     protected void setField(int field, String path){
 
         switch(field){
-            case GlobalVar.ITEM_IMAGE: cardItemImage = getImageFromFile(path); cardItemImagePath = path; EventBus.publish(new RepaintPanelEvent()); break;
+            case GlobalVar.ITEM_IMAGE: cardItemImage = getImageFromFile(path); cardItemImagePath = path; ; overlayImage = cardItemImage; overlayPath = getOverlayImagePath(path); EventBus.publish(new RepaintPanelEvent()); break;
             default: super.setField(field, path);
         }
 

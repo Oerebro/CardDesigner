@@ -5,6 +5,7 @@ import javax.swing.event.DocumentListener;
 import events.EventBus;
 import events.ItemImageUpdateEvent;
 import events.RuneChargesUpdate;
+import events.TextUpdate;
 import events.TierUpdate;
 import events.AttributeUpdate;
 import events.CardTypeUpdate;
@@ -13,7 +14,7 @@ import gui.*;
 import gui.card_types.*;
 
 import java.awt.*;
-public class AttributePanel extends JPanel{
+public class CardAttributesPanel extends JPanel{
     private String type;
     JTextField armorClassInput;
     //private Font rangeAndACFont;
@@ -31,7 +32,7 @@ public class AttributePanel extends JPanel{
 
     JCheckBox tier0,tier1,tier2,tier3,tier4;
 
-    public AttributePanel(CardDesignerGUI parent, String type) {
+    public CardAttributesPanel(CardDesignerGUI parent, String type) {
         this.setLayout(new GridLayout(0, 1, 5, 5));
         this.type = type;
         
@@ -148,12 +149,60 @@ public class AttributePanel extends JPanel{
 
     private void createWeaponPanel(){
         createWeaponTypeSelection();
+        createRangeInput();
         createDiceSelection();
         createRuneSlotSelection();
         createTierSelection();
         createAttributeSelection();
 
-        EventBus.publish(new CardTypeUpdate(GlobalVar.W_MELEE));
+        //EventBus.publish(new CardTypeUpdate(GlobalVar.W_MELEE));
+    }
+
+    public void createRangeInput(){
+        JPanel panel = new JPanel();
+
+        JTextField range1 = new JTextField();
+        JTextField range2 = new JTextField();
+        range1.setBorder(BorderFactory.createTitledBorder("Range Min"));
+        range2.setBorder(BorderFactory.createTitledBorder("Range Max"));
+
+        range1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(GlobalVar.RANGE_NORMAL_TEXT_UPDATE, range1.getText()));
+            }
+    
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(GlobalVar.RANGE_NORMAL_TEXT_UPDATE, range1.getText()));
+            }
+    
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(GlobalVar.RANGE_NORMAL_TEXT_UPDATE, range1.getText()));
+            }
+        });
+
+        range2.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(GlobalVar.RANGE_MAX_TEXT_UPDATE, range2.getText()));
+            }
+    
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(GlobalVar.RANGE_MAX_TEXT_UPDATE, range2.getText()));
+            }
+    
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(GlobalVar.RANGE_MAX_TEXT_UPDATE, range2.getText()));
+            }
+        });
+
+        panel.add(range1);
+        panel.add(range2);
+        this.add(panel);
     }
 
     private void createRunePanel(){
@@ -167,7 +216,7 @@ public class AttributePanel extends JPanel{
         weaponType.setBorder(BorderFactory.createTitledBorder("Weapon Type"));
         isMelee = new JCheckBox("Melee", true);
         isRanged = new JCheckBox("Ranged", false);
-        isThrowable = new JCheckBox("Throwable", false);
+        isThrowable = new JCheckBox("Magic Ranged", false);
         
         JCheckBox[] weaponTypes = {isMelee,isRanged,isThrowable};
         for(JCheckBox x:weaponTypes){
@@ -176,7 +225,7 @@ public class AttributePanel extends JPanel{
 
         isMelee.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_MELEE));});
         isRanged.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_RANGED));});
-        isThrowable.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_THROWABLE));});
+        isThrowable.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_MAGIC));});
         weaponType.add(isMelee);
         weaponType.add(isRanged);
         weaponType.add(isThrowable);

@@ -96,19 +96,19 @@ public class JScalingTextPane extends JScrollPane {
         StyleConstants.setForeground(defaultStyle, color);
 
         Style boldStyle = textPane.addStyle("bold", null);
-        StyleConstants.setBold(boldStyle, false);
+        StyleConstants.setBold(boldStyle, true);
         StyleConstants.setFontFamily(boldStyle, font.getFamily());
         StyleConstants.setFontSize(boldStyle, font.getSize());
         StyleConstants.setForeground(boldStyle, color);
 
         Style italicStyle = textPane.addStyle("italic", null);
-        StyleConstants.setItalic(italicStyle, false);
+        StyleConstants.setItalic(italicStyle, true);
         StyleConstants.setFontFamily(italicStyle, font.getFamily());
         StyleConstants.setFontSize(italicStyle, font.getSize());
         StyleConstants.setForeground(italicStyle, color);
 
         Style boldItalicStyle = textPane.addStyle("bolditalic", null);
-        StyleConstants.setBold(boldItalicStyle, false);
+        StyleConstants.setBold(boldItalicStyle, true);
         StyleConstants.setItalic(boldItalicStyle, true);
         StyleConstants.setFontFamily(boldItalicStyle, font.getFamily());
         StyleConstants.setFontSize(boldItalicStyle, font.getSize());
@@ -374,7 +374,7 @@ public class JScalingTextPane extends JScrollPane {
     }
 
      private void onTextUpdate(TextUpdate event) {
-        if(event.type != GlobalVar.infoTextUpdate) return;
+        if(event.type != GlobalVar.INFO_TEXT_UPDATE) return;
        
         String text = event.text;
         text = wrapText(text);

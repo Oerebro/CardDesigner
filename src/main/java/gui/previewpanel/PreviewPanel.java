@@ -8,7 +8,6 @@ import events.EventBus;
 import events.InfoTextUpdate;
 import events.RepaintPanelEvent;
 import events.SelectTypePanelUpdateEvent;
-import events.CardLoadEvent;
 import events.ClearUnrelatedImagesEvent;
 import gui.*;
 import gui.controlpanel1.FontLoader;
@@ -224,7 +223,7 @@ public class PreviewPanel {
         //infoTextDisplay.setText(htmlToPlainText(str));
         //infoTextDisplay.setFont(font);
         
-        EventBus.publish(new TextUpdate(GlobalVar.infoTextUpdatestr));
+        EventBus.publish(new TextUpdate(GlobalVar.INFO_TEXT_UPDATEstr));
         //testDisplay.setFont(font);
         //testDisplay.repaint();
         
@@ -330,11 +329,6 @@ public class PreviewPanel {
         newArea.setOpaque(false);
         return newArea;
     }
-
-
-    /*public void loadDefault() {
-        EventBus.publish(new CardLoadEvent());
-    }*/
 
 }
 

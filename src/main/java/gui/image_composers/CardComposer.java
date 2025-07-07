@@ -73,10 +73,10 @@ public class CardComposer extends Loggable{
         infoTextPane.setSize(infoFieldBounds[2],infoFieldBounds[3]);
 
 
-        titleTextPane = new OneLineTextPane(OneLineTextPane.TITLE, 200, titleFieldBounds[0],titleFieldBounds[1],titleFieldBounds[2],titleFieldBounds[3]);
+        titleTextPane = new OneLineTextPane(GlobalVar.TITLE_TEXT_UPDATE, 200, titleFieldBounds[0],titleFieldBounds[1],titleFieldBounds[2],titleFieldBounds[3]);
         titleTextPane.setForeground(Color.WHITE);
 
-        typeTextPane = new OneLineTextPane(OneLineTextPane.TYPE, 200, typeFieldBounds[0],typeFieldBounds[1],typeFieldBounds[2],typeFieldBounds[3]);
+        typeTextPane = new OneLineTextPane(GlobalVar.TYPE_TEXT_UPDATE, 200, typeFieldBounds[0],typeFieldBounds[1],typeFieldBounds[2],typeFieldBounds[3]);
         typeTextPane.setOpaque(false);
         typeTextPane.setForeground(Color.WHITE);
 
@@ -140,8 +140,8 @@ public class CardComposer extends Loggable{
 
     protected void onLoadCard(CardLoadEvent e){
         //this.type=e.type;
-        EventBus.publish(new TextUpdate(GlobalVar.titleTextUpdate,e.titleText));
-        EventBus.publish(new TextUpdate(GlobalVar.infoTextUpdate,e.infoText));
+        EventBus.publish(new TextUpdate(GlobalVar.TITLE_TEXT_UPDATE,e.titleText));
+        EventBus.publish(new TextUpdate(GlobalVar.INFO_TEXT_UPDATE,e.infoText));
         setField(GlobalVar.BACKGROUND_IMAGE, e.backgroundImage);
         setField(GlobalVar.FRAME_IMAGE, e.frameImage);
 
@@ -152,7 +152,7 @@ public class CardComposer extends Loggable{
     }
 
     protected void onTextUpdate(TextUpdate e){
-        if(e.type != GlobalVar.infoTextUpdate)
+        if(e.type != GlobalVar.INFO_TEXT_UPDATE)
         EventBus.publish(new RepaintPanelEvent());
     }
 

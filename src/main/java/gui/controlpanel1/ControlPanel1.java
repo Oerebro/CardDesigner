@@ -22,19 +22,16 @@ import gui.CardDesignerGUI;
 import gui.GlobalVar;
 import abstractclasses.*;
 import events.GetCardAttributesEvent;
+import events.CardLoadEvent;
 import events.EventBus;
 import events.ItemImageUpdateEvent;
 import events.InfoFontUpdate;
-import events.InfoTextUpdate;
-import events.LoadConfigEvent;
 import events.RepaintPanelEvent;
 import events.SelectTypePanelUpdateEvent;
 import events.TextLoadEvent;
 import events.TextUpdate;
 import events.TitleFontUpdate;
-import events.TitleTextUpdate;
 import events.ToggleTextBorder;
-import events.TypeTextUpdate;
 import gui.controlpanel1.FontLoader;
 
 public class ControlPanel1 extends ControlPanel {
@@ -67,8 +64,9 @@ public class ControlPanel1 extends ControlPanel {
 
     public void init(CardDesignerGUI parent) {
         EventBus.subscribe(SelectTypePanelUpdateEvent.class, this::onTypeUpdate);
-        EventBus.subscribe(LoadConfigEvent.class, this::onLoadConfig);
         EventBus.subscribe(TextLoadEvent.class, this::onTextLoad);
+        EventBus.subscribe(CardLoadEvent.class, this::onCardLoad);
+        
         
         
         setLayout(null);
@@ -102,7 +100,9 @@ public class ControlPanel1 extends ControlPanel {
         
     }
 
-    
+    private void onCardLoad(CardLoadEvent e){
+        EventBus.publish(new TitleFontUpdate(getTitleFont()));
+    }
 
     public String getTitleFont(){
         return (String) titleFontSelection.getSelectedItem();
@@ -222,7 +222,7 @@ public class ControlPanel1 extends ControlPanel {
         //Font font = new Font(selectedFontName, Font.PLAIN, 72);
         
         EventBus.publish(new TitleFontUpdate(selectedFontName));
-        EventBus.publish(new TextUpdate(GlobalVar.titleTextUpdate,text));
+        EventBus.publish(new TextUpdate(GlobalVar.TITLE_TEXT_UPDATE,text));
     }
 
     private void updateTypePreview() {    
@@ -230,7 +230,7 @@ public class ControlPanel1 extends ControlPanel {
         //String selectedFontName = (String) titleFontSelection.getSelectedItem();
         //Font font = new Font(selectedFontName, Font.PLAIN, 72);
         
-        EventBus.publish(new TextUpdate(GlobalVar.typeTextUpdate,text));
+        EventBus.publish(new TextUpdate(GlobalVar.TYPE_TEXT_UPDATE,text));
     }
 
     private void updateInfoPreview() {
@@ -238,7 +238,7 @@ public class ControlPanel1 extends ControlPanel {
         String selectedFontName = (String) infoFontSelection.getSelectedItem();
         //Font font = new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 72); 
         EventBus.publish(new InfoFontUpdate(selectedFontName));
-        EventBus.publish(new TextUpdate(GlobalVar.infoTextUpdate,text));
+        EventBus.publish(new TextUpdate(GlobalVar.INFO_TEXT_UPDATE,text));
         
     }
 
@@ -355,14 +355,4 @@ public class ControlPanel1 extends ControlPanel {
         c.setBounds((int)(bounds[0]*scale),(int)(bounds[1]*scale),(int)(bounds[2]*scale),(int)(bounds[3]*scale));
     }
 
-    private void onLoadConfig(LoadConfigEvent e){
-        ImageComposerConfig config = e.config;
-
-        infoTextField.setText(config.infoText);
-        titleTextField.setText(config.titleText);
-
-        titleFontSelection.setSelectedItem(config.titleFont);
-
-        EventBus.publish(new RepaintPanelEvent());
-    }
 }

@@ -12,7 +12,7 @@
       "type": "java",
       "name": "Run CardDesignerGUI",
       "request": "launch",
-      "mainClass": "CardDesignerGUI"
+      "mainClass": "gui.CardDesignerGUI"
     }
   ]
 }

@@ -16,11 +16,12 @@ import events.TitleColorUpdate;
 import events.TitleFontUpdate;
 import events.TextUpdate;
 import gui.GlobalVar;
+import gui.Loggable;
 import gui.controlpanel1.FontLoader;
 
 
 public class OneLineTextPane extends JLabel {
-    private int type;
+    private int type, id;
 
     public static final int TITLE = 1;
     public static final int RANGE_NORMAL = 2;
@@ -40,19 +41,18 @@ public class OneLineTextPane extends JLabel {
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         switch(type){
             case TITLE:
-                
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 EventBus.subscribe(TitleColorUpdate.class, this::onTitleColorUpdate);
                 setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.CENTER);
                 break;
-            case RANGE_NORMAL:
+            case GlobalVar.RANGE_NORMAL_TEXT_UPDATE:
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
                 setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.LEFT);
                 break;
-            case RANGE_MAX:
+            case GlobalVar.RANGE_MAX_TEXT_UPDATE:
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
                 setVerticalAlignment(SwingConstants.CENTER);
@@ -64,9 +64,7 @@ public class OneLineTextPane extends JLabel {
                 setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.LEFT);
                 break;
-        }
-
-        
+        }     
         
     }
 
@@ -88,10 +86,7 @@ public class OneLineTextPane extends JLabel {
     
 
     private void onTextUpdate(TextUpdate e){
-        if( e.type == GlobalVar.titleTextUpdate && this.type==TITLE 
-            || e.type == GlobalVar.rangeNormalTextUpdate && this.type==RANGE_NORMAL 
-            || e.type == GlobalVar.rangeMaxTextUpdate && this.type==RANGE_MAX
-            || e.type == GlobalVar.typeTextUpdate && this.type == TYPE)
+        if(e.type == this.type)
             {
                 String str = e.text;
                 //this.setFont(getScaledFontLabel(str, getFont(), getWidth(), getHeight(), this));
@@ -106,7 +101,6 @@ public class OneLineTextPane extends JLabel {
         Font font = FontLoader.loadFont(e.fontFamily, Font.BOLD,100f);
         Font scaledFont = getScaledFontLabel(this.getText(), font, this.getWidth(), this.getHeight(), this);
         setFont(scaledFont);
-        EventBus.publish(new RepaintPanelEvent());
     }
 
     @Override

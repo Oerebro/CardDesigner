@@ -17,15 +17,14 @@ import gui.previewpanel.OneLineTextPane;
 import java.awt.*;
 
 public class WeaponCardComposer extends EquippableCardComposer{
-
     protected BufferedImage diceImage, attributeBaseImage, rangeTypeImage;
     protected AttributeLabel attributeLabel;
 
     protected int dice, attribute, rangeType;
-    protected OneLineTextPane rangeTextPane;
+    //protected OneLineTextPane rangeTextPane;
     private int[] diceFieldBounds = {530,440,180,180};
     private int[] tierFieldBounds = {550,440,180,180};
-    private int[] rangeTypeBounds = {0,470,305,105};
+    private int[] attributeLabelBounds = {0,470,305,105};
     private int[] attributeBaseFieldBounds = {0,470,305,105};
     private int[] attributeIconBounds = {0,470,305,105};
 
@@ -42,7 +41,8 @@ public class WeaponCardComposer extends EquippableCardComposer{
         this.dice = 4;
         setRangeType(type);
         EventBus.subscribe(DiceUpdateEvent.class, this::onDiceUpdate);
-        attributeLabel = new AttributeLabel(GlobalVar.STRENGTH, GlobalVar.DAMAGE_MELEE, 0,470,305,120,1.0);
+        log(type);
+        attributeLabel = new AttributeLabel(GlobalVar.STRENGTH, type, attributeLabelBounds[0],attributeLabelBounds[1],attributeLabelBounds[2],attributeLabelBounds[3],1.0);
     }
 
     @Override
@@ -54,18 +54,9 @@ public class WeaponCardComposer extends EquippableCardComposer{
 
         Graphics2D g2d = finalImage.createGraphics();
 
-/* 
-        if (rangeTypeImage != null) {
-            g2d.drawImage(rangeTypeImage, (int)(rangeTypeBounds[0]*scale), (int)(rangeTypeBounds[1]*scale), (int)(rangeTypeBounds[2]*scale), (int)(rangeTypeBounds[3]*scale), null);
-        }
-
-        if (attributeBaseImage != null) {
-            g2d.drawImage(attributeBaseImage, (int)(attributeBaseFieldBounds[0]*scale), (int)(attributeBaseFieldBounds[1]*scale), (int)(attributeBaseFieldBounds[2]*scale), (int)(attributeBaseFieldBounds[3]*scale), null);
-        }
-*/
         BufferedImage attributeImage = attributeLabel.paint(scale);
         if (attributeImage != null) {
-            g2d.drawImage(attributeImage, (int)(attributeIconBounds[0]*scale), (int)(attributeIconBounds[1]*scale), (int)(attributeIconBounds[2]*scale), (int)(attributeIconBounds[3]*scale), null);
+            g2d.drawImage(attributeImage, (int)(attributeBaseFieldBounds[0]*scale), (int)(attributeBaseFieldBounds[1]*scale), (int)(attributeBaseFieldBounds[2]*scale), (int)(attributeBaseFieldBounds[3]*scale), null);
         }
 
         if (diceImage != null) {

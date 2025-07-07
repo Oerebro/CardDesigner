@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 
 public class SelectTypePanel extends JPanel{
     private final CardDesignerGUI parent;
-    private AttributePanel attributePanel;
+    private CardAttributesPanel attributePanel;
     private JCheckBox isWeapon, isArmor, isClothing, isAccessoire, isConsumable, isRune,isEffect, hasRuneCut;
     JCheckBox[] checkboxes;
 
@@ -51,7 +51,7 @@ public class SelectTypePanel extends JPanel{
         this.add(typePanel);
 
         
-        this.add(attributePanel = new AttributePanel(parent, "weapon"));
+        this.add(attributePanel = new CardAttributesPanel(parent, "weapon"));
 
 
         // Collect all checkboxes in this panel in an array
@@ -93,7 +93,7 @@ public class SelectTypePanel extends JPanel{
         String type = selected.getText().toLowerCase();
         //EventBus.publish(new ClearUnrelatedImagesEvent());
         EventBus.publish(new SelectTypePanelUpdateEvent(type));
-        this.attributePanel = new AttributePanel(parent, type);
+        this.attributePanel = new CardAttributesPanel(parent, type);
     
         this.add(attributePanel);
         this.repaint();

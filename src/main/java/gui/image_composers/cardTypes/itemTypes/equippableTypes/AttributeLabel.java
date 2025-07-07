@@ -18,27 +18,31 @@ import gui.Loggable;
 import gui.previewpanel.OneLineTextPane;
 
 public class AttributeLabel extends Loggable {
+
+    
+
     private BufferedImage baseLabel, attributeIcon, damageTypeIcon;
     private OneLineTextPane rangeNormal, rangeMax;
     private int attribute, damageType;
 
     private int[] rangeNormalBounds = {169,47,42+10,55};
-    private int[] rangeMaxBounds = {213,47,77+10,55};
+    private int[] rangeMaxBounds = {215,47,77+10,55};
     private int[] bounds = {0,0,305,105};
     private int[] damageTypeBounds = {123,54,44,44};
     private int[] attributeIconBounds = {27,13,85,85};
 
     public AttributeLabel(int attribute, int damageType, int x, int y, int width, int height, double scale){
+        this.damageType = damageType;
         EventBus.subscribe(AttributeUpdate.class, this::setAttribute);
         //this.setOpaque(true);
         //this.setBounds(x,y,width,height);
         this.attribute = GlobalVar.STRENGTH;
         attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");
         setDamageType(damageType);
-        setBaseLabel(GlobalVar.W_MELEE);
+        setBaseLabel(damageType);
 
-        rangeNormal = new OneLineTextPane(OneLineTextPane.RANGE_NORMAL, 50, (int)(rangeNormalBounds[0]*scale), (int)(rangeNormalBounds[1]*scale), (int)(rangeNormalBounds[2]*scale), (int)(rangeNormalBounds[3]*scale));
-        rangeMax = new OneLineTextPane(OneLineTextPane.RANGE_MAX, 50, (int)(rangeMaxBounds[0]*scale), (int)(rangeMaxBounds[1]*scale), (int)(rangeMaxBounds[2]*scale), (int)(rangeMaxBounds[3]*scale));
+        rangeNormal = new OneLineTextPane(GlobalVar.RANGE_NORMAL_TEXT_UPDATE, 50, (int)(rangeNormalBounds[0]*scale), (int)(rangeNormalBounds[1]*scale), (int)(rangeNormalBounds[2]*scale), (int)(rangeNormalBounds[3]*scale));
+        rangeMax = new OneLineTextPane(GlobalVar.RANGE_MAX_TEXT_UPDATE, 50, (int)(rangeMaxBounds[0]*scale), (int)(rangeMaxBounds[1]*scale), (int)(rangeMaxBounds[2]*scale), (int)(rangeMaxBounds[3]*scale));
 
         rangeNormal.setText("5");
         rangeMax.setText("");
@@ -47,7 +51,6 @@ public class AttributeLabel extends Loggable {
     }
 
     private void setAttribute(AttributeUpdate e){
-        log("att");
         this.attribute = e.type;
 
         switch(attribute){
@@ -73,17 +76,33 @@ public class AttributeLabel extends Loggable {
         EventBus.publish(new RepaintPanelEvent());
     }
 
+    private void setBaseLabel(int type){
+        String path = GlobalVar.ATTRIBUTE_LABEL_COMPONENTS;
+
+        switch (type) {
+            case GlobalVar.W_MELEE:
+                path += "melee.png";
+                break;
+        
+            default:
+                path += "ranged.png";
+                break;
+        }
+            baseLabel = loadImageFromFile(path);
+
+    }
+
     private void setDamageType(int type){
         this.damageType = type;
 
         switch(type){
-            case GlobalVar.DAMAGE_MAGIC:
+            case GlobalVar.W_MAGIC:
                 damageTypeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_LABEL_COMPONENTS+"damage_magic.png");
                 break;
-            case GlobalVar.DAMAGE_MELEE:
+            case GlobalVar.W_MELEE:
                 damageTypeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_LABEL_COMPONENTS+"damage_melee.png");
                 break;
-            case GlobalVar.DAMAGE_RANGED:
+            case GlobalVar.W_RANGED:
                 damageTypeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_LABEL_COMPONENTS+"damage_ranged.png");
         }
 
@@ -110,7 +129,7 @@ public class AttributeLabel extends Loggable {
         rangeNormal.doLayout();
         rangeNormal.printAll(text2d);
         g2d.drawImage(text, (int) (rangeNormalBounds[0] * scale), (int) (rangeNormalBounds[1] * scale),  (int) (rangeNormalBounds[2] * scale),(int) (rangeNormalBounds[3] * scale), null);
-
+        
         text = new BufferedImage((int) (rangeMaxBounds[2] * scale),(int) (rangeMaxBounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
         text2d = text.createGraphics();
         rangeMax.setSize((int)(rangeMaxBounds[2] * scale), (int)(rangeMaxBounds[3] * scale));
@@ -124,21 +143,7 @@ public class AttributeLabel extends Loggable {
         return image;
     }
 
-    private void setBaseLabel(int type){
-        String path = GlobalVar.ATTRIBUTE_LABEL_COMPONENTS;
-
-        switch (type) {
-            case GlobalVar.W_MELEE:
-                path += "melee.png";
-                break;
-        
-            case GlobalVar.W_RANGED:
-                path += "ranged.png";
-                break;
-        }
-            baseLabel = loadImageFromFile(path);
-
-    }
+    
 
     private BufferedImage loadImageFromFile(String path){
         BufferedImage i = null;
