@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 
 import javax.imageio.ImageIO;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import events.EventBus;
 import events.ItemImageUpdateEvent;
@@ -19,12 +18,14 @@ import events.ToggleTextBorder;
 import events.CardLoadEvent;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 
 import gui.GlobalVar;
 import gui.Loggable;
 import gui.card_types.*;
 import gui.previewpanel.JScalingTextPane;
 import gui.previewpanel.OneLineTextPane;
+import java.awt.geom.Area;
 
 public class CardComposer extends Loggable{
     protected int type;
@@ -267,7 +268,8 @@ public class CardComposer extends Loggable{
             g2d.drawImage(runeCut, 0, 0, targetWidth, targetHeight, null);
         }
 
-        return finalImage;
+        //return finalImage;
+        return paintWhiteCorners(finalImage);
     }
 
     protected CardConfig writeToConfig(CardConfig config){
@@ -309,5 +311,60 @@ public class CardComposer extends Loggable{
 
     public CardConfig saveConfig(){return null;};
     public CardConfig loadConfig(){return null;};
-    
+
+    public static BufferedImage paintWhiteCorners(BufferedImage input) {
+        int width = input.getWidth();
+        int height = input.getHeight();
+
+        double realWidthMM = 66.0;
+        double realHeightMM = 88.0;
+
+        // Calculate pixels per mm (average)
+        double pxPerMM_X = width / realWidthMM;
+        double pxPerMM_Y = height / realHeightMM;
+        double pxPerMM = (pxPerMM_X + pxPerMM_Y) / 2.0;
+
+        int r = (int) Math.round(3.0 * pxPerMM);
+
+        BufferedImage output = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = output.createGraphics();
+
+        try {
+            g2.drawImage(input, 0, 0, null);
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(Color.WHITE);
+
+            // Helper to create concave corner shape
+            // A square minus a quarter circle ellipse in the corner
+
+            // Top-left corner
+            Area tl = new Area(new Rectangle(0, 0, r, r));
+            Shape tlCircle = new Ellipse2D.Double(0, 0, 2 * r, 2 * r);
+            tl.subtract(new Area(tlCircle));
+            g2.fill(tl);
+
+            // Top-right corner
+            Area tr = new Area(new Rectangle(width - r, 0, r, r));
+            Shape trCircle = new Ellipse2D.Double(width - 2 * r, 0, 2 * r, 2 * r);
+            tr.subtract(new Area(trCircle));
+            g2.fill(tr);
+
+            // Bottom-right corner
+            Area br = new Area(new Rectangle(width - r, height - r, r, r));
+            Shape brCircle = new Ellipse2D.Double(width - 2 * r, height - 2 * r, 2 * r, 2 * r);
+            br.subtract(new Area(brCircle));
+            g2.fill(br);
+
+            // Bottom-left corner
+            Area bl = new Area(new Rectangle(0, height - r, r, r));
+            Shape blCircle = new Ellipse2D.Double(0, height - 2 * r, 2 * r, 2 * r);
+            bl.subtract(new Area(blCircle));
+            g2.fill(bl);
+
+        } finally {
+            g2.dispose();
+        }
+
+        return output;
+    }
 }

@@ -2,17 +2,13 @@ package gui.controlpanel1;
 
 //import java.io.File;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.awt.Font; 
 
 //import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,18 +17,14 @@ import javax.swing.event.DocumentListener;
 import gui.CardDesignerGUI;
 import gui.GlobalVar;
 import abstractclasses.*;
-import events.GetCardAttributesEvent;
 import events.CardLoadEvent;
 import events.EventBus;
-import events.ItemImageUpdateEvent;
 import events.InfoFontUpdate;
-import events.RepaintPanelEvent;
 import events.SelectTypePanelUpdateEvent;
 import events.TextLoadEvent;
 import events.TextUpdate;
 import events.TitleFontUpdate;
 import events.ToggleTextBorder;
-import gui.controlpanel1.FontLoader;
 
 public class ControlPanel1 extends ControlPanel {
 
@@ -334,7 +326,7 @@ public class ControlPanel1 extends ControlPanel {
         //set the absolute position of these menus within the controlpanel
         cardComponentTabbedPane.setBounds((int)(10 * scale), (int)(0), (int)(360 * scale), (int)(245 * scale));   
         selectItemArt.setBounds((int) (390 *scale), (int) (0), (int) (360*scale), (int) (245*scale));
-        selectItemTypePanel.setBounds((int) (770 *scale), (int) (0), (int) (300*scale), (int) (500*scale));
+        selectItemTypePanel.setBounds((int) (770 *scale), (int) (0), (int) (300*scale), (int) (1000*scale));
 
         setComponentBounds(titleFontSelection, titleFontBounds, scale);
         setComponentBounds(infoFontSelection, infoFontBounds, scale);

@@ -11,7 +11,6 @@ import events.AttributeUpdate;
 import events.CardTypeUpdate;
 import events.DiceUpdateEvent;
 import gui.*;
-import gui.card_types.*;
 
 import java.awt.*;
 public class CardAttributesPanel extends JPanel{
@@ -390,18 +389,6 @@ public class CardAttributesPanel extends JPanel{
         this.add(attribute);
     }
 
-    private void getDice(int num){
-        switch (num){
-            case 0: publishImageUpdate(GlobalVar.DICE,null);break;
-            case 4: publishImageUpdate(GlobalVar.DICE,GlobalVar.DICE_IMAGE_PATH+"4.png");break;
-            case 6: publishImageUpdate(GlobalVar.DICE,GlobalVar.DICE_IMAGE_PATH+"6.png");break;
-            case 8: publishImageUpdate(GlobalVar.DICE,GlobalVar.DICE_IMAGE_PATH+"8.png");break;
-            case 10: publishImageUpdate(GlobalVar.DICE,GlobalVar.DICE_IMAGE_PATH+"10.png");break;
-            case 12: publishImageUpdate(GlobalVar.DICE,GlobalVar.DICE_IMAGE_PATH+"12.png");
-        }
-
-    }
-
     private void getArmorClassImage(int ac) {
         
         if(ac == 0){
@@ -432,17 +419,6 @@ public class CardAttributesPanel extends JPanel{
         }
 
     }
-
-    /*public void getAttribute(String type){
-        switch (type){
-            case "str": publishImageUpdate(Card.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");
-            case "con": publishImageUpdate(Card.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"constitution.png");
-            case "dex": publishImageUpdate(Card.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"dexterity.png");
-            case "intel": publishImageUpdate(Card.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"intelligence.png");
-            case "wis": publishImageUpdate(Card.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"wisdom.png");
-            case "rizz": publishImageUpdate(Card.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"charisma.png");
-        }
-    }*/
 
     private void publishImageUpdate(int type, String path){
         EventBus.publish(new ItemImageUpdateEvent(type, path));

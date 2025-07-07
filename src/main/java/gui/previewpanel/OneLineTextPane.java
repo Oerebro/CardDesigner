@@ -40,7 +40,7 @@ public class OneLineTextPane extends JLabel {
         
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         switch(type){
-            case TITLE:
+            case GlobalVar.TITLE_TEXT_UPDATE:
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 EventBus.subscribe(TitleColorUpdate.class, this::onTitleColorUpdate);
                 setVerticalAlignment(SwingConstants.CENTER);
@@ -58,7 +58,7 @@ public class OneLineTextPane extends JLabel {
                 setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.LEFT);
                 break;
-            case TYPE:
+            case GlobalVar.TYPE_TEXT_UPDATE:
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
                 setVerticalAlignment(SwingConstants.CENTER);
@@ -148,7 +148,7 @@ public class OneLineTextPane extends JLabel {
 
         int lineHeight = metrics.getHeight();
         float descentRatio = .2f;
-        if(type== TITLE){
+        if(type== GlobalVar.TITLE_TEXT_UPDATE){
             descentRatio = .3f;
         }
 
