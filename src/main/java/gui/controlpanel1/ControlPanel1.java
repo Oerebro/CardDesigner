@@ -16,6 +16,7 @@ import javax.swing.event.DocumentListener;
 
 import gui.CardDesignerGUI;
 import gui.GlobalVar;
+import gui.previewpanel.DigitOnlyTextField;
 import abstractclasses.*;
 import events.CardLoadEvent;
 import events.EventBus;
@@ -39,6 +40,7 @@ public class ControlPanel1 extends ControlPanel {
     private ImageBrowser frameSelect, backgroundSelect, textboxSelect, titleSelect,effectSelect, crownSelect;
     private VariableTabbedPane selectItemArt, weapons,rune, armor, accessoire, consumable,effect,character;
     private JTextField titleTextField,typeTextField;
+    private DigitOnlyTextField fontSizeManual;
     private JTextArea infoTextField;
     private JComboBox<String> titleFontSelection,infoFontSelection;
     private JCheckBox titleStroke, infoStroke, typeStroke;
@@ -59,6 +61,7 @@ public class ControlPanel1 extends ControlPanel {
         EventBus.subscribe(SelectTypePanelUpdateEvent.class, this::onTypeUpdate);
         EventBus.subscribe(TextLoadEvent.class, this::onTextLoad);
         EventBus.subscribe(CardLoadEvent.class, this::onCardLoad);
+        EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         
         
         
@@ -75,6 +78,11 @@ public class ControlPanel1 extends ControlPanel {
             case TextLoadEvent.TITLE: titleTextField.setText(e.text); break;
             case TextLoadEvent.TYPE: typeTextField.setText(e.text); break;
         }
+    }
+
+    private void onTextUpdate(TextUpdate e){
+        if(!(e.type == GlobalVar.FONTSIZE_FIELD_UPDATE)) return;
+        fontSizeManual.setText(e.text);
     }
 
     private void createButtons() {
@@ -129,8 +137,9 @@ public class ControlPanel1 extends ControlPanel {
         infoTextField.setBorder(UIManager.getBorder("TextField.border"));
         add(infoTextField);
 
-        titleColor = new ColorPicker(parent, 420, 290, 30, 30, "title");
-        infoColor = new ColorPicker(parent, 420, 335, 30, 30, "info");
+        titleColor = new ColorPicker(parent, 420, 290, 30, 30, GlobalVar.TITLE_TEXT_UPDATE);
+        infoColor = new ColorPicker(parent, 420, 380, 30, 30, GlobalVar.INFO_TEXT_UPDATE);
+        ColorPicker typeColor = new ColorPicker(parent, 420, 335, 30, 30, GlobalVar.TYPE_TEXT_UPDATE);
 
         titleStroke = new JCheckBox("Title Outline",false);
         titleStroke.setBounds(460,290,100,30);
@@ -147,9 +156,13 @@ public class ControlPanel1 extends ControlPanel {
         JButton fontUp = new JButton("+");
         JButton fontDown = new JButton("-");
         fontUp.setBounds(infoFontBounds[0],425,30,30);
-        fontUp.addActionListener(e->{EventBus.publish(new FontSizeUpdate('+'));});
+        fontUp.addActionListener(e->{EventBus.publish(new TextUpdate(GlobalVar.FONTSIZE_TEXT_UPDATE,"+"));});
         fontDown.setBounds(infoFontBounds[0]+40,425,30,30);
-        fontDown.addActionListener(e->{EventBus.publish(new FontSizeUpdate('-'));});
+        fontDown.addActionListener(e->{EventBus.publish(new TextUpdate(GlobalVar.FONTSIZE_TEXT_UPDATE,"-"));});
+        fontSizeManual = new DigitOnlyTextField();
+        fontSizeManual.setBounds(infoFontBounds[0],460,60,30);
+        fontSizeManual.setText("19");
+        add(fontSizeManual);
         add(fontUp);
         add(fontDown);
         add(titleStroke);
@@ -157,6 +170,7 @@ public class ControlPanel1 extends ControlPanel {
         add(infoStroke);
         add(titleColor);
         add(infoColor);
+        add(typeColor);
 
     
         // Listen for text changes
@@ -210,6 +224,14 @@ public class ControlPanel1 extends ControlPanel {
                 updateInfoPreview();
             }
         });
+
+        fontSizeManual.addActionListener(e -> {
+            if (fontSizeManual.isFocusOwner()) {
+                System.out.println("Test");
+                EventBus.publish(new TextUpdate(GlobalVar.FONTSIZE_TEXT_UPDATE, fontSizeManual.getText()));
+            }
+        });
+
     
         titleFontSelection.addActionListener(e -> updateTitlePreview());
         infoFontSelection.addActionListener(e -> updateInfoPreview());

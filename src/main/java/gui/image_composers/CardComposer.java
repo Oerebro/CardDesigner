@@ -53,7 +53,7 @@ public class CardComposer extends Loggable{
     protected int targetWidth, targetHeight;
 
     protected int[] typeFieldBounds = {50,605,650,40};
-    protected int[] titleFieldBounds = {57,70,632,50};
+    protected int[] titleFieldBounds = {57,70,632,60};
     protected int[] infoFieldBounds = {55,665,640,295};
     protected int[] runeIconBounds = {40,40,90,90};
 
@@ -197,7 +197,7 @@ public class CardComposer extends Loggable{
         int w = src.getWidth();
         int h = src.getHeight();
 
-        BufferedImage result = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage result = new BufferedImage(w+(strokeWidth*2), h+(strokeWidth*2), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = result.createGraphics();
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -207,13 +207,13 @@ public class CardComposer extends Loggable{
         for (int dx = -strokeWidth; dx <= strokeWidth; dx++) {
             for (int dy = -strokeWidth; dy <= strokeWidth; dy++) {
                 if (dx * dx + dy * dy <= strokeWidth * strokeWidth) {
-                    g.drawImage(tintAlpha(src, color), dx, dy, null);
+                    g.drawImage(tintAlpha(src, color), dx+strokeWidth, dy+strokeWidth, null);
                 }
             }
         }
 
         // Draw the original image on top
-        g.drawImage(src, 0, 0, null);
+        g.drawImage(src, strokeWidth, strokeWidth, null);
         g.dispose();
         return result;
     }

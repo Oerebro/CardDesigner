@@ -12,7 +12,7 @@ import events.EventBus;
 import events.InfoColorUpdate;
 import events.InfoFontUpdate;
 import events.RepaintPanelEvent;
-import events.TitleColorUpdate;
+import events.ColorUpdate;
 import events.TitleFontUpdate;
 import events.TextUpdate;
 import gui.GlobalVar;
@@ -41,40 +41,35 @@ public class OneLineTextPane extends JLabel {
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         switch(type){
             case GlobalVar.TITLE_TEXT_UPDATE:
-                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
-                EventBus.subscribe(TitleColorUpdate.class, this::onTitleColorUpdate);
+                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);  
                 setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.CENTER);
                 break;
             case GlobalVar.RANGE_NORMAL_TEXT_UPDATE:
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
-                EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
                 setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.LEFT);
                 break;
             case GlobalVar.RANGE_MAX_TEXT_UPDATE:
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
-                EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
                 setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.LEFT);
                 break;
             case GlobalVar.TYPE_TEXT_UPDATE:
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
-                EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
                 setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.LEFT);
                 break;
         }     
+        EventBus.subscribe(ColorUpdate.class, this::onColorUpdate);
         
     }
 
 
-    private void onTitleColorUpdate(TitleColorUpdate e){
-        setColor(e.color);
-    }
-
-    private void onInfoColorUpdate(InfoColorUpdate e){
-        setColor(e.color);
+    private void onColorUpdate(ColorUpdate e){
+        if(e.type == this.type){
+            setColor(e.color);
+        }
     }
 
     private void setColor(Color color){

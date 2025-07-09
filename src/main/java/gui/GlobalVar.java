@@ -63,6 +63,8 @@ public class GlobalVar {
     public static final int TYPE_TEXT_UPDATE = 1003;
     public static final int RANGE_NORMAL_TEXT_UPDATE = 1004;
     public static final int RANGE_MAX_TEXT_UPDATE = 1005;
+    public static final int FONTSIZE_TEXT_UPDATE = 1006;
+    public static final int FONTSIZE_FIELD_UPDATE = 1007;
 
     // Paths
     public static final String DICE_IMAGE_PATH = "resources/glyphs/dice/d";

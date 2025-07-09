@@ -5,14 +5,17 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import javax.swing.text.View;
 import javax.swing.text.Style;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import gui.GlobalVar;
 import gui.controlpanel1.FontLoader;
+import events.ColorUpdate;
 import events.EventBus;
 import events.FontSizeUpdate;
 import events.InfoColorUpdate;
@@ -44,7 +47,7 @@ public class JScalingTextPane extends JScrollPane {
         this.maxNumLines = maxNumLines;
         //this.maxSizeFont = maxSizeFont;
         this.maxSizeFont = 200;
-        this.currentFontSize = 20;
+        this.currentFontSize = 19;
         
 
         
@@ -78,8 +81,7 @@ public class JScalingTextPane extends JScrollPane {
 
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         EventBus.subscribe(InfoFontUpdate.class, this::onFontUpdate);
-        EventBus.subscribe(InfoColorUpdate.class, this::onColorUpdate);
-        EventBus.subscribe(FontSizeUpdate.class, this::onFontSizeUpdate);
+        EventBus.subscribe(ColorUpdate.class, this::onColorUpdate);
         
     }
 
@@ -282,12 +284,29 @@ public class JScalingTextPane extends JScrollPane {
 
 
 
-    private void onColorUpdate(InfoColorUpdate e) {
-        textPane.setForeground(e.color);
-        EventBus.publish(new RepaintPanelEvent());
+    private void onColorUpdate(ColorUpdate e) {
+        if(e.type == GlobalVar.INFO_TEXT_UPDATE){
+            textPane.setForeground(e.color);
+            setFormattedText(textPane.getText());
+            EventBus.publish(new RepaintPanelEvent());
+        }
     }
 
-     private void onTextUpdate(TextUpdate event) {
+    private void onTextUpdate(TextUpdate event) {
+        if(event.type == GlobalVar.FONTSIZE_TEXT_UPDATE){
+            if(event.text.matches("")) return;
+            if(event.text.equals("+")||event.text.equals("-")){
+                onFontSizeUpdate(event.text.charAt(0));
+                return;
+            }
+            System.out.println(event.text);
+            this.currentFontSize = Integer.parseInt(event.text);
+            updateStylesFontSize((float) this.currentFontSize);
+            setFormattedText(textPane.getText());
+            EventBus.publish(new RepaintPanelEvent());
+            return;
+        }
+
         if(event.type != GlobalVar.INFO_TEXT_UPDATE) return;
         String text = event.text;
         Font font = textPane.getFont();
@@ -309,20 +328,24 @@ public class JScalingTextPane extends JScrollPane {
         textPane.setSize(width, height);
     }
 
-    private void onFontSizeUpdate(FontSizeUpdate e){
-        switch(e.scaler){
-            case '+': this.currentFontSize++; break;
-            case '-': if(this.currentFontSize>0) this.currentFontSize--; break;
+    private void onFontSizeUpdate(char scaler){
+        switch(scaler){
+            case '+': this.currentFontSize+=1; break;
+            case '-': if(this.currentFontSize>0) this.currentFontSize-=1; break;
         }
 
         
         updateStylesFontSize((float) this.currentFontSize);
         setFormattedText(textPane.getText());
         EventBus.publish(new RepaintPanelEvent());
+        EventBus.publish(new TextUpdate(GlobalVar.FONTSIZE_FIELD_UPDATE, String.valueOf(currentFontSize)));
     }
 
     public void scaleFont(double scale){
-        updateStylesFontSize((float) (this.currentFontSize*scale));
+        float newSize = currentFontSize * ((float) scale / 0.7f);
+        updateStylesFontSize(newSize);
+        setFormattedText(textPane.getText());
     }
+
 
 }

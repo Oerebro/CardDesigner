@@ -4,7 +4,7 @@ import javax.swing.*;
 
 import events.EventBus;
 import events.InfoColorUpdate;
-import events.TitleColorUpdate;
+import events.ColorUpdate;
 import gui.*;
 
 import java.awt.*;
@@ -12,7 +12,7 @@ import java.awt.*;
 public class ColorPicker extends JButton{
     //private CardDesignerGUI parent;
 
-    public ColorPicker(CardDesignerGUI parent, int x, int y,int width,int height, String type){
+    public ColorPicker(CardDesignerGUI parent, int x, int y,int width,int height, int type){
         this.setBackground(Color.WHITE);  
         this.setFocusPainted(false);
         //this.parent = parent;
@@ -23,10 +23,7 @@ public class ColorPicker extends JButton{
                 if (selected != null) {
                     this.setBackground(selected);
                     
-                    switch(type){
-                        case "title": EventBus.publish(new TitleColorUpdate(selected));break;
-                        case "info":  EventBus.publish(new InfoColorUpdate(selected));break;
-                    }
+                    EventBus.publish(new ColorUpdate(type,selected));
 
 
                 }
