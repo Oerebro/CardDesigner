@@ -51,7 +51,6 @@ public class ConsumableCardComposer extends ItemCardComposer{
     }
 
 
-    @Override
     protected void setField(int field, String path){
         super.setField(field, path);
         //EventBus.publish(new RepaintPanelEvent());

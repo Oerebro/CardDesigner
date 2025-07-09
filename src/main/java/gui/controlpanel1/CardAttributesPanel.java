@@ -3,7 +3,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentListener;
 
 import events.EventBus;
-import events.ItemImageUpdateEvent;
+import events.ImageUpdate;
 import events.RuneChargesUpdate;
 import events.TextUpdate;
 import events.TierUpdate;
@@ -419,7 +419,7 @@ public class CardAttributesPanel extends JPanel{
     }
 
     private void publishImageUpdate(int type, String path){
-        EventBus.publish(new ItemImageUpdateEvent(type, path));
+        EventBus.publish(new ImageUpdate(type, path));
     }
 
 

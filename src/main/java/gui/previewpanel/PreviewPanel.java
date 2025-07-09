@@ -108,9 +108,10 @@ public class PreviewPanel {
         switch (type) {
             case GlobalVar.REPAINT_BACKGROUND:
                 backgroundLayer = parent.getComposedCard(scale * panelRatio, type);
-                frameLayer = parent.getComposedCard(scale * panelRatio, type);
+                //frameLayer = parent.getComposedCard(scale * panelRatio, type);
                 break;
             case GlobalVar.REPAINT_IMAGE:
+            System.out.println("imag");
                 imageLayer = parent.getComposedCard(scale * panelRatio, type);
                 break;
             case GlobalVar.REPAINT_FRAME:

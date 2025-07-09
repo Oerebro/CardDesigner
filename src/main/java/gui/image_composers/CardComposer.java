@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 
 import events.EventBus;
-import events.ItemImageUpdateEvent;
+import events.ImageUpdate;
 import events.InfoColorUpdate;
 import events.RepaintPanelEvent;
 import events.TextLoadEvent;
@@ -87,8 +87,8 @@ public class CardComposer extends Loggable{
         
         init();
 
-        EventBus.subscribe(ItemImageUpdateEvent.class, this::onImageUpdate);
-        EventBus.subscribe(CardLoadEvent.class, this::onLoadCard);
+        EventBus.subscribe(ImageUpdate.class, this::onImageUpdate);
+        //EventBus.subscribe(CardLoadEvent.class, this::onLoadCard);
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         EventBus.subscribe(InfoColorUpdate.class, this::onInfoColorUpdate);
         EventBus.subscribe(ToggleTextBorder.class, this::toggleTextBorder);
@@ -142,13 +142,12 @@ public class CardComposer extends Loggable{
         return finalImage;
     }
 
-    protected void onImageUpdate(ItemImageUpdateEvent e){
+    protected void onImageUpdate(ImageUpdate e){
     }
 
-    protected void onLoadCard(CardLoadEvent e){
+    protected void loadCard(CardLoadEvent e){
         //this.type=e.type;
-        EventBus.publish(new TextUpdate(GlobalVar.TITLE_TEXT_UPDATE,e.titleText));
-        EventBus.publish(new TextUpdate(GlobalVar.INFO_TEXT_UPDATE,e.infoText));
+        
         setField(GlobalVar.BACKGROUND_IMAGE, e.backgroundImage);
         setField(GlobalVar.FRAME_IMAGE, e.frameImage);
 

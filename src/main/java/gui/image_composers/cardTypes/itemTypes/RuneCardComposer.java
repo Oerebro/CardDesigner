@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 import events.CardLoadEvent;
 import events.EventBus;
-import events.ItemImageUpdateEvent;
+import events.ImageUpdate;
 import events.RepaintPanelEvent;
 import events.TierUpdate;
 import gui.GlobalVar;
@@ -34,7 +34,7 @@ public class RuneCardComposer extends ItemCardComposer{
     }
 
     @Override
-    protected void onImageUpdate(ItemImageUpdateEvent e){
+    protected void onImageUpdate(ImageUpdate e){
         super.setField(e.type, e.path);
     }
  

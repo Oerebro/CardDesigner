@@ -125,9 +125,8 @@ public class WeaponCardComposer extends EquippableCardComposer{
         setField(GlobalVar.DICE, GlobalVar.DICE_IMAGE_PATH+dice+".png");
     }
 
-    @Override
-    protected void onLoadCard(CardLoadEvent e) {
-        super.onLoadCard(e);
+    protected void loadCard(CardLoadEvent e) {
+        super.loadCard(e);
     }
 
     protected WeaponConfig writeToConfig(WeaponConfig config){

@@ -76,8 +76,6 @@ public class EquippableCardComposer extends ItemCardComposer{
 
     @Override
     protected void setField(int field, String path){
-        
-
         switch(field){
             case GlobalVar.TIER: 
                 tierGlyph = getImageFromFile(path); 
@@ -99,9 +97,8 @@ public class EquippableCardComposer extends ItemCardComposer{
         }
     }
 
-    @Override
-    protected void onLoadCard(CardLoadEvent e) {
-        super.onLoadCard(e);
+    protected void loadCard(CardLoadEvent e) {
+        super.loadCard(e);
     }
 
     protected EquippableConfig writeToConfig(EquippableConfig config){

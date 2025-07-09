@@ -5,9 +5,10 @@ import java.lang.reflect.Field;
 
 import events.CardLoadEvent;
 import events.EventBus;
-import events.ItemImageUpdateEvent;
+import events.ImageUpdate;
 import events.RepaintPanelEvent;
 import events.TextLoadEvent;
+import events.TextUpdate;
 import gui.GlobalVar;
 import gui.card_types.*;
 import gui.image_composers.CardComposer;
@@ -160,14 +161,15 @@ public class ItemCardComposer extends CardComposer{
     }
 
     @Override
-    protected void onImageUpdate(ItemImageUpdateEvent e) {
+    protected void onImageUpdate(ImageUpdate e) {
         super.onImageUpdate(e);
         setField(GlobalVar.ITEM_IMAGE, e.path);
     }
 
-    @Override
-    protected void onLoadCard(CardLoadEvent e) {
-        super.onLoadCard(e);
+    protected void loadCard(CardLoadEvent e) {
+        EventBus.publish(new TextUpdate(GlobalVar.TITLE_TEXT_UPDATE,e.titleText));
+        EventBus.publish(new TextUpdate(GlobalVar.INFO_TEXT_UPDATE,e.infoText));
+        super.loadCard(e);
     }
 
     protected ItemConfig writeToConfig(ItemConfig config){

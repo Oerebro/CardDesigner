@@ -1,7 +1,8 @@
 package gui.image_composers.cardTypes.itemTypes.equippableTypes.weaponTypes;
 
 import events.CardLoadEvent;
-import events.ItemImageUpdateEvent;
+import events.EventBus;
+import events.ImageUpdate;
 import gui.GlobalVar;
 import gui.card_types.*;
 import gui.image_composers.cardTypes.itemTypes.equippableTypes.WeaponCardComposer;
@@ -9,17 +10,17 @@ import gui.image_composers.cardTypes.itemTypes.equippableTypes.WeaponCardCompose
 public class WeaponMeleeCardComposer extends WeaponCardComposer{
 
     public WeaponMeleeCardComposer(){
-        
         super(GlobalVar.W_MELEE);
+        EventBus.subscribe(CardLoadEvent.class, this::onLoadCard);
+        EventBus.subscribe(ImageUpdate.class, this::onImageUpdate);
+        
     }
 
-    @Override
     protected void onLoadCard(CardLoadEvent e){
-        super.onLoadCard(e);
+        super.loadCard(e);
     }
 
-    @Override
-    protected void onImageUpdate(ItemImageUpdateEvent e){
+    protected void onImageUpdate(ImageUpdate e){
         super.setField(e.type, e.path);
     }
  

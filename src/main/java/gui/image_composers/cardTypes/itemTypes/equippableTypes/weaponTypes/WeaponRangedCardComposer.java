@@ -1,15 +1,11 @@
 package gui.image_composers.cardTypes.itemTypes.equippableTypes.weaponTypes;
 
-import java.awt.image.BufferedImage;
-
 import events.CardLoadEvent;
-import events.ItemImageUpdateEvent;
+import events.ImageUpdate;
 import gui.GlobalVar;
 import gui.card_types.*;
 import gui.image_composers.cardTypes.itemTypes.equippableTypes.WeaponCardComposer;
-import gui.previewpanel.OneLineTextPane;
 
-import java.awt.*;
 
 public class WeaponRangedCardComposer extends WeaponCardComposer{
 
@@ -17,14 +13,12 @@ public class WeaponRangedCardComposer extends WeaponCardComposer{
         super(GlobalVar.W_RANGED);
     }
 
-    @Override
-    protected void onImageUpdate(ItemImageUpdateEvent e){
+    protected void onImageUpdate(ImageUpdate e){
         super.setField(e.type, e.path);
     }
 
-    @Override
-    protected void onLoadCard(CardLoadEvent e){
-        super.onLoadCard(e);
+    protected void loadCard(CardLoadEvent e){
+        super.loadCard(e);
     }
 
     public WeaponConfig writeToConfig(){

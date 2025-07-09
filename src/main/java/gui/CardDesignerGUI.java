@@ -263,7 +263,7 @@ public class CardDesignerGUI {
 
         //this will load the stuff from the previous card / load defaults
         //EventBus.publish(new RepaintPanelEvent());
-        //EventBus.publish(new CardLoadEvent());
+        EventBus.publish(new CardLoadEvent());
     }
     
     

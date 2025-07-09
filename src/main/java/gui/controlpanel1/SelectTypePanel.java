@@ -2,7 +2,7 @@ package gui.controlpanel1;
 import javax.swing.*;
 
 import events.EventBus;
-import events.ItemImageUpdateEvent;
+import events.ImageUpdate;
 import events.CardTypeUpdate;
 //import events.ImageUpdateEvent;
 import gui.CardDesignerGUI;
@@ -80,9 +80,9 @@ public class SelectTypePanel extends JPanel{
 
     private void updateRuneCut(Boolean isCut){
         if(isCut){
-            EventBus.publish(new ItemImageUpdateEvent(GlobalVar.RUNECUT, "resources/misc/rune_cut.png"));
+            EventBus.publish(new ImageUpdate(GlobalVar.RUNECUT, "resources/misc/rune_cut.png"));
         }else{
-            EventBus.publish(new ItemImageUpdateEvent(GlobalVar.RUNECUT, null));
+            EventBus.publish(new ImageUpdate(GlobalVar.RUNECUT, null));
         }
     }
 

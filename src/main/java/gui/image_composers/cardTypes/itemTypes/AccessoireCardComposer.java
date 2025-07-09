@@ -2,6 +2,7 @@ package gui.image_composers.cardTypes.itemTypes;
 
 import java.awt.image.BufferedImage;
 import events.EventBus;
+import events.ImageUpdate;
 import events.RepaintPanelEvent;
 import gui.GlobalVar;
 import gui.image_composers.cardTypes.ItemCardComposer;
@@ -34,17 +35,14 @@ public class AccessoireCardComposer extends ItemCardComposer{
         return finalImage;
     }
 
-
-    @Override
     protected void setField(int field, String path){
-        super.setField(field, path);
-
         switch(field){
             case GlobalVar.TIER: 
                 tierGlyph = getImageFromFile(path); 
                 tier = getTierFromPath(path); 
                 EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TIER_LABEL));
                 break;
+            default: super.setField(field, path);
         }
 
         
@@ -52,6 +50,10 @@ public class AccessoireCardComposer extends ItemCardComposer{
 
     private int getTierFromPath(String path){
         return Integer.parseInt(path.replaceAll("resources/glpyhs/tier", "").replaceAll(".png", ""));
+    }
+
+    protected void onImageUpdate(ImageUpdate e){
+        setField(e.type, e.path);
     }
 
     

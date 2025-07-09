@@ -3,6 +3,7 @@ package gui.image_composers.cardTypes.itemTypes.equippableTypes;
 import java.awt.image.BufferedImage;
 
 import events.EventBus;
+import events.ImageUpdate;
 import events.RepaintPanelEvent;
 import gui.GlobalVar;
 import gui.image_composers.cardTypes.itemTypes.EquippableCardComposer;
@@ -66,7 +67,6 @@ public class ArmorCardComposer extends EquippableCardComposer{
     }
 
 
-    @Override
     protected void setField(int field, String path){
         super.setField(field, path);
 
@@ -81,6 +81,10 @@ public class ArmorCardComposer extends EquippableCardComposer{
                 break;
             default: super.setField(field, path);
         }
+    }
+
+    protected void onImageUpdate(ImageUpdate e){
+        setField(e.type, e.path);
     }
 
 
