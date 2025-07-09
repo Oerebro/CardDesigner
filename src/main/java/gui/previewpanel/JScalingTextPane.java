@@ -237,6 +237,8 @@ public class JScalingTextPane extends JScrollPane {
     }
 
     private void updateStylesFontSize(float size){
+        textPane.setFont(textPane.getFont().deriveFont(size)); 
+
         Style defaultStyle = textPane.getStyle("default");
         StyleConstants.setFontSize(defaultStyle, (int) size);
 
@@ -255,6 +257,7 @@ public class JScalingTextPane extends JScrollPane {
 
         float fontSize = textPane.getFont().getSize();
         Font font = textPane.getFont();
+        
 
         // Apply to styles
         Style defaultStyle = textPane.getStyle("default");

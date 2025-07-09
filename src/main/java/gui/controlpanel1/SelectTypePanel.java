@@ -3,7 +3,7 @@ import javax.swing.*;
 
 import events.EventBus;
 import events.ItemImageUpdateEvent;
-import events.SelectTypePanelUpdateEvent;
+import events.CardTypeUpdate;
 import events.ClearUnrelatedImagesEvent;
 //import events.ImageUpdateEvent;
 import gui.CardDesignerGUI;
@@ -51,23 +51,25 @@ public class SelectTypePanel extends JPanel{
         this.add(typePanel);
 
         
-        this.add(attributePanel = new CardAttributesPanel(parent, "weapon"));
+        this.add(attributePanel = new CardAttributesPanel(GlobalVar.WEAPON));
 
 
         // Collect all checkboxes in this panel in an array
         JCheckBox[] checkboxes2 = {isWeapon, isArmor, isClothing, isAccessoire, isConsumable,isRune,isEffect};
         checkboxes = checkboxes2;
+        isWeapon.addActionListener(createCheckboxListener(isWeapon, checkboxes,GlobalVar.WEAPON));
+        isClothing.addActionListener(createCheckboxListener(isClothing, checkboxes,GlobalVar.ARMOR));
+        isArmor.addActionListener(createCheckboxListener(isArmor, checkboxes,GlobalVar.ARMOR));
+        isAccessoire.addActionListener(createCheckboxListener(isAccessoire, checkboxes,GlobalVar.ACCESSOIRE));
+        isConsumable.addActionListener(createCheckboxListener(isConsumable, checkboxes,GlobalVar.CONSUMABLE));
+        isRune.addActionListener(createCheckboxListener(isRune, checkboxes,GlobalVar.RUNE));
 
-        // Add action listeners to each checkbox
-        for (JCheckBox checkbox : checkboxes) {
-            checkbox.addActionListener(createCheckboxListener(checkbox, checkboxes));
-        }
     }
 
-    private ActionListener createCheckboxListener(JCheckBox selectedCheckbox, JCheckBox[] allCheckboxes) {
+    private ActionListener createCheckboxListener(JCheckBox selectedCheckbox, JCheckBox[] allCheckboxes, int type) {
         //EventBus.publish(new ClearUnrelatedImagesEvent());
         return e -> {
-            updatePanel(selectedCheckbox, allCheckboxes);
+            updatePanel(selectedCheckbox, allCheckboxes, type);
         };
     }
     private void uncheckOtherCheckboxes(JCheckBox selectedCheckbox, JCheckBox[] allCheckboxes) {
@@ -86,14 +88,14 @@ public class SelectTypePanel extends JPanel{
         }
     }
 
-    public void updatePanel(JCheckBox selected, JCheckBox[] checkboxes){
+    public void updatePanel(JCheckBox selected, JCheckBox[] checkboxes, int type){
 
         uncheckOtherCheckboxes(selected, checkboxes);
         this.remove(attributePanel);
-        String type = selected.getText().toLowerCase();
+        //String type = selected.getText().toLowerCase();
         //EventBus.publish(new ClearUnrelatedImagesEvent());
-        EventBus.publish(new SelectTypePanelUpdateEvent(type));
-        this.attributePanel = new CardAttributesPanel(parent, type);
+        EventBus.publish(new CardTypeUpdate(type));
+        this.attributePanel = new CardAttributesPanel(type);
     
         this.add(attributePanel);
         this.repaint();

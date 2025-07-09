@@ -1,7 +1,10 @@
 package gui.image_composers.cardTypes.itemTypes;
 
 import java.awt.image.BufferedImage;
+
+import events.CardLoadEvent;
 import events.EventBus;
+import events.ItemImageUpdateEvent;
 import events.RepaintPanelEvent;
 import events.TierUpdate;
 import gui.GlobalVar;
@@ -21,8 +24,26 @@ public class RuneCardComposer extends ItemCardComposer{
 
     public RuneCardComposer(){
         super(GlobalVar.RUNE);
-
+        System.out.println("Rune Composer");
         EventBus.subscribe(TierUpdate.class, this::onTierUpdate);
+    }
+
+    @Override
+    protected void onLoadCard(CardLoadEvent e){
+        super.onLoadCard(e);
+    }
+
+    @Override
+    protected void onImageUpdate(ItemImageUpdateEvent e){
+        super.setField(e.type, e.path);
+    }
+ 
+    public ItemConfig saveConfig(){
+        return super.writeToConfig(new ItemConfig());
+    }
+
+    public void loadFromConfig(CardConfig config) {
+        super.loadFromConfig(config);
     }
 
     @Override
@@ -32,7 +53,7 @@ public class RuneCardComposer extends ItemCardComposer{
         Graphics2D g2d = finalImage.createGraphics();
 
         if (tierGlyph != null) {
-            g2d.drawImage(tierGlyph, (int)(530*scale), (int)(465*scale),  (int)(180*scale),  (int)(180*scale), null);
+            g2d.drawImage(tierGlyph, (int)(530*scale), (int)(512*scale),  (int)(180*scale),  (int)(180*scale), null);
         }
         g2d.dispose();
         return finalImage;
@@ -53,14 +74,10 @@ public class RuneCardComposer extends ItemCardComposer{
     protected void setField(int field, String path){
         super.setField(field, path);
         switch(field){
-            case GlobalVar.TIER: tierGlyph = getImageFromFile(path); tier = getTierFromPath(path); EventBus.publish(new RepaintPanelEvent());break;
+            case GlobalVar.TIER: tierGlyph = getImageFromFile(path); EventBus.publish(new RepaintPanelEvent());break;
         }
 
         EventBus.publish(new RepaintPanelEvent());
-    }
-
-    private int getTierFromPath(String path){
-        return Integer.parseInt(path.replaceAll(GlobalVar.TIER_IMAGE_PATH, "").replaceAll(".png", ""));
     }
 
     

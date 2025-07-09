@@ -14,7 +14,7 @@ import gui.*;
 
 import java.awt.*;
 public class CardAttributesPanel extends JPanel{
-    private String type;
+    private int type;
     JTextField armorClassInput;
     //private Font rangeAndACFont;
 
@@ -31,21 +31,18 @@ public class CardAttributesPanel extends JPanel{
 
     JCheckBox tier0,tier1,tier2,tier3,tier4;
 
-    public CardAttributesPanel(CardDesignerGUI parent, String type) {
+    public CardAttributesPanel(int type) {
         this.setLayout(new GridLayout(0, 1, 5, 5));
         this.type = type;
         
         switch(type){
-            case "weapon": createWeaponPanel();break;
-            case "armor": createArmorPanel();break;
-            case "consumable": createConsumablePanel();break;
-            case "rune": createRunePanel();break;
-            case "other": createOtherPanel();break;
+            case GlobalVar.WEAPON: createWeaponPanel();break;
+            case GlobalVar.ARMOR: createArmorPanel();break;
+            case GlobalVar.CONSUMABLE: createConsumablePanel();break;
+            case GlobalVar.RUNE: createRunePanel();break;
+            case GlobalVar.ACCESSOIRE: createArmorPanel();break;
+            default: createOtherPanel();break;
         }
-    }
-
-    public String getType(){
-        return type;
     }
 
     public int getDice(){

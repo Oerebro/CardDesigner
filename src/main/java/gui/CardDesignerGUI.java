@@ -256,7 +256,7 @@ public class CardDesignerGUI {
     }
 
     private void setImageComposerType(int type){
-
+        
         switch(type){
             case GlobalVar.W_MELEE: imageComposer = new WeaponMeleeCardComposer(); break;
             case GlobalVar.W_RANGED: imageComposer = new WeaponRangedCardComposer(); break;
@@ -265,7 +265,7 @@ public class CardDesignerGUI {
             case GlobalVar.EFFECT: imageComposer = new EffectCardComposer(); break;
             case GlobalVar.ARMOR: imageComposer = new ArmorCardComposer(); break;
             case GlobalVar.CONSUMABLE: imageComposer = new ConsumableCardComposer(); break;
-            case GlobalVar.RUNE: imageComposer = new RuneCardComposer(); break;
+            case GlobalVar.RUNE: imageComposer = new RuneCardComposer(); System.out.println("Rune");; break;
             case GlobalVar.ACCESSOIRE: imageComposer = new AccessoireCardComposer(); break;
 
         }

@@ -22,7 +22,7 @@ import events.CardLoadEvent;
 import events.EventBus;
 import events.FontSizeUpdate;
 import events.InfoFontUpdate;
-import events.SelectTypePanelUpdateEvent;
+import events.CardTypeUpdate;
 import events.TextLoadEvent;
 import events.TextUpdate;
 import events.TitleFontUpdate;
@@ -58,7 +58,7 @@ public class ControlPanel1 extends ControlPanel {
     
 
     public void init(CardDesignerGUI parent) {
-        EventBus.subscribe(SelectTypePanelUpdateEvent.class, this::onTypeUpdate);
+        EventBus.subscribe(CardTypeUpdate.class, this::onTypeUpdate);
         EventBus.subscribe(TextLoadEvent.class, this::onTextLoad);
         EventBus.subscribe(CardLoadEvent.class, this::onCardLoad);
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
@@ -91,7 +91,7 @@ public class ControlPanel1 extends ControlPanel {
     
         // Item Art VariableTabbedPane with default state weapons
         weapons = new VariableTabbedPane();
-        weapons.init("weapon");
+        weapons.init(GlobalVar.WEAPON);
         selectItemArt = weapons;
     
         // Create title input field and font selector
@@ -320,20 +320,20 @@ public class ControlPanel1 extends ControlPanel {
         cardComponentTabbedPane.addTab("Choose Effect Background",effectSelect.getScrollPane());
     }
 
-    public void onTypeUpdate(SelectTypePanelUpdateEvent e){
+    public void onTypeUpdate(CardTypeUpdate e){
         itemArtChangeToType(e.type);
     }
 
-    private void itemArtChangeToType(String type){
+    private void itemArtChangeToType(int type){
         //EventBus.publish(new ImageUpdateEvent(CARD,"resources/"+type+".png"));
         remove(selectItemArt);
 
         switch(type){
-            case "weapon": if(weapons == null) {weapons = new VariableTabbedPane(); weapons.init(type);} selectItemArt = weapons;   break;
-            case "armor": if(armor == null) {armor = new VariableTabbedPane(); armor.init(type);} selectItemArt = armor;   break;
-            case "accessoire": if(accessoire == null) {accessoire = new VariableTabbedPane(); accessoire.init(type);} selectItemArt = accessoire;   break;
-            case "consumable": if(consumable == null) {consumable = new VariableTabbedPane(); consumable.init(type);} selectItemArt = consumable;   break;
-            case "rune": if(rune == null) {rune = new VariableTabbedPane(); rune.init(type);} selectItemArt = rune;   break;
+            case GlobalVar.WEAPON: if(weapons == null) {weapons = new VariableTabbedPane(); weapons.init(type);} selectItemArt = weapons;   break;
+            case GlobalVar.ARMOR: if(armor == null) {armor = new VariableTabbedPane(); armor.init(type);} selectItemArt = armor;   break;
+            case GlobalVar.ACCESSOIRE: if(accessoire == null) {accessoire = new VariableTabbedPane(); accessoire.init(type);} selectItemArt = accessoire;   break;
+            case GlobalVar.CONSUMABLE: if(consumable == null) {consumable = new VariableTabbedPane(); consumable.init(type);} selectItemArt = consumable;   break;
+            case GlobalVar.RUNE: if(rune == null) {rune = new VariableTabbedPane(); rune.init(type);} selectItemArt = rune;   break;
             //case "effect":
             //case "character":
         }

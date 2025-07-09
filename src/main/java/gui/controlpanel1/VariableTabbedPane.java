@@ -2,6 +2,8 @@ package gui.controlpanel1;
 
 import javax.swing.JTabbedPane;
 
+import gui.GlobalVar;
+
 public class VariableTabbedPane extends JTabbedPane{
     /*types: 
     0 - weaponOneHand
@@ -11,27 +13,27 @@ public class VariableTabbedPane extends JTabbedPane{
     3 - accessoire
     4 - consumable
     */
-    private String type;
+    private int type;
 
 
-    public void init(String type){
+    public void init(int type){
         this.type = type;
         switchToType(type);
         setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     }
 
-    public String getType(){
+    public int getType(){
         return type;
     }
     
-    public void switchToType(String type){
+    public void switchToType(int type){
         switch(type){
-            case "weapon": addTabsWeaponOneHand();break;
-            case "rune": addTabsRune();break;
-            case "armor": addTabsArmor();break;
-            case "accessoire": addTabsAccessoire();break;
-            case "consumable": addTabsConsumable();break;
-            case "character": addTabsCharacters();break;
+            case GlobalVar.WEAPON: addTabsWeaponOneHand();break;
+            case GlobalVar.RUNE: addTabsRune();break;
+            case GlobalVar.ARMOR: addTabsArmor();break;
+            case GlobalVar.ACCESSOIRE: addTabsAccessoire();break;
+            case GlobalVar.CONSUMABLE: addTabsConsumable();break;
+            case GlobalVar.CHARACTER: addTabsCharacters();break;
         }
 
 

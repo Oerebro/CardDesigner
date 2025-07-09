@@ -7,7 +7,7 @@ import javax.swing.text.View;
 import events.EventBus;
 import events.InfoTextUpdate;
 import events.RepaintPanelEvent;
-import events.SelectTypePanelUpdateEvent;
+import events.CardTypeUpdate;
 import events.ClearUnrelatedImagesEvent;
 import gui.*;
 import gui.controlpanel1.FontLoader;
@@ -32,7 +32,7 @@ public class PreviewPanel {
     
     private void init() {
         EventBus.subscribe(RepaintPanelEvent.class, this::onRepaintEvent);
-        EventBus.subscribe(SelectTypePanelUpdateEvent.class, this::onTypeChange);
+        EventBus.subscribe(CardTypeUpdate.class, this::onTypeChange);
         scaledWidth = (int) (parent.getFrameScale() * (750*panelRatio));
         scaledHeight = (int) (parent.getFrameScale() * (1050*panelRatio));
 
@@ -311,7 +311,7 @@ public class PreviewPanel {
 
     }
 
-    private void onTypeChange(SelectTypePanelUpdateEvent e){
+    private void onTypeChange(CardTypeUpdate e){
         //EventBus.publish(new ClearUnrelatedImagesEvent());
     }
 

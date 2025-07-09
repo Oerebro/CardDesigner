@@ -1,9 +1,9 @@
 package events;
 
-public class SelectTypePanelUpdateEvent {
-    public final String type;
+public class CardTypeUpdate {
+    public final int type;
 
-    public SelectTypePanelUpdateEvent(String type){
+    public CardTypeUpdate(int type){
         this.type = type;
     }
 }
