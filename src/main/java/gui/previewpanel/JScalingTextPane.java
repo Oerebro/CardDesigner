@@ -14,6 +14,7 @@ import java.util.Map;
 import gui.GlobalVar;
 import gui.controlpanel1.FontLoader;
 import events.EventBus;
+import events.FontSizeUpdate;
 import events.InfoColorUpdate;
 import events.TextUpdate;
 import events.RepaintPanelEvent;
@@ -21,10 +22,10 @@ import events.InfoFontUpdate;
 
 public class JScalingTextPane extends JScrollPane {
     private final int maxNumLines;
-    private int maxSizeFont;
+    private int maxSizeFont, currentFontSize;
     private Font currentFont;
-    private JTextPane textPane;
-    String fontFamily;
+    private WrappingTextPane textPane;
+    String fontName;
     private int iconSize;
 
     private static final Map<String, String> ICON_MAP = new HashMap<>();
@@ -38,15 +39,18 @@ public class JScalingTextPane extends JScrollPane {
     }
 
     public JScalingTextPane(int maxNumLines, int maxSizeFont) {
-        fontFamily = "";
+        fontName = "";
         loadIconsFromDirectory();
         this.maxNumLines = maxNumLines;
         //this.maxSizeFont = maxSizeFont;
         this.maxSizeFont = 200;
+        this.currentFontSize = 20;
+        
 
         
 
-        textPane = new JTextPane();
+        textPane = new WrappingTextPane();
+
         Font baseFont = UIManager.getFont("Label.font");
         if (baseFont == null) {
             baseFont = new Font("SansSerif", Font.PLAIN, maxSizeFont);
@@ -75,6 +79,7 @@ public class JScalingTextPane extends JScrollPane {
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         EventBus.subscribe(InfoFontUpdate.class, this::onFontUpdate);
         EventBus.subscribe(InfoColorUpdate.class, this::onColorUpdate);
+        EventBus.subscribe(FontSizeUpdate.class, this::onFontSizeUpdate);
         
     }
 
@@ -220,40 +225,12 @@ public class JScalingTextPane extends JScrollPane {
         doc.insertString(doc.getLength(), text, textPane.getStyle(styleName));
     }
 
-    public void scaleFontToFit(String text) {
-        int lineCount = getLineCount(text);
-        if (lineCount <= 8) {
-            lineCount = 8;
-        }
-        int paneHeight = this.getHeight();
-        Font font = textPane.getFont().deriveFont((float) maxSizeFont);
-        int lineHeight = (int) (font.getSize2D() * 1.25f);
-
-        while ((lineCount * lineHeight) > (paneHeight * 0.9)  && font.getSize() > 1) {
-            font = font.deriveFont((float) font.getSize() - 1);
-            lineHeight = (int) (font.getSize2D() * 1.25f);
-        }
-
-        currentFont = font.deriveFont((float) font.getSize());
-        textPane.setFont(font);
-        updateStylesFontSize(font.getSize());;
-    }
-
-    public void scaleFont(){
-        scaleFontToFit(textPane.getText());
-        setFormattedText(textPane.getText());
-    }
-
-    private int getLineCount(String str) {
-
-        return str.split("\n").length;
-    }
 
     private void onFontUpdate(InfoFontUpdate e){
         
-        fontFamily = e.fontFamily;
-        textPane.setFont(FontLoader.loadFont(e.fontFamily,Font.PLAIN, maxSizeFont));
-        updateStylesToCurrentFont(fontFamily);
+        fontName = e.fontName;
+        textPane.setFont(FontLoader.loadFont(e.fontName,Font.PLAIN, currentFontSize));
+        updateStylesToCurrentFont(fontName);
         EventBus.publish(new RepaintPanelEvent());
     }
 
@@ -271,7 +248,7 @@ public class JScalingTextPane extends JScrollPane {
         StyleConstants.setFontSize(boldItalicStyle, (int) size);
     }
 
-    private void updateStylesToCurrentFont(String fontFamily) {
+    private void updateStylesToCurrentFont(String fontName) {
         Color color = textPane.getForeground();
 
         float fontSize = textPane.getFont().getSize();
@@ -310,91 +287,15 @@ public class JScalingTextPane extends JScrollPane {
         EventBus.publish(new RepaintPanelEvent());
     }
 
-    private String wrapText(String text) {
-        Font font = currentFont;
-        //int maxWidth = this.getWidth();
-        FontMetrics fm = this.getFontMetrics(font);
-        int safeMaxWidth = textPane.getWidth();
-        StringBuilder result = new StringBuilder();
-
-        for (String paragraph : text.split("\n")) {
-            int lineWidth = 0;
-
-            for (String word : paragraph.split(" ")) {
-
-                int wordWidth;
-                //check if word is an icon
-                if (word.startsWith("<") && word.matches(".*>[\\.,!?:]*$")) {
-                    int iconCount = word.split(",", -1).length + word.split("><", -1).length-1;
-                    wordWidth = iconSize * iconCount;
-                } else {
-                    wordWidth = fm.stringWidth(word + " ");
-                }
-
-                if (wordWidth > safeMaxWidth) {
-                    // Break long word into parts
-                    StringBuilder wordBuilder = new StringBuilder();
-                    for (char c : word.toCharArray()) {
-                        if (fm.stringWidth(wordBuilder.toString() + c) > safeMaxWidth) {
-                            result.append(wordBuilder).append("\n");
-                            wordBuilder = new StringBuilder();
-                        }
-                        wordBuilder.append(c);
-                    }
-                    if (wordBuilder.length() > 0) {
-                        result.append(wordBuilder).append(" ");
-                        lineWidth = fm.stringWidth(wordBuilder + " ");
-                    } else {
-                        lineWidth = 0;
-                    }
-                } else {
-                    //check if line is too long
-                    if (lineWidth + wordWidth > safeMaxWidth) {
-                        result.append("\n");
-                        lineWidth = 0;
-                    }
-                    result.append(word).append(" ");
-                    lineWidth += wordWidth;
-                }
-            }
-            result.append("\n");
-        }
-        return result.toString().replaceAll("\\s+$", "");
-    }
-
-    private String unwrapText(String text) {
-        String[] lines = text.split("\n");
-        StringBuilder result = new StringBuilder();
-        for (String line : lines) {
-            if (!line.trim().isEmpty()) {
-                result.append(line.trim()).append(" ");
-            }
-        }
-        return result.toString().replaceAll("\\s+$", "");
-    }
-
      private void onTextUpdate(TextUpdate event) {
         if(event.type != GlobalVar.INFO_TEXT_UPDATE) return;
-       
         String text = event.text;
-        text = wrapText(text);
-
-
-        
         Font font = textPane.getFont();
         if (text == null) {
             text = "";
         }
         
-        int lineCount = getLineCount(text);
-        if (lineCount > maxNumLines || font.getSize2D() > (getHeight() / maxNumLines)) {
-            scaleFontToFit(text);
-        }
         setFormattedText(text);
-        /*this.repaint();
-        textPane.repaint();
-        this.revalidate();
-        textPane.revalidate();*/
         EventBus.publish(new RepaintPanelEvent());
     }
 
@@ -407,4 +308,21 @@ public class JScalingTextPane extends JScrollPane {
         textPane.setBounds(0,0, width, height);
         textPane.setSize(width, height);
     }
+
+    private void onFontSizeUpdate(FontSizeUpdate e){
+        switch(e.scaler){
+            case '+': this.currentFontSize++; break;
+            case '-': if(this.currentFontSize>0) this.currentFontSize--; break;
+        }
+
+        
+        updateStylesFontSize((float) this.currentFontSize);
+        setFormattedText(textPane.getText());
+        EventBus.publish(new RepaintPanelEvent());
+    }
+
+    public void scaleFont(double scale){
+        updateStylesFontSize((float) (this.currentFontSize*scale));
+    }
+
 }

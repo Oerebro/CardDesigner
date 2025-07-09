@@ -35,7 +35,7 @@ public class CardComposer extends Loggable{
     protected OneLineTextPane titleTextPane,typeTextPane;
     protected Boolean hasTitleBorder, hasRuneCut, hasInfoBorder, hasTypeBorder;
 
-    protected String TYPEIMAGEPATH = "reconfigs/glyphs/";
+    protected String TYPEIMAGEPATH = "resources/glyphs/";
     protected String ARMOR_TYPEIMAGE = "armor.png";
     protected String ACCESSOIRE_TYPEIMAGE = "accessoire.png";
     protected String CONSUMABLE_TYPEIMAGE = "consumable.png";
@@ -45,7 +45,7 @@ public class CardComposer extends Loggable{
     protected String W_RANGED_TYPEIMAGE = "weapon_type/ranged.png";
     protected String W_THROWABLE_TYPEIMAGE = "weapon_type/throwable.png";
 
-    protected String RUNECUT = "reconfigs/misc/rune_cut.png";
+    protected String RUNECUT = "resources/glyphs/runic_weapon.png";
 
     protected int baseWidth = 750;
     protected int baseHeight = 1050;
@@ -55,6 +55,7 @@ public class CardComposer extends Loggable{
     protected int[] typeFieldBounds = {50,605,650,40};
     protected int[] titleFieldBounds = {57,70,632,50};
     protected int[] infoFieldBounds = {55,665,640,295};
+    protected int[] runeIconBounds = {40,40,90,90};
 
     //protected boolean hasTitleBorder;
 
@@ -172,7 +173,7 @@ public class CardComposer extends Loggable{
 
     protected String getOverlayImagePath(String path){
         String[] arr = path.split("\\\\");
-        return "reconfigs/img/overlay/"+arr[arr.length-1];
+        return "resources/img/overlay/"+arr[arr.length-1];
     }
 
 
@@ -239,6 +240,8 @@ public class CardComposer extends Loggable{
 
         int[] titleBounds = {20,20,710,200};
         int[] textboxBounds = {0,560,750,450};
+        //int[] runeIconBounds = {40,40,90,90};
+        int[] runeIconBounds = {635,935,90,90};
         
 
         targetWidth = (int) (baseWidth * scale);
@@ -265,7 +268,7 @@ public class CardComposer extends Loggable{
         }
 
         if (runeCut != null) {
-            g2d.drawImage(runeCut, 0, 0, targetWidth, targetHeight, null);
+            g2d.drawImage(runeCut, (int)(runeIconBounds[0]*scale), (int)(runeIconBounds[1]*scale), (int)(runeIconBounds[2]*scale), (int)(runeIconBounds[3]*scale), null);
         }
 
         //return finalImage;

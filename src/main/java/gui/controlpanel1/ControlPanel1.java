@@ -19,6 +19,7 @@ import gui.GlobalVar;
 import abstractclasses.*;
 import events.CardLoadEvent;
 import events.EventBus;
+import events.FontSizeUpdate;
 import events.InfoFontUpdate;
 import events.SelectTypePanelUpdateEvent;
 import events.TextLoadEvent;
@@ -142,6 +143,15 @@ public class ControlPanel1 extends ControlPanel {
         infoStroke = new JCheckBox("Rules Text Outline",false);
         infoStroke.setBounds(460,380,100,30);
         infoStroke.addActionListener(e->{EventBus.publish(new ToggleTextBorder(GlobalVar.INFO_BORDER,infoStroke.isSelected()));});
+
+        JButton fontUp = new JButton("+");
+        JButton fontDown = new JButton("-");
+        fontUp.setBounds(infoFontBounds[0],425,30,30);
+        fontUp.addActionListener(e->{EventBus.publish(new FontSizeUpdate('+'));});
+        fontDown.setBounds(infoFontBounds[0]+40,425,30,30);
+        fontDown.addActionListener(e->{EventBus.publish(new FontSizeUpdate('-'));});
+        add(fontUp);
+        add(fontDown);
         add(titleStroke);
         add(typeStroke);
         add(infoStroke);

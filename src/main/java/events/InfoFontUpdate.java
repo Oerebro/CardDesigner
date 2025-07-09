@@ -1,9 +1,9 @@
 package events;
 
 public class InfoFontUpdate {
-    public final String fontFamily;
+    public final String fontName;
 
-    public InfoFontUpdate(String fontFamily) {
-        this.fontFamily = fontFamily;
+    public InfoFontUpdate(String fontName) {
+        this.fontName = fontName;
     }
 }

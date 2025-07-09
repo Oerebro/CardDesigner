@@ -81,7 +81,7 @@ public class EquippableCardComposer extends ItemCardComposer{
         switch(field){
             case GlobalVar.TIER: tierGlyph = getImageFromFile(path); EventBus.publish(new RepaintPanelEvent());break;
             case GlobalVar.RUNECHARGES: runeChargesGlyph = getImageFromFile(path); EventBus.publish(new RepaintPanelEvent());break;
-            case GlobalVar.RUNECUT: runeCut = getImageFromFile(path); if(path == null) {hasRuneCut = false;}else{hasRuneCut=true;}; EventBus.publish(new RepaintPanelEvent());break;
+            case GlobalVar.RUNECUT: runeCut = getImageFromFile(RUNECUT); if(path == null) {hasRuneCut = false;}else{hasRuneCut=true;}; EventBus.publish(new RepaintPanelEvent());break;
             default: super.setField(field, path);
         }
 

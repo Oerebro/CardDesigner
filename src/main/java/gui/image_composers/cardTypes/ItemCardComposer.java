@@ -66,7 +66,7 @@ public class ItemCardComposer extends CardComposer{
         BufferedImage infoText = new BufferedImage((int) (infoFieldBounds[2] * scale),(int) (infoFieldBounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
         labelGraphics = infoText.createGraphics();
         infoTextPane.setBounds((int) (infoFieldBounds[0] * scale), (int) (infoFieldBounds[1] * scale), (int) (infoFieldBounds[2] * scale),(int) (infoFieldBounds[3] * scale),scale);
-        infoTextPane.scaleFont();
+        infoTextPane.scaleFont(scale);
         infoTextPane.doLayout();
         infoTextPane.revalidate();
         infoTextPane.repaint(); 
