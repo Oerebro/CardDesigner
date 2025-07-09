@@ -2,9 +2,6 @@ package gui.image_composers.cardTypes.itemTypes.equippableTypes;
 
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
-
-import org.apache.commons.math3.analysis.function.Log;
-
 import events.CardLoadEvent;
 import events.DiceUpdateEvent;
 import events.EventBus;
@@ -12,7 +9,6 @@ import events.RepaintPanelEvent;
 import gui.GlobalVar;
 import gui.card_types.*;
 import gui.image_composers.cardTypes.itemTypes.EquippableCardComposer;
-import gui.previewpanel.OneLineTextPane;
 
 import java.awt.*;
 
@@ -26,7 +22,6 @@ public class WeaponCardComposer extends EquippableCardComposer{
     private int[] tierFieldBounds = {550,440,180,180};
     private int[] attributeLabelBounds = {0,470,305,105};
     private int[] attributeBaseFieldBounds = {0,470,305,105};
-    private int[] attributeIconBounds = {0,470,305,105};
 
     public int getDice(){
         return dice;
@@ -46,37 +41,66 @@ public class WeaponCardComposer extends EquippableCardComposer{
     }
 
     @Override
-    public BufferedImage composeCard(double scale){
-        BufferedImage finalImage = super.composeCard(scale);
+    public BufferedImage composeCard(double scale, int type){
+        System.out.println(type);
+        switch(type){
+            case GlobalVar.REPAINT_ATTRIBUTE_LABEL:
+                return paintAttributeLabel(scale);
+            case GlobalVar.REPAINT_TIER_LABEL:
+                return paintTierLabel(scale);
+            case GlobalVar.REPAINT_ALL:
+                return paintAll(scale);
+            default: 
+                return super.composeCard(scale, type);
+        }
+    }
 
+    private BufferedImage paintAll(double scale){
         targetWidth = (int) (baseWidth * scale);
         targetHeight = (int) (baseHeight * scale);
-
+        BufferedImage finalImage = super.composeCard(scale,type);
         Graphics2D g2d = finalImage.createGraphics();
+        g2d.drawImage(paintAttributeLabel(scale), 0, 0, targetWidth, targetHeight, null);
+        g2d.drawImage(paintTierLabel(scale), 0, 0, targetWidth, targetHeight, null);
+        g2d.dispose();
+        return finalImage;
+    }
 
+    private BufferedImage paintAttributeLabel(double scale){
+        targetWidth = (int) (baseWidth * scale);
+        targetHeight = (int) (baseHeight * scale);
+        BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics g2d = i.createGraphics();
         BufferedImage attributeImage = attributeLabel.paint(scale);
         if (attributeImage != null) {
             g2d.drawImage(attributeImage, (int)(attributeBaseFieldBounds[0]*scale), (int)(attributeBaseFieldBounds[1]*scale), (int)(attributeBaseFieldBounds[2]*scale), (int)(attributeBaseFieldBounds[3]*scale), null);
         }
+        return i;
+    }
 
+    private BufferedImage paintTierLabel(double scale){
+        targetWidth = (int) (baseWidth * scale);
+        targetHeight = (int) (baseHeight * scale);
+        BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics g2d = i.createGraphics();
         if (diceImage != null) {
             g2d.drawImage(diceImage, (int)(diceFieldBounds[0]*scale), (int)(diceFieldBounds[1]*scale), (int)(diceFieldBounds[2]*scale), (int)(diceFieldBounds[3]*scale), null);
         }
-
         if (tierGlyph != null) {
             g2d.drawImage(tierGlyph, (int)(tierFieldBounds[0]*scale), (int)(tierFieldBounds[1]*scale), (int)(tierFieldBounds[2]*scale), (int)(tierFieldBounds[3]*scale), null);;
         }
         g2d.dispose();
-        return finalImage;
+        return i;
     }
 
 
     @Override
     protected void setField(int field, String path){
         switch(field){
-            case GlobalVar.DICE: diceImage = getImageFromFile(path); EventBus.publish(new RepaintPanelEvent());break;
-            //case GlobalVar.ATTRIBUTE: attributeImage = getImageFromFile(path); attribute = getAttribute(path); EventBus.publish(new RepaintPanelEvent()); break;
-            case GlobalVar.RANGE_TYPE: rangeTypeImage = getImageFromFile(path); EventBus.publish(new RepaintPanelEvent()); break;
+            case GlobalVar.DICE: 
+                diceImage = getImageFromFile(path); 
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TIER_LABEL));
+                break;
             default: super.setField(field, path);
         }
 
@@ -99,21 +123,6 @@ public class WeaponCardComposer extends EquippableCardComposer{
     protected void onDiceUpdate(DiceUpdateEvent e){
         this.dice = e.dice;
         setField(GlobalVar.DICE, GlobalVar.DICE_IMAGE_PATH+dice+".png");
-    }
-
-    private int getAttribute(String path){
-        path = path.replaceAll(GlobalVar.ATTRIBUTE_IMAGE_PATH, "").replaceAll(".png", "");
-
-        switch(path){
-            case "strength": return GlobalVar.STRENGTH;
-            case "constitution": return GlobalVar.CONSTITUTION;
-            case "dexterity": return GlobalVar.DEXTERITY;
-            case "wisdom": return GlobalVar.WISDOM;
-            case "intelligence": return GlobalVar.INTELLIGENCE;
-            case "charisma": return GlobalVar.CHARISMA;
-        }
-
-        return GlobalVar.STRENGTH;
     }
 
     @Override

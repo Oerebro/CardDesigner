@@ -47,8 +47,8 @@ public class RuneCardComposer extends ItemCardComposer{
     }
 
     @Override
-    public BufferedImage composeCard(double scale){
-        BufferedImage finalImage = super.composeCard(scale);
+    public BufferedImage composeCard(double scale, int type){
+        BufferedImage finalImage = super.composeCard(scale,type);
 
         Graphics2D g2d = finalImage.createGraphics();
 
@@ -74,10 +74,10 @@ public class RuneCardComposer extends ItemCardComposer{
     protected void setField(int field, String path){
         super.setField(field, path);
         switch(field){
-            case GlobalVar.TIER: tierGlyph = getImageFromFile(path); EventBus.publish(new RepaintPanelEvent());break;
+            case GlobalVar.TIER: 
+            tierGlyph = getImageFromFile(path); 
+            EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TIER_LABEL));break;
         }
-
-        EventBus.publish(new RepaintPanelEvent());
     }
 
     

@@ -11,6 +11,7 @@ import events.AttributeUpdate;
 import events.CardTypeUpdate;
 import events.DiceUpdateEvent;
 import gui.*;
+import gui.previewpanel.DigitOnlyTextField;
 
 import java.awt.*;
 public class CardAttributesPanel extends JPanel{
@@ -87,7 +88,7 @@ public class CardAttributesPanel extends JPanel{
     }
 
     private void createArmorPanel(){
-        armorClassInput = new JTextField();
+        armorClassInput = new DigitOnlyTextField();
         armorClassInput.setBorder(BorderFactory.createTitledBorder("Armor Class"));
 
         armorClassInput.getDocument().addDocumentListener(new DocumentListener() {

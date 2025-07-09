@@ -29,8 +29,8 @@ public class ConsumableCardComposer extends ItemCardComposer{
     }
 
     @Override
-    public BufferedImage composeCard(double scale){
-        BufferedImage finalImage = super.composeCard(scale);
+    public BufferedImage composeCard(double scale, int type){
+        BufferedImage finalImage = super.composeCard(scale,type);
 
         Graphics2D g2d = finalImage.createGraphics();
 
@@ -54,7 +54,7 @@ public class ConsumableCardComposer extends ItemCardComposer{
     @Override
     protected void setField(int field, String path){
         super.setField(field, path);
-        EventBus.publish(new RepaintPanelEvent());
+        //EventBus.publish(new RepaintPanelEvent());
     }
 
     

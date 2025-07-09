@@ -344,11 +344,7 @@ public class ControlPanel1 extends ControlPanel {
         selectItemArt.revalidate();
         selectItemArt.repaint();
     }
-
-    public String getItemArtType(){
-        return selectItemArt.getType();
-    }
-
+    
     public void rescale(double scale) {
         //these rescales should be done in a better way, but they work atm
         frameSelect.rescale(scale);

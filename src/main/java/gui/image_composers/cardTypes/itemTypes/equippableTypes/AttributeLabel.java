@@ -7,12 +7,10 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
 
 import events.AttributeUpdate;
 import events.EventBus;
 import events.RepaintPanelEvent;
-import events.TitleFontUpdate;
 import gui.GlobalVar;
 import gui.Loggable;
 import gui.previewpanel.OneLineTextPane;
@@ -73,7 +71,7 @@ public class AttributeLabel extends Loggable {
                 attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"charisma.png");
                 break;
         }
-        EventBus.publish(new RepaintPanelEvent());
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));
     }
 
     private void setBaseLabel(int type){
@@ -106,7 +104,7 @@ public class AttributeLabel extends Loggable {
                 damageTypeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_LABEL_COMPONENTS+"damage_ranged.png");
         }
 
-        EventBus.publish(new RepaintPanelEvent());
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));
     }
 
 

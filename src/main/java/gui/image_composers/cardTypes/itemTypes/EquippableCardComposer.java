@@ -57,8 +57,8 @@ public class EquippableCardComposer extends ItemCardComposer{
     }
 
     @Override
-    public BufferedImage composeCard(double scale){
-        BufferedImage finalImage = super.composeCard(scale);
+    public BufferedImage composeCard(double scale, int type){
+        BufferedImage finalImage = super.composeCard(scale,type);
 
         Graphics2D g2d = finalImage.createGraphics();
 
@@ -79,13 +79,24 @@ public class EquippableCardComposer extends ItemCardComposer{
         
 
         switch(field){
-            case GlobalVar.TIER: tierGlyph = getImageFromFile(path); EventBus.publish(new RepaintPanelEvent());break;
-            case GlobalVar.RUNECHARGES: runeChargesGlyph = getImageFromFile(path); EventBus.publish(new RepaintPanelEvent());break;
-            case GlobalVar.RUNECUT: runeCut = getImageFromFile(RUNECUT); if(path == null) {hasRuneCut = false;}else{hasRuneCut=true;}; EventBus.publish(new RepaintPanelEvent());break;
+            case GlobalVar.TIER: 
+                tierGlyph = getImageFromFile(path); 
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TIER_LABEL));
+                break;
+            case GlobalVar.RUNECHARGES: 
+                runeChargesGlyph = getImageFromFile(path); 
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_RUNECHARGE_LABEL));break;
+            case GlobalVar.RUNECUT: 
+                runeCut = getImageFromFile(RUNECUT); 
+                    if(path == null) {
+                        hasRuneCut = false;
+                    }else{
+                        hasRuneCut=true;
+                    }; 
+                    EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_RUNECUT));
+                    break;
             default: super.setField(field, path);
         }
-
-        EventBus.publish(new RepaintPanelEvent());
     }
 
     @Override

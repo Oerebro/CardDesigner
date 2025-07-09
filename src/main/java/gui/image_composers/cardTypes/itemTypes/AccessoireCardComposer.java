@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import events.EventBus;
 import events.RepaintPanelEvent;
 import gui.GlobalVar;
-import gui.card_types.*;
 import gui.image_composers.cardTypes.ItemCardComposer;
 
 import java.awt.*;
@@ -23,8 +22,8 @@ public class AccessoireCardComposer extends ItemCardComposer{
     }
 
     @Override
-    public BufferedImage composeCard(double scale){
-        BufferedImage finalImage = super.composeCard(scale);
+    public BufferedImage composeCard(double scale, int type){
+        BufferedImage finalImage = super.composeCard(scale,type);
 
         Graphics2D g2d = finalImage.createGraphics();
 
@@ -41,10 +40,14 @@ public class AccessoireCardComposer extends ItemCardComposer{
         super.setField(field, path);
 
         switch(field){
-            case GlobalVar.TIER: tierGlyph = getImageFromFile(path); tier = getTierFromPath(path); break;
+            case GlobalVar.TIER: 
+                tierGlyph = getImageFromFile(path); 
+                tier = getTierFromPath(path); 
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TIER_LABEL));
+                break;
         }
 
-        EventBus.publish(new RepaintPanelEvent());
+        
     }
 
     private int getTierFromPath(String path){

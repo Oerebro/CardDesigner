@@ -91,7 +91,7 @@ public class JScalingTextPane extends JScrollPane {
 
     public void setColor(Color color) {
         StyleConstants.setForeground(textPane.getStyle("default"), color);
-        EventBus.publish(new RepaintPanelEvent());
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_INFO));
     }
 
     private void stylesInit(){
@@ -229,11 +229,11 @@ public class JScalingTextPane extends JScrollPane {
 
 
     private void onFontUpdate(InfoFontUpdate e){
-        
+    
         fontName = e.fontName;
         textPane.setFont(FontLoader.loadFont(e.fontName,Font.PLAIN, currentFontSize));
         updateStylesToCurrentFont(fontName);
-        EventBus.publish(new RepaintPanelEvent());
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_INFO));
     }
 
     private void updateStylesFontSize(float size){
@@ -291,7 +291,7 @@ public class JScalingTextPane extends JScrollPane {
         if(e.type == GlobalVar.INFO_TEXT_UPDATE){
             textPane.setForeground(e.color);
             setFormattedText(textPane.getText());
-            EventBus.publish(new RepaintPanelEvent());
+            EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_INFO));
         }
     }
 
@@ -306,7 +306,7 @@ public class JScalingTextPane extends JScrollPane {
             this.currentFontSize = Integer.parseInt(event.text);
             updateStylesFontSize((float) this.currentFontSize);
             setFormattedText(textPane.getText());
-            EventBus.publish(new RepaintPanelEvent());
+            EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_INFO));
             return;
         }
 
@@ -318,7 +318,7 @@ public class JScalingTextPane extends JScrollPane {
         }
         
         setFormattedText(text);
-        EventBus.publish(new RepaintPanelEvent());
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_INFO));
     }
 
 
@@ -340,7 +340,7 @@ public class JScalingTextPane extends JScrollPane {
         
         updateStylesFontSize((float) this.currentFontSize);
         setFormattedText(textPane.getText());
-        EventBus.publish(new RepaintPanelEvent());
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_INFO));
         EventBus.publish(new TextUpdate(GlobalVar.FONTSIZE_FIELD_UPDATE, String.valueOf(currentFontSize)));
     }
 

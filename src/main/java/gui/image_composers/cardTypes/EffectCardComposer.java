@@ -14,8 +14,8 @@ public class EffectCardComposer extends CardComposer{
     }
 
     @Override
-    public BufferedImage composeCard(double scale){
-        return super.composeCard(scale);
+    public BufferedImage composeCard(double scale, int type){
+        return super.composeCard(scale,type);
     }
 
 

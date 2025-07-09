@@ -70,11 +70,28 @@ public class OneLineTextPane extends JLabel {
         if(e.type == this.type){
             setColor(e.color);
         }
+        publishRepaint();
     }
 
     private void setColor(Color color){
-        setForeground(color);
-        EventBus.publish(new RepaintPanelEvent());
+        setForeground(color);    
+    }
+
+    private void publishRepaint(){
+        switch(type){
+            case GlobalVar.TITLE_TEXT_UPDATE:
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TITLE));  
+                break;
+            case GlobalVar.RANGE_NORMAL_TEXT_UPDATE:
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));
+                break;
+            case GlobalVar.RANGE_MAX_TEXT_UPDATE:
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));
+                break;
+            case GlobalVar.TYPE_TEXT_UPDATE:
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TYPE));
+                break;
+        }
     }
 
 
@@ -88,7 +105,7 @@ public class OneLineTextPane extends JLabel {
                 this.setText(str.replaceAll("<->", "—").replaceAll("<\\.>", "•"));
                 this.revalidate();
                 this.repaint();
-                EventBus.publish(new RepaintPanelEvent());
+                publishRepaint();
         }
     }
 

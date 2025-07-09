@@ -215,7 +215,7 @@ public class CardDesignerGUI {
         //WHY DOES THIS STUPID THING WORK PERFECTLY WITH 0.7 RESOLUTION BUT NOT ANYTHING ELSE??? The stupid effing font just doesnt scale up.
         double scale = 2.0;
 
-        BufferedImage finalImage = getComposedCard(scale);
+        BufferedImage finalImage = getComposedCard(scale, GlobalVar.REPAINT_ALL);
 
         Graphics2D g2d = finalImage.createGraphics();
 
@@ -242,15 +242,6 @@ public class CardDesignerGUI {
         return sdf.format(now);
     }
 
-    public void updateTitleTextDisplay(String str, Font font) {
-        previewPanel.updateTitleTextDisplay(str, font);
-    }
-    
-
-    public void updateRange(String str, Font font) {
-        previewPanel.updateRangeText(str, font);
-    }
-
     private void onCardTypeUpdate(CardTypeUpdate e){
         setImageComposerType(e.type);
     }
@@ -271,13 +262,14 @@ public class CardDesignerGUI {
         }
 
         //this will load the stuff from the previous card / load defaults
-        EventBus.publish(new CardLoadEvent());
+        //EventBus.publish(new RepaintPanelEvent());
+        //EventBus.publish(new CardLoadEvent());
     }
     
     
 
-    public BufferedImage getComposedCard(double scale){
-        return imageComposer.composeCard(scale);
+    public BufferedImage getComposedCard(double scale, int type){
+        return imageComposer.composeCard(scale, type);
     }
 
 

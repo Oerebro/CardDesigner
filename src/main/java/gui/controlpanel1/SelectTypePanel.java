@@ -4,11 +4,9 @@ import javax.swing.*;
 import events.EventBus;
 import events.ItemImageUpdateEvent;
 import events.CardTypeUpdate;
-import events.ClearUnrelatedImagesEvent;
 //import events.ImageUpdateEvent;
 import gui.CardDesignerGUI;
 import gui.GlobalVar;
-import gui.card_types.*;
 
 import java.awt.*;
 import java.awt.event.ActionListener;

@@ -65,6 +65,17 @@ public class GlobalVar {
     public static final int RANGE_MAX_TEXT_UPDATE = 1005;
     public static final int FONTSIZE_TEXT_UPDATE = 1006;
     public static final int FONTSIZE_FIELD_UPDATE = 1007;
+    public static final int REPAINT_ALL = 1008;
+    public static final int REPAINT_TITLE = 1009;
+    public static final int REPAINT_INFO = 10010;
+    public static final int REPAINT_ATTRIBUTE_LABEL = 10011;
+    public static final int REPAINT_TIER_LABEL = 10012;
+    public static final int REPAINT_RUNECHARGE_LABEL = 10013;
+    public static final int REPAINT_TYPE = 10014;
+    public static final int REPAINT_BACKGROUND = 10015;
+    public static final int REPAINT_IMAGE = 10016;
+    public static final int REPAINT_RUNECUT = 10017;
+    public static final int REPAINT_FRAME = 10018;
 
     // Paths
     public static final String DICE_IMAGE_PATH = "resources/glyphs/dice/d";

@@ -1,28 +1,20 @@
 package gui.previewpanel;
 import javax.swing.*;
-/*import javax.swing.text.BadLocationException;
-import javax.swing.text.Utilities;*/
-import javax.swing.text.View;
-
 import events.EventBus;
-import events.InfoTextUpdate;
 import events.RepaintPanelEvent;
-import events.CardTypeUpdate;
-import events.ClearUnrelatedImagesEvent;
 import gui.*;
-import gui.controlpanel1.FontLoader;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class PreviewPanel {
     public JPanel panel;
     private JPanel object;
     private CardDesignerGUI parent;
-    private JLabel titleTextDisplay,rangeTextDisplay,armorClassDisplay;
-    private JTextArea infoTextDisplay;
     private double panelRatio = 0.7;
     private int scaledWidth,scaledHeight;
-    //private int infoFontSize=20;
+
+    private BufferedImage backgroundLayer,imageLayer,frameLayer,runecutLayer,titleLayer,infoLayer, attributeLabelLayer,tierLabelLayer,runechargeLabelLayer,typeLayer;
 
     public PreviewPanel(CardDesignerGUI parent){
         this.parent = parent;
@@ -32,59 +24,41 @@ public class PreviewPanel {
     
     private void init() {
         EventBus.subscribe(RepaintPanelEvent.class, this::onRepaintEvent);
-        EventBus.subscribe(CardTypeUpdate.class, this::onTypeChange);
         scaledWidth = (int) (parent.getFrameScale() * (750*panelRatio));
         scaledHeight = (int) (parent.getFrameScale() * (1050*panelRatio));
 
         object = new JPanel() {
             @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    double scale = parent.getFrameScale();
 
-                double scale = parent.getFrameScale();
-                
+                    if (backgroundLayer != null)
+                        g.drawImage(backgroundLayer, 0, 0, scaledWidth, scaledHeight, this);
+                    if (imageLayer != null)
+                        g.drawImage(imageLayer, 0, 0, scaledWidth, scaledHeight, this);
+                    if (frameLayer != null)
+                        g.drawImage(frameLayer, 0, 0, scaledWidth, scaledHeight, this);
+                    if (runecutLayer != null)
+                        g.drawImage(runecutLayer, 0, 0, scaledWidth, scaledHeight, this);
+                    if (titleLayer != null)
+                        g.drawImage(titleLayer, 0, 0, scaledWidth, scaledHeight, this);
+                    if (infoLayer != null)
+                        g.drawImage(infoLayer, 0, 0, scaledWidth, scaledHeight, this);
+                    if (attributeLabelLayer != null)
+                        g.drawImage(attributeLabelLayer, 0, 0, scaledWidth, scaledHeight, this);
+                    if (tierLabelLayer != null)
+                        g.drawImage(tierLabelLayer, 0, 0, scaledWidth, scaledHeight, this);
+                    if (runechargeLabelLayer != null)
+                        g.drawImage(runechargeLabelLayer, 0, 0, scaledWidth, scaledHeight, this);
+                    if (typeLayer != null)
+                        g.drawImage(typeLayer, 0, 0, scaledWidth, scaledHeight, this);
+                }
 
-                g.drawImage(parent.getComposedCard(scale*panelRatio), 0, 0,scaledWidth,scaledHeight, this);
-
-                
-            }
         };
     
         object.setLayout(null);
         object.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
-
-
-
-        /*titleTextDisplay = new JLabel("", SwingConstants.CENTER);
-        titleTextDisplay.setOpaque(false);
-        titleTextDisplay.setForeground(Color.GRAY);*/
-
-        /*infoTextDisplay = new JTextArea();
-        infoTextDisplay.setLineWrap(true);
-        infoTextDisplay.setWrapStyleWord(true);
-        infoTextDisplay.setEditable(false);
-        infoTextDisplay.setFocusable(false);
-        infoTextDisplay.setBorder(null);*/
-
-        armorClassDisplay = new JLabel("", SwingConstants.CENTER);
-
-        rangeTextDisplay = new JLabel("", SwingConstants.CENTER);
-
-        armorClassDisplay.setForeground(Color.BLACK);
-
-        //infoTextDisplay.setOpaque(false);
-
-        //titleTextDisplay.setForeground(Color.WHITE);
-        //infoTextDisplay.setForeground(Color.WHITE);
-
-        /*testDisplay = new JScalingTextPane(10, 20);
-        testDisplay.setBounds(65,100,300,200);
-        object.add(testDisplay);*/
-
-
-        //object.add(titleTextDisplay);
-        //object.add(infoTextDisplay);
-        object.add(armorClassDisplay);
 
         panel = new JPanel(new BorderLayout());
         panel.setPreferredSize(new Dimension(0, 1100));
@@ -92,186 +66,6 @@ public class PreviewPanel {
         
         rescale(1.0);  
     }
-
-    private void onRepaintEvent(RepaintPanelEvent e){
-        this.repaint();
-    }
-
-    public JLabel getTitleTextDisplay() {
-        return titleTextDisplay;
-    }
-
-    public JTextArea getInfoTextDisplay() {
-        return infoTextDisplay;
-    }
-
-    public JLabel copyTitleTextDisplay(double scale) {
-        return copyJLabel(scale,titleTextDisplay,80,40,590,80);
-    }
-
-    public JLabel copyRangeTextDisplay(double scale) {
-        return copyJLabel(scale,rangeTextDisplay,120,564,110,40);
-    }
-
-    public JLabel copyArmorClassDisplay(double scale) {
-        return copyJLabel(scale,armorClassDisplay,120,564,110,40);
-    }
-
-    private JLabel copyJLabel(double scale,JLabel label,int x, int y, int width, int height) {
-        JLabel p = new JLabel("",SwingConstants.CENTER);
-        
-        p.setBounds((int)(x*scale), (int)(y*scale), (int)(width*scale), (int)(height*scale));
-        p.setFont(label.getFont());
-        p.setText(label.getText());
-
-        String text = htmlToPlainText(label.getText());
-        Font baseFont =  label.getFont();
-
-        Font font = baseFont.deriveFont((float) (baseFont.getSize2D() * scale * (float)((float)height/label.getHeight())));
-        Font scaledFont = getScaledFontLabel(text, font, (int)(p.getWidth()), height, p);
-        
-        p.setText("<html><div style='text-align:center;'>" + text + "</div></html>");
-        p.setFont(scaledFont);
-        
-        p.setOpaque(false);
-        p.setForeground(label.getForeground());
-        return p;
-    }
-
-    public JTextArea copyInfoTextDisplay(double scale) {
-        JTextArea p = new JTextArea();
-        
-        p.setBounds((int) (65*scale), (int) (655*scale), (int) (620*scale), (int) (340*scale));
-
-        
-
-        Font f = infoTextDisplay.getFont();
-        f = f.deriveFont((float) Math.floor((float) (infoTextDisplay.getFont().getSize2D() * ((620.0* scale)/infoTextDisplay.getWidth()))));
-        
-        p.setFont(f);
-        p.setLineWrap(true);
-        p.setWrapStyleWord(true);
-        p.setText(infoTextDisplay.getText());
-        p.setOpaque(false);
-        p.setForeground(infoTextDisplay.getForeground());
-        return p;
-    }
-
-    public void updateInfoColor(Color color){
-        infoTextDisplay.setForeground(color);
-    }
-
-    public void updateTitleColor(Color color){
-        titleTextDisplay.setForeground(color);
-    }
-
-  
-
-    public void updateTitleTextDisplay(String str, Font font) {
-        font = FontLoader.loadFont(font.getName(), 40f);
-        Font scaledFont = getScaledFontLabel(str, font, (int)(titleTextDisplay.getWidth()), Integer.MAX_VALUE, titleTextDisplay);
-        
-        
-        titleTextDisplay.setText("<html><div style='text-align:center;'>" + str + "</div></html>");
-        titleTextDisplay.setFont(scaledFont);
-        titleTextDisplay.repaint();
-        
-    }
-
-    public void updateRangeText(String str, Font font) {
-        font = FontLoader.loadFont(font.getName(), 40f);
-        Font scaledFont = getScaledFontLabel(str, font, (int)(rangeTextDisplay.getWidth()), Integer.MAX_VALUE, rangeTextDisplay);
-        
-        rangeTextDisplay.setText("<html><div style='text-align:center;'>" + str + "</div></html>");
-        rangeTextDisplay.setFont(scaledFont);
-        rangeTextDisplay.repaint();
-        
-    }
-
-
-    public void setRangeAndACFont(String font){
-
-        
-        Font fontrange = FontLoader.loadFont(font, rangeTextDisplay.getFont().getSize());
-        Font fontac = FontLoader.loadFont(font, armorClassDisplay.getFont().getSize());
-        rangeTextDisplay.setFont(fontrange);
-        armorClassDisplay.setFont(fontac);
-    }
-
-
-    public void updateInfoTextDisplay(String str1, Font font) { 
-        String str = htmlToPlainText(str1);
-        //int lineCount = infoTextDisplay.getLineCount()+1; 
-        int lineCount = lineCounter(str1);
-        
-        int boxHeight = infoTextDisplay.getHeight();
-
-        //FontMetrics fm = infoTextDisplay.getFontMetrics(font);
-        //int lineHeight = fm.getHeight();
-        int lineHeight = (int) font.getSize2D();
-        int availableLines = (boxHeight / lineHeight)-lineCount-1;
-
-        if(availableLines <= 1){
-            while (lineHeight * lineCount > boxHeight && font.getSize() > 1) {
-                lineHeight = (int) font.getSize2D();
-                font = font.deriveFont((float) font.getSize() - 1);
-                
-            }
-        }
-
-        font = FontLoader.loadFont(font.getName(), font.getSize());
-        //infoTextDisplay.setText(htmlToPlainText(str));
-        //infoTextDisplay.setFont(font);
-        
-        EventBus.publish(new TextUpdate(GlobalVar.INFO_TEXT_UPDATEstr));
-        //testDisplay.setFont(font);
-        //testDisplay.repaint();
-        
-        
-    }
-
-    private int lineCounter(String str){
-        return str.split("<br>").length;
-    }
-
-    
-
-
-    private static String htmlToPlainText(String html) {
-        if (html == null) return "";
-        String text = html
-            .replaceAll("(?i)<br\\s*/?>", "\n")
-            .replaceAll("(?i)</p>", "\n")
-            .replaceAll("(?i)<li>", "• ")
-            .replaceAll("(?i)</li>", "\n")
-            .replaceAll("(?i)<div.*?>", "")
-            .replaceAll("(?i)</div>", "\n");
-
-        //text = text.replaceAll("<[^>]+>", "");
-        text = text.replaceAll("<html>","");
-        text = text.replaceAll("</html>","");
-
-        text = text.replace("&nbsp;", " ")
-                .replace("&lt;", "<")
-                .replace("&gt;", ">")
-                .replace("&amp;", "&");
-
-        return text.trim();
-    }
-
-    private Font getScaledFontLabel(String text, Font baseFont, int maxWidth, int maxHeight,JLabel label) {
-        int fontSize = baseFont.getSize();
-        FontMetrics metrics;
-        do {
-            fontSize--;
-            Font tempFont = baseFont.deriveFont((float) fontSize);
-            metrics = label.getFontMetrics(tempFont);
-        } while (metrics.stringWidth(text) > maxWidth || metrics.getHeight() > maxHeight);
-
-        return baseFont.deriveFont((float) fontSize);
-    }
-
-    
     
     public int[] getScaledDimensions(int imageWidth, int imageHeight, int maxWidth, int maxHeight) {
         // Compute scale factors for width and height
@@ -305,30 +99,61 @@ public class PreviewPanel {
     }
 
     public void rescaleComponents(double scale){
-        //titleTextDisplay.setBounds((int) (80*scale*panelRatio), (int) (20*scale*panelRatio), (int) (590*scale*panelRatio), (int) (80*scale*panelRatio));
-        //infoTextDisplay.setBounds((int) (65*scale*panelRatio), (int) (655*scale*panelRatio), (int) (620*scale*panelRatio), (int) (340*scale*panelRatio));
-        armorClassDisplay.setBounds((int) (565*scale*panelRatio), (int) (485*scale*panelRatio), (int) (120*scale*panelRatio), (int) (120*scale*panelRatio));
-
     }
 
-    private void onTypeChange(CardTypeUpdate e){
-        //EventBus.publish(new ClearUnrelatedImagesEvent());
-    }
+    private void onRepaintEvent(RepaintPanelEvent e){
+        double scale = parent.getFrameScale();
+        int type = e.type;
 
-    public JTextArea cloneTextArea(JTextArea area) {
-        JTextArea newArea = new JTextArea();
-        newArea.setText(area.getText());
-        newArea.setFont(area.getFont());
-        newArea.setCaretPosition(area.getCaretPosition());
-        newArea.setEditable(area.isEditable());
-        newArea.setLineWrap(area.getLineWrap());
-        newArea.setWrapStyleWord(area.getWrapStyleWord());
-        if (area.getSelectedText() != null) {
-            newArea.select(area.getSelectionStart(), area.getSelectionEnd());
+        switch (type) {
+            case GlobalVar.REPAINT_BACKGROUND:
+                backgroundLayer = parent.getComposedCard(scale * panelRatio, type);
+                frameLayer = parent.getComposedCard(scale * panelRatio, type);
+                break;
+            case GlobalVar.REPAINT_IMAGE:
+                imageLayer = parent.getComposedCard(scale * panelRatio, type);
+                break;
+            case GlobalVar.REPAINT_FRAME:
+                frameLayer = parent.getComposedCard(scale * panelRatio, type);
+                break;
+            case GlobalVar.REPAINT_RUNECUT:
+                runecutLayer = parent.getComposedCard(scale * panelRatio, type);
+                break;
+            case GlobalVar.REPAINT_TITLE:
+                titleLayer = parent.getComposedCard(scale * panelRatio, type);
+                break;
+            case GlobalVar.REPAINT_INFO:
+                infoLayer = parent.getComposedCard(scale * panelRatio, type);
+                break;
+            case GlobalVar.REPAINT_ATTRIBUTE_LABEL:
+                attributeLabelLayer = parent.getComposedCard(scale * panelRatio, type);
+                break;
+            case GlobalVar.REPAINT_TIER_LABEL:
+                tierLabelLayer = parent.getComposedCard(scale * panelRatio, type);
+                break;
+            case GlobalVar.REPAINT_RUNECHARGE_LABEL:
+                runechargeLabelLayer = parent.getComposedCard(scale * panelRatio, type);
+                break;
+            case GlobalVar.REPAINT_TYPE:
+                typeLayer = parent.getComposedCard(scale * panelRatio, type);
+                break;
+            case GlobalVar.REPAINT_ALL:
+                backgroundLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_BACKGROUND);
+                imageLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_IMAGE);
+                frameLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_FRAME);
+                runecutLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_RUNECUT);
+                titleLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_TITLE);
+                infoLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_INFO);
+                attributeLabelLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_ATTRIBUTE_LABEL);
+                tierLabelLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_TIER_LABEL);
+                runechargeLabelLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_RUNECHARGE_LABEL);
+                typeLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_TYPE);
+                break;
         }
-        newArea.setOpaque(false);
-        return newArea;
+
+        this.repaint();
     }
+
 
 }
 

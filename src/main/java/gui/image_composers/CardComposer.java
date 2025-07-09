@@ -104,15 +104,20 @@ public class CardComposer extends Loggable{
 
     protected void toggleTextBorder(ToggleTextBorder e){
         switch(e.type){
-            case GlobalVar.TITLE_BORDER: hasTitleBorder = e.bool; break;
-            case GlobalVar.INFO_BORDER: hasInfoBorder = e.bool; break;
-            case GlobalVar.TYPE_BORDER: hasTypeBorder = e.bool; break;
-
+            case    GlobalVar.TITLE_BORDER: hasTitleBorder = e.bool; 
+                    EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TITLE)); 
+                    break;
+            case    GlobalVar.INFO_BORDER: hasInfoBorder = e.bool; 
+                    EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TITLE)); 
+                    break;
+            case    GlobalVar.TYPE_BORDER: hasTypeBorder = e.bool;
+                    EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TITLE)); 
+                    break;
         }
-        EventBus.publish(new RepaintPanelEvent());
+        
     }
 
-    public BufferedImage composeCard(double scale){
+    public BufferedImage composeCard(double scale, int type){
         int targetWidth = (int) (baseWidth * scale);
         int targetHeight = (int) (baseHeight * scale);
 
@@ -121,21 +126,21 @@ public class CardComposer extends Loggable{
 
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, targetWidth, targetHeight);
-        //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
         if (cardBackground != null) {
             g2d.drawImage(cardBackground, 0, 0, targetWidth, targetHeight, null);
         }
 
-        if (cardType != null) {
+        g2d.drawImage(drawCardFrame(scale), 0, 0, targetWidth, targetHeight, null);
+
+        /*if (cardType != null) {
             g2d.drawImage(cardType, (int)(530*scale), (int)(490*scale),  (int)(180*scale),  (int)(180*scale), null);
-        }
+        }*/
 
         
         g2d.dispose();
         return finalImage;
     }
-
 
     protected void onImageUpdate(ItemImageUpdateEvent e){
     }
@@ -154,8 +159,17 @@ public class CardComposer extends Loggable{
     }
 
     protected void onTextUpdate(TextUpdate e){
-        if(e.type != GlobalVar.INFO_TEXT_UPDATE)
-        EventBus.publish(new RepaintPanelEvent());
+        switch(e.type){
+            case    GlobalVar.INFO_TEXT_UPDATE:
+                    EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TITLE)); 
+                    break;
+            case    GlobalVar.TITLE_TEXT_UPDATE:; 
+                    EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TITLE)); 
+                    break;
+            case    GlobalVar.TYPE_TEXT_UPDATE:
+                    EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TITLE)); 
+                    break;
+        }
     }
 
 
@@ -168,7 +182,7 @@ public class CardComposer extends Loggable{
             case GlobalVar.TEXTBOX_IMAGE: cardTextBox = getImageFromFile(path); cardTextBoxPath = path;break;
         }
 
-        EventBus.publish(new RepaintPanelEvent());
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_BACKGROUND));
     }
 
     protected String getOverlayImagePath(String path){
