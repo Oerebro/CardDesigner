@@ -38,24 +38,33 @@ public class WeaponCardComposer extends EquippableCardComposer{
         EventBus.subscribe(DiceUpdateEvent.class, this::onDiceUpdate);
         log(type);
         attributeLabel = new AttributeLabel(GlobalVar.STRENGTH, type, attributeLabelBounds[0],attributeLabelBounds[1],attributeLabelBounds[2],attributeLabelBounds[3],1.0);
+
+        //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TIER_LABEL));
+        //System.out.println("test");
+        //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));
     }
 
     @Override
     public BufferedImage composeCard(double scale, int type){
-        System.out.println(type);
+        //System.out.println("composecard: "+type);
         switch(type){
             case GlobalVar.REPAINT_ATTRIBUTE_LABEL:
+                System.out.println("REPAINT_ATTRIBUTE_LABEL");
                 return paintAttributeLabel(scale);
             case GlobalVar.REPAINT_TIER_LABEL:
+                System.out.println("REPAINT_TIER_LABEL");
                 return paintTierLabel(scale);
             case GlobalVar.REPAINT_ALL:
+                System.out.println("REPAINT_ALL");
                 return paintAll(scale);
+                
             default: 
                 return super.composeCard(scale, type);
         }
     }
 
     private BufferedImage paintAll(double scale){
+        System.out.println("paint all");
         targetWidth = (int) (baseWidth * scale);
         targetHeight = (int) (baseHeight * scale);
         BufferedImage finalImage = super.composeCard(scale,type);
@@ -67,6 +76,7 @@ public class WeaponCardComposer extends EquippableCardComposer{
     }
 
     private BufferedImage paintAttributeLabel(double scale){
+        System.out.println("paint attributelabel");
         targetWidth = (int) (baseWidth * scale);
         targetHeight = (int) (baseHeight * scale);
         BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
@@ -75,6 +85,7 @@ public class WeaponCardComposer extends EquippableCardComposer{
         if (attributeImage != null) {
             g2d.drawImage(attributeImage, (int)(attributeBaseFieldBounds[0]*scale), (int)(attributeBaseFieldBounds[1]*scale), (int)(attributeBaseFieldBounds[2]*scale), (int)(attributeBaseFieldBounds[3]*scale), null);
         }
+        g2d.dispose();
         return i;
     }
 

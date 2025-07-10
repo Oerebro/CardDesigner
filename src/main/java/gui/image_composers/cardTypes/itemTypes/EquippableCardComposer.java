@@ -34,6 +34,7 @@ public class EquippableCardComposer extends ItemCardComposer{
         runeCharges = 0;
         EventBus.subscribe(RuneChargesUpdate.class, this::onRuneChargeUpdate);
         EventBus.subscribe(TierUpdate.class, this::onTierUpdate);
+        //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_RUNECHARGE_LABEL));
     }
 
     private void onRuneChargeUpdate(RuneChargesUpdate e){
@@ -58,19 +59,40 @@ public class EquippableCardComposer extends ItemCardComposer{
 
     @Override
     public BufferedImage composeCard(double scale, int type){
+        switch(type){
+            case GlobalVar.REPAINT_RUNECHARGE_LABEL:
+                System.out.println("REPAINT_RUNECHARGE_LABEL");
+                return paintRuneCharge(scale);
+            case GlobalVar.REPAINT_ALL:
+                System.out.println("REPAINT_ALL");
+                return paintAll(scale);
+            default: 
+                return super.composeCard(scale, type);
+        }
+    }
+
+    private BufferedImage paintAll(double scale){
+        System.out.println("paint all");
+        targetWidth = (int) (baseWidth * scale);
+        targetHeight = (int) (baseHeight * scale);
         BufferedImage finalImage = super.composeCard(scale,type);
-
         Graphics2D g2d = finalImage.createGraphics();
+        g2d.drawImage(paintRuneCharge(scale), 0, 0, targetWidth, targetHeight, null);
+        g2d.dispose();
+        return finalImage;
+    }
 
-        /*if (tierGlyph != null) {
-            g2d.drawImage(tierGlyph, (int)(530*scale), (int)(450*scale),  (int)(180*scale),  (int)(180*scale), null);
-        }*/
-
+    private BufferedImage paintRuneCharge(double scale){
+        System.out.println("paint attributelabel");
+        targetWidth = (int) (baseWidth * scale);
+        targetHeight = (int) (baseHeight * scale);
+        BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics g2d = i.createGraphics();
         if (runeChargesGlyph != null) {
             g2d.drawImage(runeChargesGlyph, (int) (0*scale), (int)(0*scale), (int) (750*scale), (int) (1050*scale), null);
         }
         g2d.dispose();
-        return finalImage;
+        return i;
     }
 
 

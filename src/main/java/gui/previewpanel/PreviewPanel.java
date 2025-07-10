@@ -65,6 +65,7 @@ public class PreviewPanel {
         panel.add(object, BorderLayout.LINE_START);
         
         rescale(1.0);  
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ALL));
     }
     
     public int[] getScaledDimensions(int imageWidth, int imageHeight, int maxWidth, int maxHeight) {
@@ -149,6 +150,7 @@ public class PreviewPanel {
                 tierLabelLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_TIER_LABEL);
                 runechargeLabelLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_RUNECHARGE_LABEL);
                 typeLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_TYPE);
+                System.out.println("backgroundlayer: "+backgroundLayer);
                 break;
         }
 

@@ -128,6 +128,7 @@ public class CardComposer extends Loggable{
         g2d.fillRect(0, 0, targetWidth, targetHeight);
 
         if (cardBackground != null) {
+            System.out.println("BACKGROUND");
             g2d.drawImage(cardBackground, 0, 0, targetWidth, targetHeight, null);
         }
 
@@ -181,7 +182,7 @@ public class CardComposer extends Loggable{
             case GlobalVar.TEXTBOX_IMAGE: cardTextBox = getImageFromFile(path); cardTextBoxPath = path;break;
         }
 
-        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_BACKGROUND));
+        //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_BACKGROUND));
     }
 
     protected String getOverlayImagePath(String path){
@@ -283,7 +284,7 @@ public class CardComposer extends Loggable{
         if (runeCut != null) {
             g2d.drawImage(runeCut, (int)(runeIconBounds[0]*scale), (int)(runeIconBounds[1]*scale), (int)(runeIconBounds[2]*scale), (int)(runeIconBounds[3]*scale), null);
         }
-
+        System.out.println("REPAINT_FRAME");
         //return finalImage;
         return paintWhiteCorners(finalImage);
     }
