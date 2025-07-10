@@ -1,7 +1,9 @@
 package gui.image_composers.cardTypes.itemTypes.equippableTypes;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -128,19 +130,62 @@ public class AttributeLabel extends Loggable {
         rangeNormal.setSize((int)(rangeNormalBounds[2] * scale), (int)(rangeNormalBounds[3] * scale));
         rangeNormal.doLayout();
         rangeNormal.printAll(text2d);
-        g2d.drawImage(text, (int) (rangeNormalBounds[0] * scale), (int) (rangeNormalBounds[1] * scale),  (int) (rangeNormalBounds[2] * scale),(int) (rangeNormalBounds[3] * scale), null);
+        g2d.drawImage(drawStroke(text,2,Color.WHITE), (int) (rangeNormalBounds[0] * scale), (int) (rangeNormalBounds[1] * scale),  (int) ((rangeNormalBounds[2]-10) * scale),(int) (rangeNormalBounds[3] * scale), null);
         
         text = new BufferedImage((int) (rangeMaxBounds[2] * scale),(int) (rangeMaxBounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
         text2d = text.createGraphics();
         rangeMax.setSize((int)(rangeMaxBounds[2] * scale), (int)(rangeMaxBounds[3] * scale));
         rangeMax.doLayout();      
         rangeMax.printAll(text2d);
-        g2d.drawImage(text, (int) (rangeMaxBounds[0] * scale), (int) (rangeMaxBounds[1] * scale),  (int) (rangeMaxBounds[2] * scale),(int) (rangeMaxBounds[3] * scale), null);
+        g2d.drawImage(drawStroke(text,2,Color.WHITE), (int) (rangeMaxBounds[0] * scale), (int) (rangeMaxBounds[1] * scale),  (int) (rangeMaxBounds[2] * scale),(int) (rangeMaxBounds[3] * scale), null);
 
         text2d.dispose();
         g2d.dispose();
 
         return image;
+    }
+
+    protected BufferedImage drawStroke(BufferedImage src, int strokeWidth, Color color) {
+        int w = src.getWidth();
+        int h = src.getHeight();
+
+        BufferedImage result = new BufferedImage(w+(strokeWidth*2), h+(strokeWidth*2), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = result.createGraphics();
+
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setComposite(AlphaComposite.SrcOver);
+
+        // Draw offset copies to simulate a soft stroke (cheap blur)
+        for (int dx = -strokeWidth; dx <= strokeWidth; dx++) {
+            for (int dy = -strokeWidth; dy <= strokeWidth; dy++) {
+                if (dx * dx + dy * dy <= strokeWidth * strokeWidth) {
+                    g.drawImage(tintAlpha(src, color), dx+strokeWidth, dy+strokeWidth, null);
+                }
+            }
+        }
+
+        // Draw the original image on top
+        g.drawImage(src, strokeWidth, strokeWidth, null);
+        g.dispose();
+        return result;
+    }
+
+    protected BufferedImage tintAlpha(BufferedImage src, Color color) {
+        int w = src.getWidth();
+        int h = src.getHeight();
+        BufferedImage tinted = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int argb = src.getRGB(x, y);
+                int alpha = (argb >> 24) & 0xFF;
+                if (alpha > 0) {
+                    tinted.setRGB(x, y, (alpha << 24) | (color.getRGB() & 0x00FFFFFF));
+                }
+            }
+        }
+
+        return tinted;
     }
 
     
