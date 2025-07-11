@@ -49,7 +49,7 @@ public class CardDesignerGUI {
 
     public CardDesignerGUI() {     
         EventBus.subscribe(CardTypeUpdate.class, this::onCardTypeUpdate);   
-        setImageComposerType(GlobalVar.W_MELEE);
+        setImageComposerType(GlobalVar.WEAPON);
         
         frame = new JFrame("Card Designer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -249,14 +249,15 @@ public class CardDesignerGUI {
     private void setImageComposerType(int type){
         
         switch(type){
-            case GlobalVar.W_MELEE: imageComposer = new WeaponMeleeCardComposer(); break;
+            /*case GlobalVar.W_MELEE: imageComposer = new WeaponMeleeCardComposer(); break;
             case GlobalVar.W_RANGED: imageComposer = new WeaponRangedCardComposer(); break;
-            case GlobalVar.W_THROWABLE: imageComposer = new WeaponThrowableCardComposer(); break;
+            case GlobalVar.W_THROWABLE: imageComposer = new WeaponThrowableCardComposer(); break;*/
+            case GlobalVar.WEAPON: imageComposer = new WeaponMeleeCardComposer(); break;
             case GlobalVar.CHARACTER: imageComposer = new CharacterCardComposer(); break;
             case GlobalVar.EFFECT: imageComposer = new EffectCardComposer(); break;
             case GlobalVar.ARMOR: imageComposer = new ArmorCardComposer(); break;
             case GlobalVar.CONSUMABLE: imageComposer = new ConsumableCardComposer(); break;
-            case GlobalVar.RUNE: imageComposer = new RuneCardComposer(); System.out.println("Rune");; break;
+            case GlobalVar.RUNE: imageComposer = new RuneCardComposer(); break;
             case GlobalVar.ACCESSOIRE: imageComposer = new AccessoireCardComposer(); break;
 
         }

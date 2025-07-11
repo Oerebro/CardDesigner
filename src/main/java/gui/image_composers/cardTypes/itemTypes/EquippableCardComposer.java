@@ -61,10 +61,8 @@ public class EquippableCardComposer extends ItemCardComposer{
     public BufferedImage composeCard(double scale, int type){
         switch(type){
             case GlobalVar.REPAINT_RUNECHARGE_LABEL:
-                System.out.println("REPAINT_RUNECHARGE_LABEL");
                 return paintRuneCharge(scale);
             case GlobalVar.REPAINT_ALL:
-                System.out.println("REPAINT_ALL");
                 return paintAll(scale);
             default: 
                 return super.composeCard(scale, type);
@@ -72,7 +70,6 @@ public class EquippableCardComposer extends ItemCardComposer{
     }
 
     private BufferedImage paintAll(double scale){
-        System.out.println("paint all");
         targetWidth = (int) (baseWidth * scale);
         targetHeight = (int) (baseHeight * scale);
         BufferedImage finalImage = super.composeCard(scale,type);
@@ -83,7 +80,6 @@ public class EquippableCardComposer extends ItemCardComposer{
     }
 
     private BufferedImage paintRuneCharge(double scale){
-        System.out.println("paint attributelabel");
         targetWidth = (int) (baseWidth * scale);
         targetHeight = (int) (baseHeight * scale);
         BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
@@ -105,7 +101,8 @@ public class EquippableCardComposer extends ItemCardComposer{
                 break;
             case GlobalVar.RUNECHARGES: 
                 runeChargesGlyph = getImageFromFile(path); 
-                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_RUNECHARGE_LABEL));break;
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_RUNECHARGE_LABEL));
+                break;
             case GlobalVar.RUNECUT: 
                 runeCut = getImageFromFile(RUNECUT); 
                     if(path == null) {

@@ -227,7 +227,6 @@ public class ControlPanel1 extends ControlPanel {
 
         fontSizeManual.addActionListener(e -> {
             if (fontSizeManual.isFocusOwner()) {
-                System.out.println("Test");
                 EventBus.publish(new TextUpdate(GlobalVar.FONTSIZE_TEXT_UPDATE, fontSizeManual.getText()));
             }
         });

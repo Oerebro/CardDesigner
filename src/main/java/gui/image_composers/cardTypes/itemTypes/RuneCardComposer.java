@@ -24,7 +24,6 @@ public class RuneCardComposer extends ItemCardComposer{
 
     public RuneCardComposer(){
         super(GlobalVar.RUNE);
-        System.out.println("Rune Composer");
         EventBus.subscribe(TierUpdate.class, this::onTierUpdate);
     }
 

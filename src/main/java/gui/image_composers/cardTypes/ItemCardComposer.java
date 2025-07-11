@@ -33,23 +33,17 @@ public class ItemCardComposer extends CardComposer{
     @Override
     public BufferedImage composeCard(double scale, int type){
         switch(type){
-            case GlobalVar.REPAINT_IMAGE:
-                System.out.println("REPAINT_IMAGE");
+            case GlobalVar.REPAINT_IMAGE:           
                 return paintImage(scale);
             case GlobalVar.REPAINT_INFO:
-                System.out.println("REPAINT_INFO");
                 return paintInfo(scale);
             case GlobalVar.REPAINT_TYPE:
-                System.out.println("REPAINT_TYPE");
                 return paintType(scale);
             case GlobalVar.REPAINT_TITLE:
-                System.out.println("REPAINT_TITLE");
                 return paintTitle(scale);
             case GlobalVar.REPAINT_FRAME:
-                System.out.println("REPAINT_FRAME");
                 return drawCardFrame(scale);
             case GlobalVar.REPAINT_ALL:
-                System.out.println("REPAINT_ALL");
                 return paintAll(scale);
             default: 
                 return super.composeCard(scale, type);
@@ -160,7 +154,8 @@ public class ItemCardComposer extends CardComposer{
                 cardItemImagePath = path; 
                 overlayImage = cardItemImage; 
                 overlayPath = getOverlayImagePath(path); 
-                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_IMAGE)); break;
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_IMAGE)); 
+                break;
             default: super.setField(field, path);
         }
 

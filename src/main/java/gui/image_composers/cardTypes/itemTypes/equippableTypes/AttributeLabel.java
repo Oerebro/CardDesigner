@@ -1,7 +1,9 @@
 package gui.image_composers.cardTypes.itemTypes.equippableTypes;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -9,8 +11,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import events.AttributeUpdate;
+import events.CardTypeUpdate;
 import events.EventBus;
 import events.RepaintPanelEvent;
+import events.TextUpdate;
 import gui.GlobalVar;
 import gui.Loggable;
 import gui.previewpanel.OneLineTextPane;
@@ -19,7 +23,7 @@ public class AttributeLabel extends Loggable {
 
     
 
-    private BufferedImage baseLabel, attributeIcon, damageTypeIcon;
+    private BufferedImage baseLabel, attributeIcon, damageTypeIcon, meleeLabel, rangedLabel;
     private OneLineTextPane rangeNormal, rangeMax;
     private int attribute, damageType;
 
@@ -32,6 +36,7 @@ public class AttributeLabel extends Loggable {
     public AttributeLabel(int attribute, int damageType, int x, int y, int width, int height, double scale){
         this.damageType = damageType;
         EventBus.subscribe(AttributeUpdate.class, this::setAttribute);
+        EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         //this.setOpaque(true);
         //this.setBounds(x,y,width,height);
         this.attribute = GlobalVar.STRENGTH;
@@ -42,10 +47,26 @@ public class AttributeLabel extends Loggable {
         rangeNormal = new OneLineTextPane(GlobalVar.RANGE_NORMAL_TEXT_UPDATE, 50, (int)(rangeNormalBounds[0]*scale), (int)(rangeNormalBounds[1]*scale), (int)(rangeNormalBounds[2]*scale), (int)(rangeNormalBounds[3]*scale));
         rangeMax = new OneLineTextPane(GlobalVar.RANGE_MAX_TEXT_UPDATE, 50, (int)(rangeMaxBounds[0]*scale), (int)(rangeMaxBounds[1]*scale), (int)(rangeMaxBounds[2]*scale), (int)(rangeMaxBounds[3]*scale));
 
-        rangeNormal.setText("5");
+        rangeNormal.setText("");
         rangeMax.setText("");
         rangeNormal.setForeground(Color.BLACK);
         rangeMax.setForeground(Color.BLACK);
+
+        EventBus.subscribe(CardTypeUpdate.class, this::onCardTypeUpdate);
+    }
+
+    private void onCardTypeUpdate(CardTypeUpdate e){
+            setDamageType(e.type);
+    }
+
+    private void onTextUpdate(TextUpdate e){
+        if(e.type != GlobalVar.RANGE_MAX_TEXT_UPDATE)
+            return;
+        if((e.text.equals(""))){
+            setBaseLabel(GlobalVar.W_MELEE);
+        }else{
+            setBaseLabel(GlobalVar.W_RANGED);
+        }
     }
 
     private void setAttribute(AttributeUpdate e){
@@ -75,18 +96,27 @@ public class AttributeLabel extends Loggable {
     }
 
     private void setBaseLabel(int type){
-        String path = GlobalVar.ATTRIBUTE_LABEL_COMPONENTS;
+        this.damageType = type;
 
         switch (type) {
-            case GlobalVar.W_MELEE:
-                path += "melee.png";
+            case GlobalVar.W_MELEE:       
+                if(meleeLabel == null){
+                    String path = GlobalVar.ATTRIBUTE_LABEL_COMPONENTS;
+                    path += "melee.png";
+                    meleeLabel = loadImageFromFile(path);
+                }
+                baseLabel = meleeLabel;
                 break;
         
             default:
-                path += "ranged.png";
+                if(rangedLabel == null){
+                        String path = GlobalVar.ATTRIBUTE_LABEL_COMPONENTS;
+                        path += "ranged.png";
+                        rangedLabel = loadImageFromFile(path);
+                    }
+                baseLabel = rangedLabel;
                 break;
         }
-            baseLabel = loadImageFromFile(path);
 
     }
 
@@ -126,14 +156,14 @@ public class AttributeLabel extends Loggable {
         rangeNormal.setSize((int)(rangeNormalBounds[2] * scale), (int)(rangeNormalBounds[3] * scale));
         rangeNormal.doLayout();
         rangeNormal.printAll(text2d);
-        g2d.drawImage(text, (int) (rangeNormalBounds[0] * scale), (int) (rangeNormalBounds[1] * scale),  (int) (rangeNormalBounds[2] * scale),(int) (rangeNormalBounds[3] * scale), null);
+        g2d.drawImage(drawStroke(text, 3, Color.WHITE), (int) (rangeNormalBounds[0] * scale), (int) (rangeNormalBounds[1] * scale),  (int) (rangeNormalBounds[2] * scale),(int) (rangeNormalBounds[3] * scale), null);
         
         text = new BufferedImage((int) (rangeMaxBounds[2] * scale),(int) (rangeMaxBounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
         text2d = text.createGraphics();
         rangeMax.setSize((int)(rangeMaxBounds[2] * scale), (int)(rangeMaxBounds[3] * scale));
         rangeMax.doLayout();      
         rangeMax.printAll(text2d);
-        g2d.drawImage(text, (int) (rangeMaxBounds[0] * scale), (int) (rangeMaxBounds[1] * scale),  (int) (rangeMaxBounds[2] * scale),(int) (rangeMaxBounds[3] * scale), null);
+        g2d.drawImage(drawStroke(text, 3, Color.WHITE), (int) (rangeMaxBounds[0] * scale), (int) (rangeMaxBounds[1] * scale),  (int) (rangeMaxBounds[2] * scale),(int) (rangeMaxBounds[3] * scale), null);
 
         text2d.dispose();
         g2d.dispose();
@@ -141,7 +171,48 @@ public class AttributeLabel extends Loggable {
         return image;
     }
 
-    
+    protected BufferedImage drawStroke(BufferedImage src, int strokeWidth, Color color) {
+        int w = src.getWidth();
+        int h = src.getHeight();
+
+        BufferedImage result = new BufferedImage(w+(strokeWidth*2), h+(strokeWidth*2), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = result.createGraphics();
+
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setComposite(AlphaComposite.SrcOver);
+
+        // Draw offset copies to simulate a soft stroke (cheap blur)
+        for (int dx = -strokeWidth; dx <= strokeWidth; dx++) {
+            for (int dy = -strokeWidth; dy <= strokeWidth; dy++) {
+                if (dx * dx + dy * dy <= strokeWidth * strokeWidth) {
+                    g.drawImage(tintAlpha(src, color), dx+strokeWidth, dy+strokeWidth, null);
+                }
+            }
+        }
+
+        // Draw the original image on top
+        g.drawImage(src, strokeWidth, strokeWidth, null);
+        g.dispose();
+        return result;
+    }
+
+    protected BufferedImage tintAlpha(BufferedImage src, Color color) {
+        int w = src.getWidth();
+        int h = src.getHeight();
+        BufferedImage tinted = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int argb = src.getRGB(x, y);
+                int alpha = (argb >> 24) & 0xFF;
+                if (alpha > 0) {
+                    tinted.setRGB(x, y, (alpha << 24) | (color.getRGB() & 0x00FFFFFF));
+                }
+            }
+        }
+
+        return tinted;
+    }
 
     private BufferedImage loadImageFromFile(String path){
         BufferedImage i = null;

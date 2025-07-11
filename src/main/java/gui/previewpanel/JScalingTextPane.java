@@ -302,7 +302,6 @@ public class JScalingTextPane extends JScrollPane {
                 onFontSizeUpdate(event.text.charAt(0));
                 return;
             }
-            System.out.println(event.text);
             this.currentFontSize = Integer.parseInt(event.text);
             updateStylesFontSize((float) this.currentFontSize);
             setFormattedText(textPane.getText());
