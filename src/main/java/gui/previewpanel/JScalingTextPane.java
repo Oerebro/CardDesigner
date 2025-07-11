@@ -90,8 +90,9 @@ public class JScalingTextPane extends JScrollPane {
     }
 
     public void setColor(Color color) {
-        StyleConstants.setForeground(textPane.getStyle("default"), color);
-        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_INFO));
+            textPane.setForeground(color);
+            setFormattedText(textPane.getText());
+            //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_INFO));
     }
 
     private void stylesInit(){

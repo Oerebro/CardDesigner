@@ -53,7 +53,7 @@ public class ItemCardComposer extends CardComposer{
     private BufferedImage paintAll(double scale){
         targetWidth = (int) (baseWidth * scale);
         targetHeight = (int) (baseHeight * scale);
-        BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage i = super.composeCard(scale, GlobalVar.REPAINT_ALL);
         Graphics2D g2d = i.createGraphics();
         g2d.drawImage(paintImage(scale), 0, 0, targetWidth, targetHeight, null);
         g2d.drawImage(drawCardFrame(scale), 0, 0, targetWidth, targetHeight, null);

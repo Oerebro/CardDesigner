@@ -64,23 +64,24 @@ public class CardComposer extends Loggable{
 
         this.type = type;
         
-        hasTitleBorder = false;
-        hasTypeBorder = false;
-        hasInfoBorder = false;
+        hasTitleBorder = true;
+        hasTypeBorder = true;
+        hasInfoBorder = true;
 
         
 
         infoTextPane = new JScalingTextPane(9, 72);
         infoTextPane.setBounds(infoFieldBounds[0],infoFieldBounds[1],infoFieldBounds[2],infoFieldBounds[3]);
         infoTextPane.setSize(infoFieldBounds[2],infoFieldBounds[3]);
+        infoTextPane.setColor(Color.BLACK);
 
 
         titleTextPane = new OneLineTextPane(GlobalVar.TITLE_TEXT_UPDATE, 200, titleFieldBounds[0],titleFieldBounds[1],titleFieldBounds[2],titleFieldBounds[3]);
-        titleTextPane.setForeground(Color.WHITE);
+        titleTextPane.setForeground(Color.BLACK);
 
         typeTextPane = new OneLineTextPane(GlobalVar.TYPE_TEXT_UPDATE, 200, typeFieldBounds[0],typeFieldBounds[1],typeFieldBounds[2],typeFieldBounds[3]);
         typeTextPane.setOpaque(false);
-        typeTextPane.setForeground(Color.WHITE);
+        typeTextPane.setForeground(Color.BLACK);
 
         //titleTextPane.setBounds(80,20,590,80);
         //titleTextPane.setBounds(0,100,590,80);

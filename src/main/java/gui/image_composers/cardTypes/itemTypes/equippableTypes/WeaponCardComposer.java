@@ -60,7 +60,7 @@ public class WeaponCardComposer extends EquippableCardComposer{
     private BufferedImage paintAll(double scale){
         targetWidth = (int) (baseWidth * scale);
         targetHeight = (int) (baseHeight * scale);
-        BufferedImage finalImage = super.composeCard(scale,type);
+        BufferedImage finalImage = super.composeCard(scale,GlobalVar.REPAINT_ALL);
         Graphics2D g2d = finalImage.createGraphics();
         g2d.drawImage(paintAttributeLabel(scale), 0, 0, targetWidth, targetHeight, null);
         g2d.drawImage(paintTierLabel(scale), 0, 0, targetWidth, targetHeight, null);

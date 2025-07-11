@@ -141,15 +141,15 @@ public class ControlPanel1 extends ControlPanel {
         infoColor = new ColorPicker(parent, 420, 380, 30, 30, GlobalVar.INFO_TEXT_UPDATE);
         ColorPicker typeColor = new ColorPicker(parent, 420, 335, 30, 30, GlobalVar.TYPE_TEXT_UPDATE);
 
-        titleStroke = new JCheckBox("Title Outline",false);
+        titleStroke = new JCheckBox("Title Outline",true);
         titleStroke.setBounds(460,290,100,30);
         titleStroke.addActionListener(e->{EventBus.publish(new ToggleTextBorder(GlobalVar.TITLE_BORDER,titleStroke.isSelected()));});
 
-        typeStroke = new JCheckBox("Type Info Outline",false);
+        typeStroke = new JCheckBox("Type Info Outline",true);
         typeStroke.setBounds(460,335,100,30);
         typeStroke.addActionListener(e->{EventBus.publish(new ToggleTextBorder(GlobalVar.TYPE_BORDER,typeStroke.isSelected()));});
 
-        infoStroke = new JCheckBox("Rules Text Outline",false);
+        infoStroke = new JCheckBox("Rules Text Outline",true);
         infoStroke.setBounds(460,380,100,30);
         infoStroke.addActionListener(e->{EventBus.publish(new ToggleTextBorder(GlobalVar.INFO_BORDER,infoStroke.isSelected()));});
 
@@ -272,6 +272,7 @@ public class ControlPanel1 extends ControlPanel {
 
     private void createInfoFontSelection(){
         infoFontSelection = createFontSelection();
+        infoFontSelection.setSelectedItem("PlantinMTPro");
         EventBus.publish(new InfoFontUpdate((String) infoFontSelection.getSelectedItem()));
     }
 
