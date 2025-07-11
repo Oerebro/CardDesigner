@@ -1,5 +1,10 @@
 build/
 target/
+CardEditorv0.1/
 *.zip
 *.kra
-*.png
+*.png*
+*.png~
+*.jpg
+*.jpeg
+
