@@ -27,6 +27,7 @@ public class CardImageBrowser extends ImageBrowser{
         label.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
+                System.out.println("Type: "+type);
                 publishImageUpdate(type,file.getPath());
             }
         });

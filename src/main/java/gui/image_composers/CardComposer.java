@@ -129,6 +129,7 @@ public class CardComposer extends Loggable{
         g2d.fillRect(0, 0, targetWidth, targetHeight);
 
         if (cardBackground != null) {
+            System.out.println("Backgroundupdate");
             g2d.drawImage(cardBackground, 0, 0, targetWidth, targetHeight, null);
         }
 
@@ -175,14 +176,14 @@ public class CardComposer extends Loggable{
 
     protected void setField(int field, String path){
         switch(field){
-            case GlobalVar.BACKGROUND_IMAGE: cardBackground = getImageFromFile(path); cardBackgroundPath = path;break;
+            case GlobalVar.BACKGROUND_IMAGE: cardBackground = getImageFromFile(path);cardBackgroundPath = path;break;
             case GlobalVar.FRAME_IMAGE: cardFrame = getImageFromFile(path); cardFramePath = path;break;
             case GlobalVar.TITLE_IMAGE: cardTitle = getImageFromFile(path); cardTitlePath = path;break;
             case GlobalVar.CROWN_IMAGE: cardCrown = getImageFromFile(path); cardCrownPath = path;break;
             case GlobalVar.TEXTBOX_IMAGE: cardTextBox = getImageFromFile(path); cardTextBoxPath = path;break;
         }
 
-        //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_BACKGROUND));
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_BACKGROUND));
     }
 
     protected String getOverlayImagePath(String path){

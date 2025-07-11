@@ -50,8 +50,7 @@ public class WeaponCardComposer extends EquippableCardComposer{
             case GlobalVar.REPAINT_TIER_LABEL:
                 return paintTierLabel(scale);
             case GlobalVar.REPAINT_ALL:
-                return paintAll(scale);
-                
+                return paintAll(scale);      
             default: 
                 return super.composeCard(scale, type);
         }

@@ -27,10 +27,10 @@ public class RuneCardComposer extends ItemCardComposer{
         EventBus.subscribe(TierUpdate.class, this::onTierUpdate);
     }
 
-    @Override
+    /*@Override
     protected void onLoadCard(CardLoadEvent e){
         super.onLoadCard(e);
-    }
+    }*/
 
     @Override
     protected void onImageUpdate(ImageUpdate e){

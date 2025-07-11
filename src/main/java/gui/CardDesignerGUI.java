@@ -201,7 +201,7 @@ public class CardDesignerGUI {
 
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            imageComposer.loadFromConfig(selectedFile);
+            //imageComposer.loadFromConfig(selectedFile);
         }
     }
 
