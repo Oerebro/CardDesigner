@@ -139,7 +139,7 @@ public class CardComposer extends Loggable{
         g2d.drawImage(paintBackground(scale), 0, 0, targetWidth, targetHeight, null);
         g2d.drawImage(paintFrame(scale), 0, 0, targetWidth, targetHeight, null);
         g2d.dispose();
-        return i;
+        return paintWhiteCorners(i);
     }
 
     private BufferedImage paintBackground(double scale){
@@ -151,7 +151,7 @@ public class CardComposer extends Loggable{
             g2d.drawImage(cardBackground, 0, 0, targetWidth, targetHeight, null);
         }
         g2d.dispose();
-        return i;
+        return paintWhiteCorners(i);
     }
 
     protected void onImageUpdate(ImageUpdate e){
@@ -362,10 +362,9 @@ public class CardComposer extends Loggable{
         try {
             g2.drawImage(input, 0, 0, null);
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(Color.WHITE);
 
-            // Helper to create concave corner shape
-            // A square minus a quarter circle ellipse in the corner
+            // Set transparent composite
+            g2.setComposite(AlphaComposite.Clear);
 
             // Top-left corner
             Area tl = new Area(new Rectangle(0, 0, r, r));
@@ -397,4 +396,5 @@ public class CardComposer extends Loggable{
 
         return output;
     }
+
 }

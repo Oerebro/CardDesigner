@@ -151,7 +151,6 @@ public class ItemCardComposer extends CardComposer{
 
         switch(field){
             case GlobalVar.ITEM_IMAGE: 
-                log(path);
                 cardItemImage = getImageFromFile(path); 
                 cardItemImagePath = path; 
                 overlayImage = cardItemImage; 
