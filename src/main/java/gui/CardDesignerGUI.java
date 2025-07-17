@@ -29,13 +29,12 @@ import gui.image_composers.cardTypes.itemTypes.ConsumableCardComposer;
 import gui.image_composers.cardTypes.itemTypes.RuneCardComposer;
 import gui.image_composers.cardTypes.itemTypes.equippableTypes.ArmorCardComposer;
 import gui.image_composers.cardTypes.itemTypes.equippableTypes.weaponTypes.WeaponMeleeCardComposer;
-import gui.image_composers.cardTypes.itemTypes.equippableTypes.weaponTypes.WeaponRangedCardComposer;
-import gui.image_composers.cardTypes.itemTypes.equippableTypes.weaponTypes.WeaponThrowableCardComposer;
 import gui.previewpanel.*;
 
 
 public class CardDesignerGUI {
     public JFrame frame;
+    private int loadedCardType;
     private CardComposer imageComposer;
     private PreviewPanel previewPanel;
     ControlPanel1 controlPanel;
@@ -49,7 +48,9 @@ public class CardDesignerGUI {
 
     public CardDesignerGUI() {     
         EventBus.subscribe(CardTypeUpdate.class, this::onCardTypeUpdate);   
-        setImageComposerType(GlobalVar.WEAPON);
+
+        int defaultType = GlobalVar.ARMOR;
+        setImageComposerType(defaultType);
         
         frame = new JFrame("Card Designer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,7 +67,7 @@ public class CardDesignerGUI {
 
         // Control Panel on the right
         controlPanel = new ControlPanel1();
-        controlPanel.init(this);
+        controlPanel.init(defaultType);
 
         controlPanel2 = new ControlPanel2();
         controlPanel2.init(this);
@@ -247,24 +248,27 @@ public class CardDesignerGUI {
     }
 
     private void setImageComposerType(int type){
-        
-        switch(type){
-            /*case GlobalVar.W_MELEE: imageComposer = new WeaponMeleeCardComposer(); break;
-            case GlobalVar.W_RANGED: imageComposer = new WeaponRangedCardComposer(); break;
-            case GlobalVar.W_THROWABLE: imageComposer = new WeaponThrowableCardComposer(); break;*/
-            case GlobalVar.WEAPON: imageComposer = new WeaponMeleeCardComposer(); break;
-            case GlobalVar.CHARACTER: imageComposer = new CharacterCardComposer(); break;
-            case GlobalVar.EFFECT: imageComposer = new EffectCardComposer(); break;
-            case GlobalVar.ARMOR: imageComposer = new ArmorCardComposer(); break;
-            case GlobalVar.CONSUMABLE: imageComposer = new ConsumableCardComposer(); break;
-            case GlobalVar.RUNE: imageComposer = new RuneCardComposer(); break;
-            case GlobalVar.ACCESSOIRE: imageComposer = new AccessoireCardComposer(); break;
+        if(type != loadedCardType){
+            switch(type){
+                /*case GlobalVar.W_MELEE: imageComposer = new WeaponMeleeCardComposer(); break;
+                case GlobalVar.W_RANGED: imageComposer = new WeaponRangedCardComposer(); break;
+                case GlobalVar.W_THROWABLE: imageComposer = new WeaponThrowableCardComposer(); break;*/
+                case GlobalVar.WEAPON: imageComposer = new WeaponMeleeCardComposer(); break;
+                case GlobalVar.CHARACTER: imageComposer = new CharacterCardComposer(); break;
+                case GlobalVar.EFFECT: imageComposer = new EffectCardComposer(); break;
+                case GlobalVar.ARMOR: imageComposer = new ArmorCardComposer(); break;
+                case GlobalVar.CONSUMABLE: imageComposer = new ConsumableCardComposer(); break;
+                case GlobalVar.RUNE: imageComposer = new RuneCardComposer(); break;
+                case GlobalVar.ACCESSOIRE: imageComposer = new AccessoireCardComposer(); break;
+            }
 
+            loadedCardType = type;
+            EventBus.publish(new CardLoadEvent());
+            EventBus.publish(new RepaintPanelEvent());
         }
-
         //this will load the stuff from the previous card / load defaults
         //EventBus.publish(new RepaintPanelEvent());
-        EventBus.publish(new CardLoadEvent());
+        
     }
     
     
@@ -277,15 +281,10 @@ public class CardDesignerGUI {
 
     public static void main(String[] args) {
         try {
-            // Set System L&F
-        //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         UIManager.setLookAndFeel(new FlatDarkLaf());
         } 
         catch (UnsupportedLookAndFeelException e) {
-        // handle exception
         }
-
-        //run ui thread
         SwingUtilities.invokeLater(CardDesignerGUI::new);
     }
 

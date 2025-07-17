@@ -1,6 +1,7 @@
 package gui.controlpanel1;
 import javax.swing.*;
 
+import abstractclasses.ControlPanel;
 import events.EventBus;
 import events.ImageUpdate;
 import events.CardTypeUpdate;
@@ -12,12 +13,13 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class SelectTypePanel extends JPanel{
-    private final CardDesignerGUI parent;
-    private CardAttributesPanel attributePanel;
-    private JCheckBox isWeapon, isArmor, isClothing, isAccessoire, isConsumable, isRune,isEffect, hasRuneCut;
+    private final ControlPanel1 parent;
+    
+    //private JCheckBox isWeapon, isArmor, isClothing, isAccessoire, isConsumable, isRune,isEffect, hasRuneCut;
     JCheckBox[] checkboxes;
+    int[] buttonSize = {40,40};
 
-    public SelectTypePanel(CardDesignerGUI parent) {
+    public SelectTypePanel(ControlPanel1 parent) {
         this.parent = parent; 
         createCheckBoxPanel();
     }
@@ -27,77 +29,51 @@ public class SelectTypePanel extends JPanel{
         JPanel typePanel = new JPanel();
         typePanel.setBorder(BorderFactory.createTitledBorder("Item Type"));
         typePanel.setLayout(new GridLayout(0, 2, 5, 5));
-        isWeapon = new JCheckBox("Weapon", true);       
-        isArmor = new JCheckBox("Armor", false);
-        isClothing = new JCheckBox("Clothing", false);
-        isAccessoire = new JCheckBox("Accessoire", false);
-        isConsumable = new JCheckBox("Consumable", false);
-        isRune = new JCheckBox("Rune", false);
-        isEffect = new JCheckBox("Effect", false);
-        hasRuneCut = new JCheckBox("Show Rune Cut Line", false);
-        hasRuneCut.addActionListener(e->{updateRuneCut(hasRuneCut.isSelected());});
-        // Add the checkboxes to the panel
+        //this.setPreferredSize(new Dimension(300,300));
+
+        JButton isWeapon = new JButton("Weapon",loadIcon("resources/glyphs/buttons/weapon.png", buttonSize[0], buttonSize[1]));
+        JButton isArmor = new JButton("Armor", loadIcon("resources/glyphs/buttons/armor.png", buttonSize[0], buttonSize[1]));
+        JButton isAccessoire = new JButton("Accessoire", loadIcon("resources/glyphs/buttons/accessoire.png", buttonSize[0], buttonSize[1]));
+        JButton isConsumable = new JButton("Consumable", loadIcon("resources/glyphs/buttons/potion.png", buttonSize[0], buttonSize[1]));
+        JButton isRune = new JButton("Rune", loadIcon("resources/glyphs/buttons/rune.png", buttonSize[0], buttonSize[1]));
+        JButton isEffect = new JButton("Effect", loadIcon("resources/glyphs/buttons/effect.png", buttonSize[0], buttonSize[1]));
+
+        isWeapon.setHorizontalAlignment(SwingConstants.LEFT);
+        isArmor.setHorizontalAlignment(SwingConstants.LEFT);
+        isAccessoire.setHorizontalAlignment(SwingConstants.LEFT);
+        isConsumable.setHorizontalAlignment(SwingConstants.LEFT);
+        isRune.setHorizontalAlignment(SwingConstants.LEFT);
+        isEffect.setHorizontalAlignment(SwingConstants.LEFT);
+
         typePanel.add(isWeapon);
         typePanel.add(isArmor);
-        typePanel.add(isClothing);
         typePanel.add(isAccessoire);
         typePanel.add(isConsumable);
         typePanel.add(isRune);
         typePanel.add(isEffect);
-        typePanel.add(hasRuneCut);
 
         this.add(typePanel);
 
         
-        this.add(attributePanel = new CardAttributesPanel(GlobalVar.WEAPON));
-
+        
 
         // Collect all checkboxes in this panel in an array
-        JCheckBox[] checkboxes2 = {isWeapon, isArmor, isClothing, isAccessoire, isConsumable,isRune,isEffect};
-        checkboxes = checkboxes2;
-        isWeapon.addActionListener(createCheckboxListener(isWeapon, checkboxes,GlobalVar.WEAPON));
-        isClothing.addActionListener(createCheckboxListener(isClothing, checkboxes,GlobalVar.ARMOR));
-        isArmor.addActionListener(createCheckboxListener(isArmor, checkboxes,GlobalVar.ARMOR));
-        isAccessoire.addActionListener(createCheckboxListener(isAccessoire, checkboxes,GlobalVar.ACCESSOIRE));
-        isConsumable.addActionListener(createCheckboxListener(isConsumable, checkboxes,GlobalVar.CONSUMABLE));
-        isRune.addActionListener(createCheckboxListener(isRune, checkboxes,GlobalVar.RUNE));
+        isWeapon.addActionListener(e -> {parent.updatePanel(GlobalVar.WEAPON);});
+        isArmor.addActionListener(e -> {parent.updatePanel(GlobalVar.ARMOR);});
+        isAccessoire.addActionListener(e -> {parent.updatePanel(GlobalVar.ACCESSOIRE);});
+        isConsumable.addActionListener(e -> {parent.updatePanel(GlobalVar.CONSUMABLE);});
+        isRune.addActionListener(e -> {parent.updatePanel(GlobalVar.RUNE);});
+        isEffect.addActionListener(e -> {parent.updatePanel(GlobalVar.EFFECT);});
 
     }
 
-    private ActionListener createCheckboxListener(JCheckBox selectedCheckbox, JCheckBox[] allCheckboxes, int type) {
-        //EventBus.publish(new ClearUnrelatedImagesEvent());
-        return e -> {
-            updatePanel(selectedCheckbox, allCheckboxes, type);
-        };
-    }
-    private void uncheckOtherCheckboxes(JCheckBox selectedCheckbox, JCheckBox[] allCheckboxes) {
-        for (JCheckBox checkbox : allCheckboxes) {
-            if (checkbox != selectedCheckbox) {
-                checkbox.setSelected(false);
-            }
-        }
+    private ImageIcon loadIcon(String path, int width, int height) {
+        ImageIcon originalIcon = new ImageIcon(path);
+        Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledImage);
     }
 
-    private void updateRuneCut(Boolean isCut){
-        if(isCut){
-            EventBus.publish(new ImageUpdate(GlobalVar.RUNECUT, "resources/misc/rune_cut.png"));
-        }else{
-            EventBus.publish(new ImageUpdate(GlobalVar.RUNECUT, null));
-        }
-    }
-
-    public void updatePanel(JCheckBox selected, JCheckBox[] checkboxes, int type){
-
-        uncheckOtherCheckboxes(selected, checkboxes);
-        this.remove(attributePanel);
-        //String type = selected.getText().toLowerCase();
-        //EventBus.publish(new ClearUnrelatedImagesEvent());
-        EventBus.publish(new CardTypeUpdate(type));
-        this.attributePanel = new CardAttributesPanel(type);
     
-        this.add(attributePanel);
-        this.repaint();
-    }
 
 
 }

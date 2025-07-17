@@ -3,6 +3,9 @@ package gui.previewpanel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -27,6 +30,7 @@ public class OneLineTextPane extends JLabel {
     public static final int RANGE_NORMAL = 2;
     public static final int RANGE_MAX = 4;
     public static final int TYPE = 3;
+    private BufferedImage fontRenderImg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     
 
     public OneLineTextPane(int type, int maxSizeFont,int x, int y, int width,int height) {
@@ -34,33 +38,34 @@ public class OneLineTextPane extends JLabel {
         this.setBounds(x,y,width,height);
         this.setSize(width,height);
         this.setLayout(null);
-        //this.setOpaque(true);
+        this.setOpaque(false);
 
         this.setText("");
         
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         switch(type){
             case GlobalVar.TITLE_TEXT_UPDATE:
-                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);  
+                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);     
                 setVerticalAlignment(SwingConstants.CENTER);
-                setHorizontalAlignment(SwingConstants.CENTER);
+                setHorizontalAlignment(SwingConstants.CENTER); 
                 break;
             case GlobalVar.RANGE_NORMAL_TEXT_UPDATE:
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 setVerticalAlignment(SwingConstants.CENTER);
-                setHorizontalAlignment(SwingConstants.LEFT);
+                setHorizontalAlignment(SwingConstants.LEFT); 
                 break;
             case GlobalVar.RANGE_MAX_TEXT_UPDATE:
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 setVerticalAlignment(SwingConstants.CENTER);
-                setHorizontalAlignment(SwingConstants.LEFT);
+                setHorizontalAlignment(SwingConstants.LEFT); 
                 break;
             case GlobalVar.TYPE_TEXT_UPDATE:
                 EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
                 setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.LEFT);
                 break;
-        }     
+        } 
+           
         EventBus.subscribe(ColorUpdate.class, this::onColorUpdate);
         
     }
@@ -94,6 +99,13 @@ public class OneLineTextPane extends JLabel {
         }
     }
 
+    private void publishFontRepaint(){
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TITLE));
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));  
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TYPE));
+    }
+
 
     
 
@@ -112,14 +124,16 @@ public class OneLineTextPane extends JLabel {
     private void onTitleFontUpdate(TitleFontUpdate e){
         Font font = FontLoader.loadFont(e.fontFamily, Font.BOLD,100f);
         Font scaledFont = getScaledFontLabel(this.getText(), font, this.getWidth(), this.getHeight(), this);
-        setFont(scaledFont);
+        this.setFont(scaledFont);
+        //(FontLoader.loadFont(e.fontName,Font.PLAIN, scaledFont.getSize())
+        publishRepaint();
     }
 
     @Override
     public void setSize(int w, int h){
         super.setSize(w,h);
         Font scaledFont = getScaledFontLabel(this.getText(), this.getFont().deriveFont(100f), w, h, this);
-        setFont(scaledFont);
+        this.setFont(scaledFont);
     }
 
     private void onInfoFontUpdate(InfoFontUpdate e){
@@ -152,11 +166,19 @@ public class OneLineTextPane extends JLabel {
     private Font getScaledFontLabel(String text, Font baseFont, int maxWidth, int maxHeight, OneLineTextPane label) {
         int fontSize = baseFont.getSize();
         FontMetrics metrics;
+        
+        Graphics2D g2 = fontRenderImg.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+
         do {
             fontSize--;
             Font tempFont = baseFont.deriveFont((float) fontSize);
-            metrics = label.getFontMetrics(tempFont);
-        } while (metrics.stringWidth(text) > maxWidth-15 || metrics.getHeight() > maxHeight-1);
+            metrics = g2.getFontMetrics(tempFont);
+        } while (metrics.stringWidth(text) > maxWidth - 15 || metrics.getHeight() > maxHeight - 1);
+
+        g2.dispose();
+
 
         int lineHeight = metrics.getHeight();
         float descentRatio = .2f;
@@ -167,8 +189,6 @@ public class OneLineTextPane extends JLabel {
         int descentOffset = (int) (lineHeight * descentRatio);
 
         setBorder(new EmptyBorder(descentOffset, 0, 0, 0));
-
-        
         return baseFont.deriveFont((float) fontSize);
     }
 }

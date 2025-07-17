@@ -119,29 +119,39 @@ public class CardComposer extends Loggable{
     }
 
     public BufferedImage composeCard(double scale, int type){
-        int targetWidth = (int) (baseWidth * scale);
-        int targetHeight = (int) (baseHeight * scale);
+        switch(type){
+            case GlobalVar.REPAINT_BACKGROUND:
+                return paintBackground(scale);
+            case GlobalVar.REPAINT_FRAME:
+                return paintFrame(scale); 
+            case GlobalVar.REPAINT_ALL:
+                return paintAll(scale); 
+            default: 
+                return null;
+        }
+    }
 
-        BufferedImage finalImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = finalImage.createGraphics();
+    private BufferedImage paintAll(double scale){
+        targetWidth = (int) (baseWidth * scale);
+        targetHeight = (int) (baseHeight * scale);
+        BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = i.createGraphics();
+        g2d.drawImage(paintBackground(scale), 0, 0, targetWidth, targetHeight, null);
+        g2d.drawImage(paintFrame(scale), 0, 0, targetWidth, targetHeight, null);
+        g2d.dispose();
+        return i;
+    }
 
-        g2d.setColor(Color.WHITE);
-        g2d.fillRect(0, 0, targetWidth, targetHeight);
-
+    private BufferedImage paintBackground(double scale){
+        targetWidth = (int) (baseWidth * scale);
+        targetHeight = (int) (baseHeight * scale);
+        BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = i.createGraphics();
         if (cardBackground != null) {
-            System.out.println("Backgroundupdate");
             g2d.drawImage(cardBackground, 0, 0, targetWidth, targetHeight, null);
         }
-
-        g2d.drawImage(drawCardFrame(scale), 0, 0, targetWidth, targetHeight, null);
-
-        /*if (cardType != null) {
-            g2d.drawImage(cardType, (int)(530*scale), (int)(490*scale),  (int)(180*scale),  (int)(180*scale), null);
-        }*/
-
-        
         g2d.dispose();
-        return finalImage;
+        return i;
     }
 
     protected void onImageUpdate(ImageUpdate e){
@@ -156,6 +166,8 @@ public class CardComposer extends Loggable{
         setField(GlobalVar.TITLE_IMAGE, e.titleImage);
         setField(GlobalVar.CROWN_IMAGE, e.crownImage);
         setField(GlobalVar.TEXTBOX_IMAGE, e.textBoxImage);
+
+        //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ALL));
 
     }
 
@@ -251,7 +263,7 @@ public class CardComposer extends Loggable{
         return tinted;
     }
 
-    protected BufferedImage drawCardFrame(double scale){
+    protected BufferedImage paintFrame(double scale){
 
         int[] titleBounds = {20,20,710,200};
         int[] textboxBounds = {0,560,750,450};
@@ -297,6 +309,7 @@ public class CardComposer extends Loggable{
         config.cardTextBoxPath = cardTextBoxPath;
         config.titleText = titleTextPane.getText();
         config.typeText = typeTextPane.getText();
+        config.infoText = infoTextPane.getText();
         config.type = this.type;
         config.hasTitleBorder = hasTitleBorder;
 

@@ -16,24 +16,12 @@ import gui.previewpanel.DigitOnlyTextField;
 import java.awt.*;
 public class CardAttributesPanel extends JPanel{
     private int type;
+    int[] buttonSize = {40,40};
     JTextField armorClassInput;
-    //private Font rangeAndACFont;
-
-    //Rune Types
-    JCheckBox melee,ranged,mixed,armor;
-
-    //weapon type
-    JCheckBox isMelee,isRanged, isThrowable;
-
-    JCheckBox d4,d6,d8,d10,d12;
-
-    //runeslots
-    JCheckBox none_slot,one_slot,two_slot,three_slot;
-
-    JCheckBox tier0,tier1,tier2,tier3,tier4;
 
     public CardAttributesPanel(int type) {
-        this.setLayout(new GridLayout(0, 1, 5, 5));
+        //this.setLayout(new GridLayout(0, 1, 5, 5));
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.type = type;
         
         switch(type){
@@ -46,46 +34,6 @@ public class CardAttributesPanel extends JPanel{
         }
     }
 
-    public int getDice(){
-        if(d6.isSelected())
-            return 6;
-        if(d8.isSelected())
-            return 8;
-        if(d10.isSelected())
-            return 10;
-        if(d12.isSelected())
-            return 12;
-
-        return 4;  
-    }
-
-    public int getTier(){
-        if(tier1.isSelected())
-            return 1;
-        if(tier2.isSelected())
-            return 2;
-        if(tier3.isSelected())
-            return 3;
-        if(tier4.isSelected())
-            return 4;
-
-        return 0;  
-    }
-
-    public int getRuneSlots(){
-        if(one_slot.isSelected())
-            return 1;
-        if(two_slot.isSelected())
-            return 2;
-        if(three_slot.isSelected())
-            return 3;
-
-        return 0;  
-    }
-
-    public int getArmorClass(){
-        return Integer.parseInt(armorClassInput.getText());
-    }
 
     private void createArmorPanel(){
         armorClassInput = new DigitOnlyTextField();
@@ -210,39 +158,30 @@ public class CardAttributesPanel extends JPanel{
     private void createWeaponTypeSelection() {
         
         JPanel weaponType = new JPanel();
+        //weaponType.setLayout(new GridLayout(0, 3, 5, 5));
         weaponType.setBorder(BorderFactory.createTitledBorder("Weapon Type"));
-        isMelee = new JCheckBox("Melee", true);
-        isRanged = new JCheckBox("Ranged", false);
-        isThrowable = new JCheckBox("Magic Ranged", false);
-        
-        JCheckBox[] weaponTypes = {isMelee,isRanged,isThrowable};
-        for(JCheckBox x:weaponTypes){
-            x.addActionListener(e->{uncheckOtherCheckboxes(x,weaponTypes);});
-        }
+        JButton isMelee = new JButton("",loadIcon("resources/glyphs/AttributeLabel/damage_melee.png", buttonSize[0], buttonSize[1]));
+        JButton isRanged = new JButton("",loadIcon("resources/glyphs/AttributeLabel/damage_ranged.png", buttonSize[0], buttonSize[1]));
+        JButton isMagic = new JButton("",loadIcon("resources/glyphs/AttributeLabel/damage_magic.png", buttonSize[0], buttonSize[1]));
 
         isMelee.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_MELEE));});
         isRanged.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_RANGED));});
-        isThrowable.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_MAGIC));});
+        isMagic.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_MAGIC));});
         weaponType.add(isMelee);
         weaponType.add(isRanged);
-        weaponType.add(isThrowable);
+        weaponType.add(isMagic);
         this.add(weaponType);
     }
 
     private void createRuneTypeSelection(){
         JPanel runeTypes = new JPanel();
+        //runeTypes.setLayout(new GridLayout(2, 2, 5, 5));
         runeTypes.setBorder(BorderFactory.createTitledBorder("Type"));
-        melee = new JCheckBox("Melee",true);
-        ranged = new JCheckBox("Ranged",false);
-        mixed = new JCheckBox("Either",false);
-        armor = new JCheckBox("Armor",false);
 
-
-        JCheckBox[] runeTypesArr = {melee,ranged,mixed,armor};
-
-        for(JCheckBox x:runeTypesArr){
-            x.addActionListener(e->{uncheckOtherCheckboxes(x,runeTypesArr);});
-        }
+        JButton melee = new JButton("",loadIcon("resources/glyphs/AttributeLabel/damage_melee.png", buttonSize[0], buttonSize[1]));
+        JButton ranged = new JButton("",loadIcon("resources/glyphs/AttributeLabel/damage_ranged.png", buttonSize[0], buttonSize[1]));
+        JButton mixed = new JButton("",loadIcon("resources/glyphs/AttributeLabel/damage_magic.png", buttonSize[0], buttonSize[1]));
+        JButton armor = new JButton("",loadIcon("resources/glyphs/buttons/damage_mixed.png", buttonSize[0], buttonSize[1]));
 
         ranged.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_RANGED));;});
         melee.addActionListener(e -> {EventBus.publish(new CardTypeUpdate(GlobalVar.W_MELEE));});
@@ -262,19 +201,13 @@ public class CardAttributesPanel extends JPanel{
 
     private void createDiceSelection(){
         JPanel dice = new JPanel();
+        //dice.setLayout(new GridLayout(0, 5, 5, 5));
         dice.setBorder(BorderFactory.createTitledBorder("Weapon Dice"));
-
-        d4 = new JCheckBox("D4",false);
-        d6 = new JCheckBox("D6",false);
-        d8 = new JCheckBox("D8",false);
-        d10 = new JCheckBox("D10",false);
-        d12 = new JCheckBox("D12",false);
-
-        JCheckBox[] diceSelect = {d4,d6,d8,d10,d12};
-
-        for(JCheckBox x:diceSelect){
-            x.addActionListener(e->{uncheckOtherCheckboxes(x,diceSelect);});
-        }
+        JButton d4 = new JButton("",loadIcon("resources/glyphs/dice/d4.png", buttonSize[0], buttonSize[1]));
+        JButton d6 = new JButton("",loadIcon("resources/glyphs/dice/d6.png", buttonSize[0], buttonSize[1]));
+        JButton d8 = new JButton("",loadIcon("resources/glyphs/dice/d8.png", buttonSize[0], buttonSize[1]));
+        JButton d10 = new JButton("",loadIcon("resources/glyphs/dice/d10.png", buttonSize[0], buttonSize[1]));
+        JButton d12 = new JButton("",loadIcon("resources/glyphs/dice/d12.png", buttonSize[0], buttonSize[1]));
 
         d4.addActionListener(e -> {EventBus.publish(new DiceUpdateEvent(4));});
         d6.addActionListener(e -> {EventBus.publish(new DiceUpdateEvent(6));});
@@ -295,16 +228,13 @@ public class CardAttributesPanel extends JPanel{
     private void createRuneSlotSelection(){
         JPanel runeSlots = new JPanel();
         runeSlots.setBorder(BorderFactory.createTitledBorder("Rune Charges"));
+        //runeSlots.setLayout(new GridLayout(2, 2, 5, 5));
 
-        none_slot = new JCheckBox("none", true);
-        one_slot = new JCheckBox("1", false);
-        two_slot = new JCheckBox("2", false);
-        three_slot = new JCheckBox("3", false);
+        JButton none_slot = new JButton("None");
+        JButton one_slot = new JButton("",loadIcon("resources/glyphs/buttons/charge1.png", buttonSize[0], buttonSize[1]));
+        JButton two_slot = new JButton("",loadIcon("resources/glyphs/buttons/charge2.png", buttonSize[0], buttonSize[1]));
+        JButton three_slot = new JButton("",loadIcon("resources/glyphs/buttons/charge3.png", buttonSize[0], buttonSize[1]));
 
-        JCheckBox[] runeSlotsArr = { none_slot,one_slot,two_slot,three_slot};
-        for(JCheckBox x:runeSlotsArr){
-            x.addActionListener(e->{uncheckOtherCheckboxes(x,runeSlotsArr);});
-        }
 
         none_slot.addActionListener(e-> {EventBus.publish(new RuneChargesUpdate(0));});
         one_slot.addActionListener(e-> {EventBus.publish(new RuneChargesUpdate(1));});
@@ -323,17 +253,14 @@ public class CardAttributesPanel extends JPanel{
     private void createTierSelection(){
         JPanel tier = new JPanel();
         tier.setBorder(BorderFactory.createTitledBorder("Tier"));
-        tier0 = new JCheckBox("Tier 0",true);
-        tier1 = new JCheckBox("Tier 1",false);
-        tier2 = new JCheckBox("Tier 2",false);
-        tier3 = new JCheckBox("Tier 3",false);
-        tier4 = new JCheckBox("Tier 4",false);
+        //tier.setLayout(new GridLayout(0, 5, 5, 5));
 
-        JCheckBox[] tiers = {tier0,tier1,tier2,tier3,tier4};
+        JButton tier0 = new JButton("Common");
+        JButton tier1 = new JButton("",loadIcon("resources/glyphs/tier/1.png", buttonSize[0], buttonSize[1]));
+        JButton tier2 = new JButton("",loadIcon("resources/glyphs/tier/2.png", buttonSize[0], buttonSize[1]));
+        JButton tier3 = new JButton("",loadIcon("resources/glyphs/tier/3.png", buttonSize[0], buttonSize[1]));
+        JButton tier4 = new JButton("",loadIcon("resources/glyphs/tier/4.png", buttonSize[0], buttonSize[1]));
 
-        for(JCheckBox x:tiers){
-            x.addActionListener(e->{uncheckOtherCheckboxes(x,tiers);});
-        }
 
         tier0.addActionListener(e -> {EventBus.publish(new TierUpdate(0));});
         tier1.addActionListener(e -> {EventBus.publish(new TierUpdate(1));});
@@ -356,18 +283,13 @@ public class CardAttributesPanel extends JPanel{
         JPanel attribute = new JPanel();
         attribute.setBorder(BorderFactory.createTitledBorder("Damage Attribute"));
         attribute.setLayout(new GridLayout(0, 3, 5, 5));
-        JCheckBox str = new JCheckBox("Strength",true);
-        JCheckBox con = new JCheckBox("Constitution",false);
-        JCheckBox dex = new JCheckBox("Dexterity",false);
-        JCheckBox intel = new JCheckBox("Intelligence",false);
-        JCheckBox wis = new JCheckBox("Wisdom",false);
-        JCheckBox rizz = new JCheckBox("Charisma",false);
 
-        JCheckBox[] attributes = {str,con,dex,intel,wis,rizz};
-
-        for(JCheckBox x:attributes){
-            x.addActionListener(e->{uncheckOtherCheckboxes(x,attributes);});
-        }
+        JButton str = new JButton("",loadIcon("resources/glyphs/attributes/strength.png", buttonSize[0], buttonSize[1]));
+        JButton con = new JButton("",loadIcon("resources/glyphs/attributes/constitution.png", buttonSize[0], buttonSize[1]));
+        JButton dex = new JButton("",loadIcon("resources/glyphs/attributes/dexterity.png", buttonSize[0], buttonSize[1]));
+        JButton rizz = new JButton("",loadIcon("resources/glyphs/attributes/charisma.png", buttonSize[0], buttonSize[1]));
+        JButton intel = new JButton("",loadIcon("resources/glyphs/attributes/intelligence.png", buttonSize[0], buttonSize[1]));
+        JButton wis = new JButton("",loadIcon("resources/glyphs/attributes/wisdom.png", buttonSize[0], buttonSize[1]));
 
         publishImageUpdate(GlobalVar.ATTRIBUTE, GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");
         str.addActionListener(e -> {EventBus.publish(new AttributeUpdate(GlobalVar.STRENGTH));});
@@ -424,15 +346,10 @@ public class CardAttributesPanel extends JPanel{
 
 
 
-    private void uncheckOtherCheckboxes(JCheckBox selectedCheckbox, JCheckBox[] allCheckboxes) {
-        for (JCheckBox checkbox : allCheckboxes) {
-            if (checkbox != selectedCheckbox) {
-                checkbox.setSelected(false);
-            }
-        }
+    private ImageIcon loadIcon(String path, int width, int height) {
+        ImageIcon originalIcon = new ImageIcon(path);
+        Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledImage);
     }
-
-
-
 
 }

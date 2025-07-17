@@ -1,7 +1,7 @@
 {
-  "type" : 7,
+  "type" : 201,
   "titleText" : "",
-  "infoText" : null,
+  "infoText" : "Test\r\r\r\n",
   "typeText" : "",
   "cardFramePath" : "resources/img/card_components/frame/default.png",
   "cardBackgroundPath" : "resources/img/card_components/background/default.png",
@@ -11,7 +11,7 @@
   "cardTextBoxPath" : "resources/img/card_components/textbox/default.png",
   "cardTitlePath" : "resources/img/card_components/title/default.png",
   "cardCrownPath" : "resources/img/card_components/crowns/default.png",
-  "hasTitleBorder" : false,
+  "hasTitleBorder" : true,
   "hasRuneCut" : false,
   "cardItemImagePath" : null,
   "runeCharges" : 0,

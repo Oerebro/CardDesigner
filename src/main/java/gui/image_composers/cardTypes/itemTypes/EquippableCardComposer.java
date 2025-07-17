@@ -7,7 +7,6 @@ import events.CardLoadEvent;
 import events.EventBus;
 import events.RepaintPanelEvent;
 import events.RuneChargesUpdate;
-import events.TextLoadEvent;
 import events.TierUpdate;
 import gui.GlobalVar;
 import gui.card_types.*;
@@ -47,7 +46,7 @@ public class EquippableCardComposer extends ItemCardComposer{
         }
     }
 
-    private void onTierUpdate(TierUpdate e){
+    protected void onTierUpdate(TierUpdate e){
         tier = e.num;
 
         if(tier > 0){

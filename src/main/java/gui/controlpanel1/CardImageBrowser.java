@@ -21,13 +21,12 @@ public class CardImageBrowser extends ImageBrowser{
 
     @Override
     protected IconLabel addMouseListener(IconLabel label, File file) {
-        label.setOpaque(true);
+        label.setOpaque(false);
         label.setBackground(Color.LIGHT_GRAY);
 
         label.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                System.out.println("Type: "+type);
                 publishImageUpdate(type,file.getPath());
             }
         });

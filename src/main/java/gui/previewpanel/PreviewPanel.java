@@ -32,15 +32,14 @@ public class PreviewPanel {
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     double scale = parent.getFrameScale();
-
                     if (backgroundLayer != null)
                         g.drawImage(backgroundLayer, 0, 0, scaledWidth, scaledHeight, this);
                     if (imageLayer != null)
                         g.drawImage(imageLayer, 0, 0, scaledWidth, scaledHeight, this);
                     if (frameLayer != null)
                         g.drawImage(frameLayer, 0, 0, scaledWidth, scaledHeight, this);
-                    /*if (runecutLayer != null)
-                        g.drawImage(runecutLayer, 0, 0, scaledWidth, scaledHeight, this);*/
+                    if (runecutLayer != null)
+                        g.drawImage(runecutLayer, 0, 0, scaledWidth, scaledHeight, this);
                     if (titleLayer != null)
                         g.drawImage(titleLayer, 0, 0, scaledWidth, scaledHeight, this);
                     if (infoLayer != null)
@@ -114,12 +113,7 @@ public class PreviewPanel {
                 //frameLayer = parent.getComposedCard(scale * panelRatio, type);
                 break;
             case GlobalVar.REPAINT_IMAGE:
-                 startTime = System.nanoTime();
                 imageLayer = parent.getComposedCard(scale * panelRatio, type);
-                 endTime = System.nanoTime();
-                 durationInNanoseconds = endTime - startTime;
-                 durationInMilliseconds = durationInNanoseconds / 1_000_000.0;
-                System.out.println("Repainting Image took: " + durationInMilliseconds + " ms");
                 break;
             case GlobalVar.REPAINT_FRAME:
                 frameLayer = parent.getComposedCard(scale * panelRatio, type);
@@ -134,12 +128,12 @@ public class PreviewPanel {
                 infoLayer = parent.getComposedCard(scale * panelRatio, type);
                 break;
             case GlobalVar.REPAINT_ATTRIBUTE_LABEL:
-                 startTime = System.nanoTime();
+                startTime = System.nanoTime();
                 attributeLabelLayer = parent.getComposedCard(scale * panelRatio, type);
-                 endTime = System.nanoTime();
-                 durationInNanoseconds = endTime - startTime;
-                 durationInMilliseconds = durationInNanoseconds / 1_000_000.0;
-                System.out.println("Repainting AttributeLabel took: " + durationInMilliseconds + " ms");
+                endTime = System.nanoTime();
+                durationInNanoseconds = endTime - startTime;
+                durationInMilliseconds = durationInNanoseconds / 1_000_000.0;
+                //System.out.println("Repainting AttributeLabel took: " + durationInMilliseconds + " ms");
                 break;
             case GlobalVar.REPAINT_TIER_LABEL:
                 tierLabelLayer = parent.getComposedCard(scale * panelRatio, type);

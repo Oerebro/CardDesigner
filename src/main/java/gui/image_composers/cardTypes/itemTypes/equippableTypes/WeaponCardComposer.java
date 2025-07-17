@@ -23,14 +23,6 @@ public class WeaponCardComposer extends EquippableCardComposer{
     private int[] attributeLabelBounds = {0,470,305,105};
     private int[] attributeBaseFieldBounds = {0,470,305,105};
 
-    public int getDice(){
-        return dice;
-    }
-
-    public int getAttribute(){
-        return attribute;
-    }
-
     public WeaponCardComposer(int type){
         super(type);
         this.dice = 4;
@@ -41,6 +33,16 @@ public class WeaponCardComposer extends EquippableCardComposer{
         //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TIER_LABEL));
         //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));
     }
+
+    public int getDice(){
+        return dice;
+    }
+
+    public int getAttribute(){
+        return attribute;
+    }
+
+    
 
     @Override
     public BufferedImage composeCard(double scale, int type){

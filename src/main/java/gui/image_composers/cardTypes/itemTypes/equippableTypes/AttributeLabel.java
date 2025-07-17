@@ -37,7 +37,7 @@ public class AttributeLabel extends Loggable {
         this.damageType = damageType;
         EventBus.subscribe(AttributeUpdate.class, this::setAttribute);
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
-        //this.setOpaque(true);
+        //this.setOpaque(false);
         //this.setBounds(x,y,width,height);
         this.attribute = GlobalVar.STRENGTH;
         attributeIcon = loadImageFromFile(GlobalVar.ATTRIBUTE_IMAGE_PATH+"strength.png");

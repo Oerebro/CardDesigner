@@ -32,8 +32,9 @@ public class ItemCardComposer extends CardComposer{
 
     @Override
     public BufferedImage composeCard(double scale, int type){
+        
         switch(type){
-            case GlobalVar.REPAINT_IMAGE:           
+            case GlobalVar.REPAINT_IMAGE:       
                 return paintImage(scale);
             case GlobalVar.REPAINT_INFO:
                 return paintInfo(scale);
@@ -42,7 +43,7 @@ public class ItemCardComposer extends CardComposer{
             case GlobalVar.REPAINT_TITLE:
                 return paintTitle(scale);
             case GlobalVar.REPAINT_FRAME:
-                return drawCardFrame(scale);
+                return paintFrame(scale);
             case GlobalVar.REPAINT_ALL:
                 return paintAll(scale);
             default: 
@@ -56,7 +57,7 @@ public class ItemCardComposer extends CardComposer{
         BufferedImage i = super.composeCard(scale, GlobalVar.REPAINT_ALL);
         Graphics2D g2d = i.createGraphics();
         g2d.drawImage(paintImage(scale), 0, 0, targetWidth, targetHeight, null);
-        g2d.drawImage(drawCardFrame(scale), 0, 0, targetWidth, targetHeight, null);
+        g2d.drawImage(paintFrame(scale), 0, 0, targetWidth, targetHeight, null);
         g2d.drawImage(paintInfo(scale), 0, 0, targetWidth, targetHeight, null);
         g2d.drawImage(paintType(scale), 0, 0, targetWidth, targetHeight, null);
         g2d.drawImage(paintTitle(scale), 0, 0, targetWidth, targetHeight, null);
@@ -72,7 +73,7 @@ public class ItemCardComposer extends CardComposer{
         if (cardItemImage != null) {
             g2d.drawImage(cardItemImage, 0, 0, targetWidth, targetHeight, null);
         }
-        g2d.drawImage(drawCardFrame(scale), 0, 0, targetWidth, targetHeight, null);
+        g2d.drawImage(paintFrame(scale), 0, 0, targetWidth, targetHeight, null);
         g2d.dispose();
         return i;
     }
@@ -150,6 +151,7 @@ public class ItemCardComposer extends CardComposer{
 
         switch(field){
             case GlobalVar.ITEM_IMAGE: 
+                log(path);
                 cardItemImage = getImageFromFile(path); 
                 cardItemImagePath = path; 
                 overlayImage = cardItemImage; 
@@ -161,11 +163,11 @@ public class ItemCardComposer extends CardComposer{
 
     }
 
-    @Override
+    /*@Override
     protected void onImageUpdate(ImageUpdate e) {
         super.onImageUpdate(e);
         setField(GlobalVar.ITEM_IMAGE, e.path);
-    }
+    }*/
 
     protected void loadCard(CardLoadEvent e) {
         EventBus.publish(new TextUpdate(GlobalVar.TITLE_TEXT_UPDATE,e.titleText));

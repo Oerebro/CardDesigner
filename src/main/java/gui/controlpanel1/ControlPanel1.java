@@ -1,5 +1,7 @@
 package gui.controlpanel1;
 
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 //import java.io.File;
 import java.io.File;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class ControlPanel1 extends ControlPanel {
     //private JLabel frameLabel, backgroundLabel, textboxLabel;
     //private JButton loadFrameButton, loadBackgroundButton, loadTextboxButton;
     private CardDesignerGUI parent;
+    private CardAttributesPanel attributePanel;
     
     private SelectTypePanel selectItemTypePanel;
 
@@ -46,6 +49,16 @@ public class ControlPanel1 extends ControlPanel {
     private JCheckBox titleStroke, infoStroke, typeStroke;
     private ColorPicker titleColor, infoColor;
 
+    private CardAttributesPanel weaponAtt = new CardAttributesPanel(GlobalVar.WEAPON);
+    private CardAttributesPanel armorAtt = new CardAttributesPanel(GlobalVar.ARMOR);
+    private CardAttributesPanel accessoireAtt = new CardAttributesPanel(GlobalVar.ACCESSOIRE);
+    private CardAttributesPanel consumableAtt = new CardAttributesPanel(GlobalVar.WEAPON);
+    private CardAttributesPanel runeAtt = new CardAttributesPanel(GlobalVar.RUNE);
+    private CardAttributesPanel effectAtt = new CardAttributesPanel(GlobalVar.EFFECT);
+
+    private JPanel panel;
+    private int cardType;
+
     private int[] titleFieldBounds = {10,290,305,30};
     private int[] typeFieldBounds = {10,335,305,30};
     private int[] infoFieldBounds = {10,380,305,205};
@@ -57,7 +70,8 @@ public class ControlPanel1 extends ControlPanel {
     private int[] infoColorBounds = { 420, 380, 30, 30};
     
 
-    public void init(CardDesignerGUI parent) {
+    public void init(int type) {
+        this.cardType = type;
         EventBus.subscribe(CardTypeUpdate.class, this::onTypeUpdate);
         EventBus.subscribe(TextLoadEvent.class, this::onTextLoad);
         EventBus.subscribe(CardLoadEvent.class, this::onCardLoad);
@@ -66,7 +80,6 @@ public class ControlPanel1 extends ControlPanel {
         
         
         setLayout(null);
-        this.parent = parent;
         createButtons();
         compose();
         rescale(1.0);
@@ -87,12 +100,20 @@ public class ControlPanel1 extends ControlPanel {
 
     private void createButtons() {
         createCardComponentSelection();
-        selectItemTypePanel = new SelectTypePanel(parent);
+        panel = new JPanel();
+        selectItemTypePanel = new SelectTypePanel(this);
+        panel.setLayout(new FlowLayout());
+        panel.add(selectItemTypePanel);
+        panel.add(attributePanel = new CardAttributesPanel(cardType));
+        this.add(panel);
+        panel.setBounds((int) (770), (int) (0), (int) (400), (int) (2000));
     
         // Item Art VariableTabbedPane with default state weapons
-        weapons = new VariableTabbedPane();
-        weapons.init(GlobalVar.WEAPON);
-        selectItemArt = weapons;
+        //weapons = new VariableTabbedPane();
+        //weapons.init(GlobalVar.WEAPON);
+        armor = new VariableTabbedPane();
+        armor.init(GlobalVar.ARMOR);
+        selectItemArt = armor;
     
         // Create title input field and font selector
         createTitleFontSelection();
@@ -115,10 +136,41 @@ public class ControlPanel1 extends ControlPanel {
 
     public void compose() {
         add(cardComponentTabbedPane);
-        add(selectItemTypePanel);
+        //add(selectItemTypePanel);
         add(selectItemArt);
         add(titleFontSelection);
         add(infoFontSelection);
+    }
+
+    public void updatePanel(int type){
+        if(this.cardType != type){
+            this.cardType = type;
+            this.remove(attributePanel);
+            this.revalidate();
+            EventBus.publish(new CardTypeUpdate(type));
+            this.attributePanel = decideAttPanel(type);
+            this.add(attributePanel);
+            this.repaint();
+        }    
+    }
+
+    private CardAttributesPanel decideAttPanel(int type){
+        switch(type){
+            case GlobalVar.WEAPON:
+                return weaponAtt;
+            case GlobalVar.ARMOR:
+                return armorAtt;
+            case GlobalVar.ACCESSOIRE:
+                return accessoireAtt;
+            case GlobalVar.RUNE:
+                return runeAtt;
+            case GlobalVar.EFFECT:
+                return effectAtt;
+            case GlobalVar.CONSUMABLE:
+                return consumableAtt;
+        }
+
+        return null;
     }
 
     private void createTextFieldsAndPreview() {
@@ -354,7 +406,8 @@ public class ControlPanel1 extends ControlPanel {
         //set the absolute position of these menus within the controlpanel
         cardComponentTabbedPane.setBounds((int)(10 * scale), (int)(0), (int)(360 * scale), (int)(245 * scale));   
         selectItemArt.setBounds((int) (390 *scale), (int) (0), (int) (360*scale), (int) (245*scale));
-        selectItemTypePanel.setBounds((int) (770 *scale), (int) (0), (int) (300*scale), (int) (1000*scale));
+        //selectItemTypePanel.setBounds((int) (770 *scale), (int) (0), (int) (400*scale), (int) (600*scale));
+        panel.setBounds((int) (770 *scale), (int) (0), (int) (400*scale), (int) (2000*scale));
 
         setComponentBounds(titleFontSelection, titleFontBounds, scale);
         setComponentBounds(infoFontSelection, infoFontBounds, scale);
