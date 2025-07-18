@@ -436,6 +436,7 @@ public class ControlPanel1 extends ControlPanel {
         selectItemArt.setBounds((int) (390 *scale), (int) (0), (int) (360*scale), (int) (245*scale));
         selectItemArt.revalidate();
         selectItemArt.repaint();
+        this.repaint();
     }
     
     public void rescale(double scale) {
@@ -445,8 +446,8 @@ public class ControlPanel1 extends ControlPanel {
         //textboxSelect.rescale(scale);
 
         //set the absolute position of these menus within the controlpanel
-        cardComponentTabbedPane.setBounds((int)(10 * scale), (int)(0), (int)(360 * scale), (int)(245 * scale));   
-        selectItemArt.setBounds((int) (390 *scale), (int) (0), (int) (360*scale), (int) (245*scale));
+        cardComponentTabbedPane.setBounds((int)(10 * scale), (int)(0), (int)(360 * scale), (int)(295 * scale));   
+        selectItemArt.setBounds((int) (390 *scale), (int) (0), (int) (360*scale), (int) (295*scale));
         //selectItemTypePanel.setBounds((int) (770 *scale), (int) (0), (int) (400*scale), (int) (600*scale));
         attributeSelectionPanel.setBounds((int) (770 *scale), (int) (0), (int) (400*scale), (int) (2000*scale));
 

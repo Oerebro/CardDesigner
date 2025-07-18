@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class IconLabel extends JLabel {
-
     public IconLabel(ImageIcon icon) {
         super(icon);
         setHorizontalAlignment(CENTER);
