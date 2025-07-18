@@ -52,7 +52,7 @@ public class CardComposer extends Loggable{
 
     protected int targetWidth, targetHeight;
 
-    protected int[] typeFieldBounds = {50,605,650,40};
+    protected int[] typeFieldBounds = {50,600,650,50};
     protected int[] titleFieldBounds = {57,70,632,60};
     protected int[] infoFieldBounds = {55,665,640,295};
     protected int[] runeIconBounds = {40,40,90,90};

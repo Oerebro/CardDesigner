@@ -35,7 +35,7 @@ public class ControlPanel1 extends ControlPanel {
     //private JLabel frameLabel, backgroundLabel, textboxLabel;
     //private JButton loadFrameButton, loadBackgroundButton, loadTextboxButton;
     private CardDesignerGUI parent;
-    private CardAttributesPanel attributePanel;
+    
     
     private SelectTypePanel selectItemTypePanel;
 
@@ -49,14 +49,15 @@ public class ControlPanel1 extends ControlPanel {
     private JCheckBox titleStroke, infoStroke, typeStroke;
     private ColorPicker titleColor, infoColor;
 
-    private CardAttributesPanel weaponAtt = new CardAttributesPanel(GlobalVar.WEAPON);
-    private CardAttributesPanel armorAtt = new CardAttributesPanel(GlobalVar.ARMOR);
-    private CardAttributesPanel accessoireAtt = new CardAttributesPanel(GlobalVar.ACCESSOIRE);
-    private CardAttributesPanel consumableAtt = new CardAttributesPanel(GlobalVar.WEAPON);
-    private CardAttributesPanel runeAtt = new CardAttributesPanel(GlobalVar.RUNE);
-    private CardAttributesPanel effectAtt = new CardAttributesPanel(GlobalVar.EFFECT);
+    private CardAttributesPanel weaponAtt;
+    private CardAttributesPanel armorAtt;
+    private CardAttributesPanel accessoireAtt;
+    private CardAttributesPanel consumableAtt;
+    private CardAttributesPanel runeAtt;
+    private CardAttributesPanel effectAtt;
+    private CardAttributesPanel attributePanel;
 
-    private JPanel panel;
+    private JPanel attributeSelectionPanel;
     private int cardType;
 
     private int[] titleFieldBounds = {10,290,305,30};
@@ -77,7 +78,12 @@ public class ControlPanel1 extends ControlPanel {
         EventBus.subscribe(CardLoadEvent.class, this::onCardLoad);
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         
-        
+        weaponAtt = new CardAttributesPanel(GlobalVar.WEAPON);
+        armorAtt = new CardAttributesPanel(GlobalVar.ARMOR);
+        accessoireAtt = new CardAttributesPanel(GlobalVar.ACCESSOIRE);
+        consumableAtt = new CardAttributesPanel(GlobalVar.WEAPON);
+        runeAtt = new CardAttributesPanel(GlobalVar.RUNE);
+        effectAtt = new CardAttributesPanel(GlobalVar.EFFECT);
         
         setLayout(null);
         createButtons();
@@ -100,13 +106,14 @@ public class ControlPanel1 extends ControlPanel {
 
     private void createButtons() {
         createCardComponentSelection();
-        panel = new JPanel();
+        attributeSelectionPanel = new JPanel();
         selectItemTypePanel = new SelectTypePanel(this);
-        panel.setLayout(new FlowLayout());
-        panel.add(selectItemTypePanel);
-        panel.add(attributePanel = new CardAttributesPanel(cardType));
-        this.add(panel);
-        panel.setBounds((int) (770), (int) (0), (int) (400), (int) (2000));
+        attributeSelectionPanel.setLayout(new FlowLayout());
+        attributeSelectionPanel.add(selectItemTypePanel);
+        attributePanel = new CardAttributesPanel(cardType);
+        attributeSelectionPanel.add(attributePanel);
+        this.add(attributeSelectionPanel);
+        attributeSelectionPanel.setBounds((int) (770), (int) (0), (int) (400), (int) (2000));
     
         // Item Art VariableTabbedPane with default state weapons
         //weapons = new VariableTabbedPane();
@@ -143,20 +150,23 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     public void updatePanel(int type){
+        System.out.println("update panel");
         if(this.cardType != type){
             this.cardType = type;
-            this.remove(attributePanel);
-            this.revalidate();
-            EventBus.publish(new CardTypeUpdate(type));
-            this.attributePanel = decideAttPanel(type);
-            this.add(attributePanel);
+            attributeSelectionPanel.remove(attributePanel);
+            attributePanel = decideAttPanel(type);
+            attributePanel.revalidate();
+            attributeSelectionPanel.add(attributePanel);
+            attributeSelectionPanel.repaint();
             this.repaint();
+            EventBus.publish(new CardTypeUpdate(type));
         }    
     }
 
     private CardAttributesPanel decideAttPanel(int type){
         switch(type){
             case GlobalVar.WEAPON:
+            System.out.println("to weapon");
                 return weaponAtt;
             case GlobalVar.ARMOR:
                 return armorAtt;
@@ -381,11 +391,38 @@ public class ControlPanel1 extends ControlPanel {
         remove(selectItemArt);
 
         switch(type){
-            case GlobalVar.WEAPON: if(weapons == null) {weapons = new VariableTabbedPane(); weapons.init(type);} selectItemArt = weapons;   break;
-            case GlobalVar.ARMOR: if(armor == null) {armor = new VariableTabbedPane(); armor.init(type);} selectItemArt = armor;   break;
-            case GlobalVar.ACCESSOIRE: if(accessoire == null) {accessoire = new VariableTabbedPane(); accessoire.init(type);} selectItemArt = accessoire;   break;
-            case GlobalVar.CONSUMABLE: if(consumable == null) {consumable = new VariableTabbedPane(); consumable.init(type);} selectItemArt = consumable;   break;
-            case GlobalVar.RUNE: if(rune == null) {rune = new VariableTabbedPane(); rune.init(type);} selectItemArt = rune;   break;
+            case GlobalVar.WEAPON: 
+                if(weapons == null) {
+                    weapons = new VariableTabbedPane(); 
+                    weapons.init(type);
+                } 
+                selectItemArt = weapons; 
+                break;
+            case GlobalVar.ARMOR: 
+                if(armor == null) {
+                    armor = new VariableTabbedPane(); 
+                    armor.init(type);
+                } selectItemArt = armor;   
+                break;
+            case GlobalVar.ACCESSOIRE: 
+                if(accessoire == null) {
+                    accessoire = new VariableTabbedPane(); accessoire.init(type);
+                } 
+                selectItemArt = accessoire;   
+                break;
+            case GlobalVar.CONSUMABLE: 
+                if(consumable == null) {
+                    consumable = new VariableTabbedPane(); 
+                    consumable.init(type);
+                } 
+                selectItemArt = consumable;   
+                break;
+            case GlobalVar.RUNE: 
+                if(rune == null) {
+                    rune = new VariableTabbedPane(); rune.init(type);
+                } 
+                selectItemArt = rune;   
+                break;
             //case "effect":
             //case "character":
         }
@@ -407,7 +444,7 @@ public class ControlPanel1 extends ControlPanel {
         cardComponentTabbedPane.setBounds((int)(10 * scale), (int)(0), (int)(360 * scale), (int)(245 * scale));   
         selectItemArt.setBounds((int) (390 *scale), (int) (0), (int) (360*scale), (int) (245*scale));
         //selectItemTypePanel.setBounds((int) (770 *scale), (int) (0), (int) (400*scale), (int) (600*scale));
-        panel.setBounds((int) (770 *scale), (int) (0), (int) (400*scale), (int) (2000*scale));
+        attributeSelectionPanel.setBounds((int) (770 *scale), (int) (0), (int) (400*scale), (int) (2000*scale));
 
         setComponentBounds(titleFontSelection, titleFontBounds, scale);
         setComponentBounds(infoFontSelection, infoFontBounds, scale);
