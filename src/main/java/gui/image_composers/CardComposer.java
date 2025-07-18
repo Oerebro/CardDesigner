@@ -134,31 +134,6 @@ public class CardComposer extends Loggable{
                 return null;
         }
     }
-
-    private BufferedImage paintCrown(double scale){
-        targetWidth = (int) (baseWidth * scale);
-        targetHeight = (int) (baseHeight * scale);
-        BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = i.createGraphics();
-        if (cardCrown != null) {
-            g2d.drawImage(cardCrown, 0, 0, targetWidth, targetHeight, null);
-        }
-        g2d.dispose();
-        return paintWhiteCorners(i);
-    }
-
-    private BufferedImage paintTextbox(double scale){
-        targetWidth = (int) (baseWidth * scale);
-        targetHeight = (int) (baseHeight * scale);
-        BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = i.createGraphics();
-        if (cardTextBox != null) {
-            g2d.drawImage(cardTextBox, 0, 0, targetWidth, targetHeight, null);
-        }
-        g2d.dispose();
-        return paintWhiteCorners(i);
-    }
-
     private BufferedImage paintAll(double scale){
         targetWidth = (int) (baseWidth * scale);
         targetHeight = (int) (baseHeight * scale);
@@ -337,8 +312,13 @@ public class CardComposer extends Loggable{
             g2d.drawImage(cardCrown, (int)(titleBounds[0]*scale), (int)(titleBounds[1]*scale), (int)(titleBounds[2]*scale), (int)(titleBounds[3]*scale), null);
         }
 
+        int offsetY = 0;
+        if(infoTextPane.getText().trim().isEmpty() || infoTextPane.getText() == null){
+            offsetY = (int)((infoFieldBounds[3] - 40)*scale);;
+        }
+
         if (cardTextBox != null) {
-            g2d.drawImage(cardTextBox, (int)(textboxBounds[0]*scale), (int)(textboxBounds[1]*scale), (int)(textboxBounds[2]*scale), (int)(textboxBounds[3]*scale), null);
+            g2d.drawImage(cardTextBox, (int)(textboxBounds[0]*scale), (int)(textboxBounds[1]*scale)+offsetY, (int)(textboxBounds[2]*scale), (int)(textboxBounds[3]*scale), null);
         }
 
         if (runeCut != null) {

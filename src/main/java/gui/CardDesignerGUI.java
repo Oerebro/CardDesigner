@@ -67,7 +67,7 @@ public class CardDesignerGUI {
 
         // Control Panel on the right
         controlPanel = new ControlPanel1();
-        controlPanel.init(defaultType);
+        controlPanel.init(defaultType, this);
 
         controlPanel2 = new ControlPanel2();
         controlPanel2.init(this);

@@ -135,10 +135,16 @@ public class ItemCardComposer extends CardComposer{
         typeTextPane.validate();
         typeTextPane.printAll(labelGraphics);
         labelGraphics.dispose();
+
+        int offsetY = 0;
+        if(infoTextPane.getText().trim().isEmpty() || infoTextPane.getText() == null){
+            offsetY = (int)((infoFieldBounds[3] - 40)*scale);;
+        }
+
         if(hasTypeBorder){
             typeText = drawStroke(typeText,(int)(3*scale),Color.WHITE);
         }
-        g2d.drawImage(typeText, (int) (typeFieldBounds[0]*scale), (int)(typeFieldBounds[1]*scale),  (int)(typeFieldBounds[2]*scale),  (int)(typeFieldBounds[3]*scale), null);
+        g2d.drawImage(typeText, (int) (typeFieldBounds[0]*scale), (int)(typeFieldBounds[1]*scale) + offsetY,  (int)(typeFieldBounds[2]*scale),  (int)(typeFieldBounds[3]*scale), null);
         g2d.dispose();
         return i;
     }

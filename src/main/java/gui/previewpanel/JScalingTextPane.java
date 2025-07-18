@@ -28,6 +28,7 @@ public class JScalingTextPane extends JScrollPane {
     private int maxSizeFont, currentFontSize;
     private Font currentFont;
     private WrappingTextPane textPane;
+    private Boolean wasEmpty = true;
     String fontName;
     private int iconSize;
 
@@ -297,7 +298,10 @@ public class JScalingTextPane extends JScrollPane {
     }
 
     private void onTextUpdate(TextUpdate event) {
+        
         if(event.type == GlobalVar.FONTSIZE_TEXT_UPDATE){
+            
+
             if(event.text.matches("")) return;
             if(event.text.equals("+")||event.text.equals("-")){
                 onFontSizeUpdate(event.text.charAt(0));
@@ -311,14 +315,19 @@ public class JScalingTextPane extends JScrollPane {
         }
 
         if(event.type != GlobalVar.INFO_TEXT_UPDATE) return;
+
+        boolean isNowEmpty = event.text.trim().isEmpty();
         String text = event.text;
         Font font = textPane.getFont();
         if (text == null) {
             text = "";
-        }
-        
+        }  
         setFormattedText(text);
         EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_INFO));
+        if (wasEmpty != isNowEmpty) {
+            EventBus.publish(new RepaintPanelEvent());
+        }
+        wasEmpty = isNowEmpty;
     }
 
 

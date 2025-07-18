@@ -134,12 +134,7 @@ public class PreviewPanel {
                 infoLayer = parent.getComposedCard(scale * panelRatio, type);
                 break;
             case GlobalVar.REPAINT_ATTRIBUTE_LABEL:
-                startTime = System.nanoTime();
                 attributeLabelLayer = parent.getComposedCard(scale * panelRatio, type);
-                endTime = System.nanoTime();
-                durationInNanoseconds = endTime - startTime;
-                durationInMilliseconds = durationInNanoseconds / 1_000_000.0;
-                System.out.println("Repainting AttributeLabel took: " + durationInMilliseconds + " ms");
                 break;
             case GlobalVar.REPAINT_TIER_LABEL:
                 tierLabelLayer = parent.getComposedCard(scale * panelRatio, type);

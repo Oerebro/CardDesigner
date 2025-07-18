@@ -75,8 +75,12 @@ public class WeaponCardComposer extends EquippableCardComposer{
         BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics g2d = i.createGraphics();
         BufferedImage attributeImage = attributeLabel.paint(scale);
+        int offsetY = 0;
+        if(infoTextPane.getText().trim().isEmpty() || infoTextPane.getText() == null){
+            offsetY = (int)((infoFieldBounds[3] - 40)*scale);;
+        }
         if (attributeImage != null) {
-            g2d.drawImage(attributeImage, (int)(attributeBaseFieldBounds[0]*scale), (int)(attributeBaseFieldBounds[1]*scale), (int)(attributeBaseFieldBounds[2]*scale), (int)(attributeBaseFieldBounds[3]*scale), null);
+            g2d.drawImage(attributeImage, (int)(attributeBaseFieldBounds[0]*scale), (int)(attributeBaseFieldBounds[1]*scale)+offsetY, (int)(attributeBaseFieldBounds[2]*scale), (int)(attributeBaseFieldBounds[3]*scale), null);
         }
         g2d.dispose();
         return i;
@@ -87,11 +91,15 @@ public class WeaponCardComposer extends EquippableCardComposer{
         targetHeight = (int) (baseHeight * scale);
         BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics g2d = i.createGraphics();
+        int offsetY = 0;
+        if(infoTextPane.getText().trim().isEmpty() || infoTextPane.getText() == null){
+            offsetY = (int)((infoFieldBounds[3] - 40)*scale);;
+        }
         if (diceImage != null) {
-            g2d.drawImage(diceImage, (int)(diceFieldBounds[0]*scale), (int)(diceFieldBounds[1]*scale), (int)(diceFieldBounds[2]*scale), (int)(diceFieldBounds[3]*scale), null);
+            g2d.drawImage(diceImage, (int)(diceFieldBounds[0]*scale), (int)(diceFieldBounds[1]*scale)+offsetY, (int)(diceFieldBounds[2]*scale), (int)(diceFieldBounds[3]*scale), null);
         }
         if (tierGlyph != null) {
-            g2d.drawImage(tierGlyph, (int)(tierFieldBounds[0]*scale), (int)(tierFieldBounds[1]*scale), (int)(tierFieldBounds[2]*scale), (int)(tierFieldBounds[3]*scale), null);;
+            g2d.drawImage(tierGlyph, (int)(tierFieldBounds[0]*scale), (int)(tierFieldBounds[1]*scale)+offsetY, (int)(tierFieldBounds[2]*scale), (int)(tierFieldBounds[3]*scale), null);;
         }
         g2d.dispose();
         return i;

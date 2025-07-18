@@ -60,18 +60,21 @@ public class ControlPanel1 extends ControlPanel {
     private JPanel attributeSelectionPanel;
     private int cardType;
 
-    private int[] titleFieldBounds = {10,290,305,30};
-    private int[] typeFieldBounds = {10,335,305,30};
-    private int[] infoFieldBounds = {10,380,305,205};
+    private int[] titleFieldBounds = {10, 340, 305, 30};
+    private int[] typeFieldBounds = {10, 385, 305, 30};
+    private int[] infoFieldBounds = {10, 430, 305, 205};
 
-    private int[] titleFontBounds = {320,290,90,30};
-    private int[] infoFontBounds = {320, 380, 90, 30};
+    private int[] titleFontBounds = {320, 340, 90, 30};
+    private int[] infoFontBounds = {320, 430, 90, 30};
 
-    private int[] titleColorBounds = {420, 290, 30, 30};
-    private int[] infoColorBounds = { 420, 380, 30, 30};
+    private int[] titleColorBounds = {420, 340, 30, 30};
+    private int[] infoColorBounds = {420, 430, 30, 30};
+    private int[] typeColorBounds = {420, 385, 30, 30};
+
     
 
-    public void init(int type) {
+    public void init(int type, CardDesignerGUI parent) {
+        this.parent = parent;
         this.cardType = type;
         EventBus.subscribe(CardTypeUpdate.class, this::onTypeUpdate);
         EventBus.subscribe(TextLoadEvent.class, this::onTextLoad);
@@ -159,7 +162,8 @@ public class ControlPanel1 extends ControlPanel {
             attributeSelectionPanel.add(attributePanel);
             attributeSelectionPanel.repaint();
             this.repaint();
-            EventBus.publish(new CardTypeUpdate(type));
+            SwingUtilities.invokeLater(() -> {EventBus.publish(new CardTypeUpdate(type));});
+            
         }    
     }
 
@@ -199,9 +203,9 @@ public class ControlPanel1 extends ControlPanel {
         infoTextField.setBorder(UIManager.getBorder("TextField.border"));
         add(infoTextField);
 
-        titleColor = new ColorPicker(parent, 420, 290, 30, 30, GlobalVar.TITLE_TEXT_UPDATE);
-        infoColor = new ColorPicker(parent, 420, 380, 30, 30, GlobalVar.INFO_TEXT_UPDATE);
-        ColorPicker typeColor = new ColorPicker(parent, 420, 335, 30, 30, GlobalVar.TYPE_TEXT_UPDATE);
+        titleColor = new ColorPicker(parent, titleColorBounds[0], titleColorBounds[1],titleColorBounds[2],titleColorBounds[3],GlobalVar.TITLE_TEXT_UPDATE);
+        infoColor = new ColorPicker(parent, infoColorBounds[0], infoColorBounds[1],infoColorBounds[2],infoColorBounds[3], GlobalVar.INFO_TEXT_UPDATE);
+        ColorPicker typeColor = new ColorPicker(parent, typeColorBounds[0], typeColorBounds[1],typeColorBounds[2],typeColorBounds[3], GlobalVar.TYPE_TEXT_UPDATE);
 
         titleStroke = new JCheckBox("Title Outline",true);
         titleStroke.setBounds(460,290,100,30);
@@ -217,12 +221,12 @@ public class ControlPanel1 extends ControlPanel {
 
         JButton fontUp = new JButton("+");
         JButton fontDown = new JButton("-");
-        fontUp.setBounds(infoFontBounds[0],425,30,30);
+        fontUp.setBounds(infoFontBounds[0],425+50,30,30);
         fontUp.addActionListener(e->{EventBus.publish(new TextUpdate(GlobalVar.FONTSIZE_TEXT_UPDATE,"+"));});
-        fontDown.setBounds(infoFontBounds[0]+40,425,30,30);
+        fontDown.setBounds(infoFontBounds[0]+40,425+50,30,30);
         fontDown.addActionListener(e->{EventBus.publish(new TextUpdate(GlobalVar.FONTSIZE_TEXT_UPDATE,"-"));});
         fontSizeManual = new DigitOnlyTextField();
-        fontSizeManual.setBounds(infoFontBounds[0],460,60,30);
+        fontSizeManual.setBounds(infoFontBounds[0],460+50,60,30);
         fontSizeManual.setText("19");
         add(fontSizeManual);
         add(fontUp);

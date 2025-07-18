@@ -11,12 +11,13 @@ public class EventBus {
 
     public static <T> void publish(T event) {
         List<EventListener<?>> listenerList = listeners.get(event.getClass());
-        if (listenerList != null) {
-            for (EventListener<?> l : listenerList) {
-                @SuppressWarnings("unchecked")
-                EventListener<T> typedListener = (EventListener<T>) l;
-                typedListener.onEvent(event);
-            }
+        if (listenerList == null || listenerList.isEmpty()) return;
+
+        for (EventListener<?> l : new ArrayList<>(listenerList)) {
+            @SuppressWarnings("unchecked")
+            EventListener<T> typedListener = (EventListener<T>) l;
+            typedListener.onEvent(event);
         }
     }
+
 }

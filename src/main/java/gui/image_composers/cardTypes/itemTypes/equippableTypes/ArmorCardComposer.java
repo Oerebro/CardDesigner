@@ -100,15 +100,19 @@ public class ArmorCardComposer extends EquippableCardComposer{
         targetHeight = (int) (baseHeight * scale);
         BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics g2d = i.createGraphics();
+        int offsetY = 0;
+        if(infoTextPane.getText().trim().isEmpty() || infoTextPane.getText() == null){
+            offsetY = (int)((infoFieldBounds[3] - 40)*scale);
+        }
         if (tierGlyph != null) {
-            g2d.drawImage(tierGlyph, (int)(tierFieldBounds[0]*scale), (int)(tierFieldBounds[1]*scale), (int)(tierFieldBounds[2]*scale), (int)(tierFieldBounds[3]*scale), null);
+            g2d.drawImage(tierGlyph, (int)(tierFieldBounds[0]*scale), (int)(tierFieldBounds[1]*scale)+offsetY, (int)(tierFieldBounds[2]*scale), (int)(tierFieldBounds[3]*scale), null);
         }
         if (ac1 != null) {
-            g2d.drawImage(ac1, (int)(acBounds[0]*scale), (int)(acBounds[1]*scale), (int)(acBounds[2]*scale), (int)(acBounds[3]*scale), null);
+            g2d.drawImage(ac1, (int)(acBounds[0]*scale), (int)(acBounds[1]*scale)+offsetY, (int)(acBounds[2]*scale), (int)(acBounds[3]*scale), null);
         }
 
         if (ac2 != null) {
-            g2d.drawImage(ac2,(int)(acBounds[0]*scale), (int)(acBounds[1]*scale), (int)(acBounds[2]*scale), (int)(acBounds[3]*scale), null);
+            g2d.drawImage(ac2,(int)(acBounds[0]*scale), (int)(acBounds[1]*scale)+offsetY, (int)(acBounds[2]*scale), (int)(acBounds[3]*scale), null);
         }
         g2d.dispose();
         return i;
