@@ -20,6 +20,8 @@ public abstract class ImageBrowser extends ImagePublisher {
     protected int x, y;
 
     protected void init() {
+        
+
         this.height += 50;
         filePanel = new JPanel(new GridLayout(0, 3, 4, 4));
         filePanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
@@ -71,12 +73,16 @@ public abstract class ImageBrowser extends ImagePublisher {
 
         JPanel container = new JPanel(new BorderLayout());
         container.add(filePanel, BorderLayout.CENTER);
-
+        filePanel.setBounds(x, y, width, height);
+        container.setBounds(x, y, width, height);
         scrollPane = new JScrollPane(container);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBounds(x, y, width, height);
         scrollPane.setPreferredSize(new Dimension(width, height));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.getVerticalScrollBar().setBlockIncrement(64);
+
     }
 
     public JScrollPane getScrollPane() {
