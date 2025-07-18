@@ -1,4 +1,4 @@
-package gui.image_composers.cardTypes.itemTypes.equippableTypes;
+package gui.image_composers.cardTypes.itemTypes;
 
 import java.awt.image.BufferedImage;
 

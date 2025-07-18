@@ -14,7 +14,7 @@ public class PreviewPanel {
     private double panelRatio = 0.7;
     private int scaledWidth,scaledHeight;
 
-    private BufferedImage backgroundLayer,imageLayer,frameLayer,runecutLayer,titleLayer,infoLayer, attributeLabelLayer,tierLabelLayer,runechargeLabelLayer,typeLayer;
+    private BufferedImage backgroundLayer,imageLayer,frameLayer,crownLayer, textboxLayer,runecutLayer,titleLayer,infoLayer, attributeLabelLayer,tierLabelLayer,runechargeLabelLayer,typeLayer;
 
     public PreviewPanel(CardDesignerGUI parent){
         this.parent = parent;
@@ -110,16 +110,22 @@ public class PreviewPanel {
         switch (type) {
             case GlobalVar.REPAINT_BACKGROUND:
                 backgroundLayer = parent.getComposedCard(scale * panelRatio, type);
-                //frameLayer = parent.getComposedCard(scale * panelRatio, type);
+                //frameLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_FRAME);
                 break;
             case GlobalVar.REPAINT_IMAGE:
                 imageLayer = parent.getComposedCard(scale * panelRatio, type);
+                break;
+            case GlobalVar.REPAINT_CROWN:
+                frameLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_FRAME);
+                break;
+            case GlobalVar.REPAINT_TEXTBOX:
+                frameLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_FRAME);
                 break;
             case GlobalVar.REPAINT_FRAME:
                 frameLayer = parent.getComposedCard(scale * panelRatio, type);
                 break;
             case GlobalVar.REPAINT_RUNECUT:
-                //runecutLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_FRAME);
+                runecutLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_RUNECUT);
                 break;
             case GlobalVar.REPAINT_TITLE:
                 titleLayer = parent.getComposedCard(scale * panelRatio, type);
@@ -133,7 +139,7 @@ public class PreviewPanel {
                 endTime = System.nanoTime();
                 durationInNanoseconds = endTime - startTime;
                 durationInMilliseconds = durationInNanoseconds / 1_000_000.0;
-                //System.out.println("Repainting AttributeLabel took: " + durationInMilliseconds + " ms");
+                System.out.println("Repainting AttributeLabel took: " + durationInMilliseconds + " ms");
                 break;
             case GlobalVar.REPAINT_TIER_LABEL:
                 tierLabelLayer = parent.getComposedCard(scale * panelRatio, type);

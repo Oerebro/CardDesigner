@@ -123,12 +123,40 @@ public class CardComposer extends Loggable{
             case GlobalVar.REPAINT_BACKGROUND:
                 return paintBackground(scale);
             case GlobalVar.REPAINT_FRAME:
-                return paintFrame(scale); 
+                return paintFrame(scale);
+            /*case GlobalVar.REPAINT_CROWN:
+                return paintCrown(scale);
+            case GlobalVar.REPAINT_TEXTBOX:
+                return paintTextbox(scale);*/ 
             case GlobalVar.REPAINT_ALL:
                 return paintAll(scale); 
             default: 
                 return null;
         }
+    }
+
+    private BufferedImage paintCrown(double scale){
+        targetWidth = (int) (baseWidth * scale);
+        targetHeight = (int) (baseHeight * scale);
+        BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = i.createGraphics();
+        if (cardCrown != null) {
+            g2d.drawImage(cardCrown, 0, 0, targetWidth, targetHeight, null);
+        }
+        g2d.dispose();
+        return paintWhiteCorners(i);
+    }
+
+    private BufferedImage paintTextbox(double scale){
+        targetWidth = (int) (baseWidth * scale);
+        targetHeight = (int) (baseHeight * scale);
+        BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = i.createGraphics();
+        if (cardTextBox != null) {
+            g2d.drawImage(cardTextBox, 0, 0, targetWidth, targetHeight, null);
+        }
+        g2d.dispose();
+        return paintWhiteCorners(i);
     }
 
     private BufferedImage paintAll(double scale){
@@ -188,14 +216,34 @@ public class CardComposer extends Loggable{
 
     protected void setField(int field, String path){
         switch(field){
-            case GlobalVar.BACKGROUND_IMAGE: cardBackground = getImageFromFile(path);cardBackgroundPath = path;break;
-            case GlobalVar.FRAME_IMAGE: cardFrame = getImageFromFile(path); cardFramePath = path;break;
-            case GlobalVar.TITLE_IMAGE: cardTitle = getImageFromFile(path); cardTitlePath = path;break;
-            case GlobalVar.CROWN_IMAGE: cardCrown = getImageFromFile(path); cardCrownPath = path;break;
-            case GlobalVar.TEXTBOX_IMAGE: cardTextBox = getImageFromFile(path); cardTextBoxPath = path;break;
+            case GlobalVar.BACKGROUND_IMAGE: 
+                cardBackground = getImageFromFile(path);
+                cardBackgroundPath = path;
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_BACKGROUND)); 
+                break;
+            case GlobalVar.FRAME_IMAGE: 
+                cardFrame = getImageFromFile(path); 
+                cardFramePath = path;
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_FRAME)); 
+                break;
+            case GlobalVar.TITLE_IMAGE: 
+                cardTitle = getImageFromFile(path); 
+                cardTitlePath = path;
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_CROWN)); 
+                break;
+            case GlobalVar.CROWN_IMAGE: 
+                cardCrown = getImageFromFile(path); 
+                cardCrownPath = path;
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_CROWN)); 
+                break;
+            case GlobalVar.TEXTBOX_IMAGE: 
+                cardTextBox = getImageFromFile(path); 
+                cardTextBoxPath = path;
+                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TEXTBOX)); 
+                break;
         }
 
-        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_BACKGROUND));
+        //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_BACKGROUND));
     }
 
     protected String getOverlayImagePath(String path){
@@ -264,7 +312,6 @@ public class CardComposer extends Loggable{
     }
 
     protected BufferedImage paintFrame(double scale){
-
         int[] titleBounds = {20,20,710,200};
         int[] textboxBounds = {0,560,750,450};
         //int[] runeIconBounds = {40,40,90,90};

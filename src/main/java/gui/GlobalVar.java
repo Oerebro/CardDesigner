@@ -76,6 +76,8 @@ public class GlobalVar {
     public static final int REPAINT_IMAGE = 10016;
     public static final int REPAINT_RUNECUT = 10017;
     public static final int REPAINT_FRAME = 10018;
+    public static final int REPAINT_TEXTBOX = 10019;
+    public static final int REPAINT_CROWN = 10020;
 
     // Paths
     public static final String DICE_IMAGE_PATH = "resources/glyphs/dice/d";

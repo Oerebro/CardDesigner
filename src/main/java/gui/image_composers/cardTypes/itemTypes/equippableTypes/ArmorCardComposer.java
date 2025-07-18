@@ -116,8 +116,6 @@ public class ArmorCardComposer extends EquippableCardComposer{
 
     @Override
     protected void setField(int field, String path){
-        super.setField(field, path);
-
         switch(field){
             case GlobalVar.ARMOR1: 
                 ac1 = getImageFromFile(path); 
@@ -133,7 +131,6 @@ public class ArmorCardComposer extends EquippableCardComposer{
     }
 
     protected void onImageUpdate(ImageUpdate e){
-
         setField(e.type, e.path);
     }
 

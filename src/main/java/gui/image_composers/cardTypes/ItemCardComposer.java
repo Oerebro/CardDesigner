@@ -42,8 +42,6 @@ public class ItemCardComposer extends CardComposer{
                 return paintType(scale);
             case GlobalVar.REPAINT_TITLE:
                 return paintTitle(scale);
-            case GlobalVar.REPAINT_FRAME:
-                return paintFrame(scale);
             case GlobalVar.REPAINT_ALL:
                 return paintAll(scale);
             default: 
@@ -73,7 +71,7 @@ public class ItemCardComposer extends CardComposer{
         if (cardItemImage != null) {
             g2d.drawImage(cardItemImage, 0, 0, targetWidth, targetHeight, null);
         }
-        g2d.drawImage(paintFrame(scale), 0, 0, targetWidth, targetHeight, null);
+        //g2d.drawImage(paintFrame(scale), 0, 0, targetWidth, targetHeight, null);
         g2d.dispose();
         return i;
     }
