@@ -1,4 +1,4 @@
-package gui.image_composers.cardTypes.itemTypes;
+package gui.image_composers.cardTypes.itemTypes.equippableTypes;
 
 import java.awt.image.BufferedImage;
 
@@ -13,7 +13,7 @@ import gui.image_composers.cardTypes.ItemCardComposer;
 
 import java.awt.*;
 
-public class RuneCardComposer extends ItemCardComposer{
+public class RuneCard extends ItemCardComposer{
 
     private BufferedImage tierGlyph;
     private int tier;
@@ -22,7 +22,7 @@ public class RuneCardComposer extends ItemCardComposer{
         return tier;
     }
 
-    public RuneCardComposer(){
+    public RuneCard(){
         super(GlobalVar.RUNE);
         EventBus.subscribe(TierUpdate.class, this::onTierUpdate);
     }

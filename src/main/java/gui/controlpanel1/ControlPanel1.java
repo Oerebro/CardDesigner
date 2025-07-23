@@ -41,7 +41,7 @@ public class ControlPanel1 extends ControlPanel {
 
     private JTabbedPane cardComponentTabbedPane;
     private ImageBrowser frameSelect, backgroundSelect, textboxSelect, titleSelect,effectSelect, crownSelect;
-    private VariableTabbedPane selectItemArt, weapons,rune, armor, accessoire, consumable,effect,character;
+    private VariableTabbedPane selectItemArt, weapons,rune, arkham, armor, accessoire, consumable,effect,character;
     private JTextField titleTextField,typeTextField;
     private DigitOnlyTextField fontSizeManual;
     private JTextArea infoTextField;
@@ -55,14 +55,14 @@ public class ControlPanel1 extends ControlPanel {
     private CardAttributesPanel consumableAtt;
     private CardAttributesPanel runeAtt;
     private CardAttributesPanel effectAtt;
-    private CardAttributesPanel attributePanel;
+    private CardAttributesPanel attributePanel, arkhamAtt;
 
     private JPanel attributeSelectionPanel;
-    private int cardType;
+    private int cardType = 0;
 
-    private int[] titleFieldBounds = {10, 340, 305, 30};
-    private int[] typeFieldBounds = {10, 385, 305, 30};
-    private int[] infoFieldBounds = {10, 430, 305, 205};
+    private int[] titleTextBounds = {10, 340, 305, 30};
+    private int[] typeTextBounds = {10, 385, 305, 30};
+    private int[] infoTextBounds = {10, 430, 305, 205};
 
     private int[] titleFontBounds = {320, 340, 90, 30};
     private int[] infoFontBounds = {320, 430, 90, 30};
@@ -75,7 +75,8 @@ public class ControlPanel1 extends ControlPanel {
 
     public void init(int type, CardDesignerGUI parent) {
         this.parent = parent;
-        this.cardType = type;
+        //this.cardType = type;
+        
         EventBus.subscribe(CardTypeUpdate.class, this::onTypeUpdate);
         EventBus.subscribe(TextLoadEvent.class, this::onTextLoad);
         EventBus.subscribe(CardLoadEvent.class, this::onCardLoad);
@@ -87,9 +88,12 @@ public class ControlPanel1 extends ControlPanel {
         consumableAtt = new CardAttributesPanel(GlobalVar.WEAPON);
         runeAtt = new CardAttributesPanel(GlobalVar.RUNE);
         effectAtt = new CardAttributesPanel(GlobalVar.EFFECT);
+        arkhamAtt = new CardAttributesPanel(GlobalVar.ARKHAM);
+        selectItemArt = new VariableTabbedPane();
         
         setLayout(null);
         createButtons();
+        updatePanel(type);
         compose();
         rescale(1.0);
     }
@@ -121,14 +125,13 @@ public class ControlPanel1 extends ControlPanel {
         // Item Art VariableTabbedPane with default state weapons
         //weapons = new VariableTabbedPane();
         //weapons.init(GlobalVar.WEAPON);
-        armor = new VariableTabbedPane();
-        armor.init(GlobalVar.ARMOR);
-        selectItemArt = armor;
+        
     
         // Create title input field and font selector
         createTitleFontSelection();
         createInfoFontSelection();
         createTextFieldsAndPreview();
+        
         
     }
 
@@ -153,8 +156,10 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     public void updatePanel(int type){
-        System.out.println("update panel");
-        if(this.cardType != type){
+        System.out.println("WARUM ZUM FICK GEHST DU NICHT");
+        System.out.println(cardType + " " + type);
+        if(cardType != type){
+            System.out.println("GEHT DAS HIER?");
             this.cardType = type;
             attributeSelectionPanel.remove(attributePanel);
             attributePanel = decideAttPanel(type);
@@ -176,12 +181,14 @@ public class ControlPanel1 extends ControlPanel {
                 return armorAtt;
             case GlobalVar.ACCESSOIRE:
                 return accessoireAtt;
-            case GlobalVar.RUNE:
+            case GlobalVar.RUNE :
                 return runeAtt;
             case GlobalVar.EFFECT:
                 return effectAtt;
             case GlobalVar.CONSUMABLE:
                 return consumableAtt;
+            case GlobalVar.ARKHAM:
+                return arkhamAtt;
         }
 
         return null;
@@ -387,6 +394,7 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     public void onTypeUpdate(CardTypeUpdate e){
+        System.out.println("test");
         itemArtChangeToType(e.type);
     }
 
@@ -427,6 +435,12 @@ public class ControlPanel1 extends ControlPanel {
                 } 
                 selectItemArt = rune;   
                 break;
+            case GlobalVar.ARKHAM: 
+                if(arkham == null) {
+                    arkham = new VariableTabbedPane(); arkham.init(type);
+                } 
+                selectItemArt = arkham;   
+                break;
             //case "effect":
             //case "character":
         }
@@ -454,9 +468,9 @@ public class ControlPanel1 extends ControlPanel {
         setComponentBounds(titleFontSelection, titleFontBounds, scale);
         setComponentBounds(infoFontSelection, infoFontBounds, scale);
 
-        setComponentBounds(titleTextField, titleFieldBounds, scale);
-        setComponentBounds(typeTextField, typeFieldBounds, scale);
-        setComponentBounds(infoTextField, infoFieldBounds, scale);
+        setComponentBounds(titleTextField, titleTextBounds, scale);
+        setComponentBounds(typeTextField, typeTextBounds, scale);
+        setComponentBounds(infoTextField, infoTextBounds, scale);
 
         setComponentBounds(infoColor, infoColorBounds, scale);
         setComponentBounds(titleColor, titleColorBounds, scale);

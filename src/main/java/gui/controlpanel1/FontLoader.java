@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class FontLoader {
+import gui.Loggable;
+
+public class FontLoader{
     public static Font loadFont(String family, int style, float size) {
         String basePath = "resources/misc/fonts/";
         String styleSuffix;
@@ -18,10 +20,12 @@ public class FontLoader {
             case Font.ITALIC:
                 styleSuffix = "-italic";
                 break;
-            case Font.BOLD | Font.ITALIC:
+            /*case Font.BOLD | Font.ITALIC:
+                System.out.println("loading "+family+"-bold");
                 styleSuffix = "-bolditalic";
-                break;
+                break;*/
             default:
+                
                 styleSuffix = "-regular";
         }
 
@@ -30,7 +34,9 @@ public class FontLoader {
         for (String ext : extensions) {
             File file = new File(basePath + family + styleSuffix + ext);
             if (file.exists()) {
+
                 try (FileInputStream fis = new FileInputStream(file)) {
+                    System.out.println("loading "+basePath + family + styleSuffix + ext);
                     Font font = Font.createFont(Font.TRUETYPE_FONT, fis);
                     return font.deriveFont(size);
                 } catch (FontFormatException | IOException e) {

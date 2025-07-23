@@ -104,8 +104,6 @@ public class PreviewPanel {
     private void onRepaintEvent(RepaintPanelEvent e){
         double scale = parent.getFrameScale();
         int type = e.type;
-        long startTime, endTime,durationInNanoseconds;
-        double durationInMilliseconds;
 
         switch (type) {
             case GlobalVar.REPAINT_BACKGROUND:

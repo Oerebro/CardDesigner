@@ -27,10 +27,11 @@ public class JScalingTextPane extends JScrollPane {
     private final int maxNumLines;
     private int maxSizeFont, currentFontSize;
     private Font currentFont;
-    private WrappingTextPane textPane;
+    public JTextPane textPane;
     private Boolean wasEmpty = true;
     String fontName;
-    private int iconSize;
+    private int iconSize, StyleConstantsAlignement;
+
 
     private static final Map<String, String> ICON_MAP = new HashMap<>();
 
@@ -53,7 +54,7 @@ public class JScalingTextPane extends JScrollPane {
 
         
 
-        textPane = new WrappingTextPane();
+        textPane = new JTextPane();
 
         Font baseFont = UIManager.getFont("Label.font");
         if (baseFont == null) {
@@ -61,6 +62,7 @@ public class JScalingTextPane extends JScrollPane {
         }
 
         currentFont = baseFont.deriveFont((float) maxSizeFont);
+        StyleConstantsAlignement = StyleConstants.ALIGN_LEFT;
 
         textPane.setFont(baseFont.deriveFont((float) maxSizeFont));
         textPane.setForeground(Color.WHITE);
@@ -122,6 +124,9 @@ public class JScalingTextPane extends JScrollPane {
         StyleConstants.setFontFamily(boldItalicStyle, font.getFamily());
         StyleConstants.setFontSize(boldItalicStyle, font.getSize());
         StyleConstants.setForeground(boldItalicStyle, color);
+
+        Style paragraphStyle = textPane.addStyle("paragraph", null);
+        StyleConstants.setAlignment(paragraphStyle, StyleConstantsAlignement);
     }
 
     private static void loadIconsFromDirectory() {
@@ -142,13 +147,21 @@ public class JScalingTextPane extends JScrollPane {
         }
     }
 
-    
+    public void setStyleConstantAlignement(int i){
+        StyleConstantsAlignement = i;
+        Style paragraphStyle = textPane.getStyle("paragraph");
+        StyleConstants.setAlignment(paragraphStyle, StyleConstantsAlignement);
+        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_INFO));
+    }
 
     private void setFormattedText(String rawText) {
         rawText = rawText.replaceAll("<->", "—").replaceAll("<\\.>", "•");
         StyledDocument doc = textPane.getStyledDocument();
-        try {
+         try {
             doc.remove(0, doc.getLength());
+
+            Style paragraphStyle = textPane.getStyle("paragraph");
+            doc.setParagraphAttributes(0, 1, paragraphStyle, false);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }

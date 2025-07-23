@@ -20,6 +20,8 @@ public class EquippableCardComposer extends ItemCardComposer{
     protected int tier, runeCharges;
     protected boolean hasRuneCut;
 
+    protected String test;
+
     public int getTier(){
         return tier;
     }
@@ -29,8 +31,10 @@ public class EquippableCardComposer extends ItemCardComposer{
     }
 
     public EquippableCardComposer(int type){
+        
         super(type);
         runeCharges = 0;
+        
         EventBus.subscribe(RuneChargesUpdate.class, this::onRuneChargeUpdate);
         EventBus.subscribe(TierUpdate.class, this::onTierUpdate);
         //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_RUNECHARGE_LABEL));

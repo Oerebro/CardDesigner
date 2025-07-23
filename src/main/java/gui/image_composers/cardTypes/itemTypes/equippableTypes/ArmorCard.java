@@ -13,7 +13,7 @@ import gui.image_composers.cardTypes.itemTypes.EquippableCardComposer;
 
 import java.awt.*;
 
-public class ArmorCardComposer extends EquippableCardComposer{
+public class ArmorCard extends EquippableCardComposer{
 
     private BufferedImage ac1, ac2;
 
@@ -26,7 +26,7 @@ public class ArmorCardComposer extends EquippableCardComposer{
     BufferedImage legendary = getImageFromFile(GlobalVar.AC_IMAGE_PATH+"legendary_armor.png");
     BufferedImage artifact = getImageFromFile(GlobalVar.AC_IMAGE_PATH+"artifact_armor.png");
 
-    public ArmorCardComposer(){
+    public ArmorCard(){
         super(GlobalVar.ARMOR);
         tierGlyph = getTierImage(0);
         EventBus.subscribe(CardLoadEvent.class, this::onLoadCard);
@@ -102,7 +102,7 @@ public class ArmorCardComposer extends EquippableCardComposer{
         Graphics g2d = i.createGraphics();
         int offsetY = 0;
         if(infoTextPane.getText().trim().isEmpty() || infoTextPane.getText() == null){
-            offsetY = (int)((infoFieldBounds[3] - 40)*scale);
+            offsetY = (int)((infoTextBounds[3] - 40)*scale);
         }
         if (tierGlyph != null) {
             g2d.drawImage(tierGlyph, (int)(tierFieldBounds[0]*scale), (int)(tierFieldBounds[1]*scale)+offsetY, (int)(tierFieldBounds[2]*scale), (int)(tierFieldBounds[3]*scale), null);

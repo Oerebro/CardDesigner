@@ -34,6 +34,7 @@ public class VariableTabbedPane extends JTabbedPane{
             case GlobalVar.ACCESSOIRE: addTabsAccessoire();break;
             case GlobalVar.CONSUMABLE: addTabsConsumable();break;
             case GlobalVar.CHARACTER: addTabsCharacters();break;
+            case GlobalVar.ARKHAM: addTabsArkham();break;
         }
 
 
@@ -64,6 +65,14 @@ public class VariableTabbedPane extends JTabbedPane{
         add("Offensive",new ItemArtImageBrowser("resources/img/runes/offensive",440,350,1300,40,80).getScrollPane());
         add("Defensive",new ItemArtImageBrowser("resources/img/runes/defensive",440,350,1300,40,80).getScrollPane());
         add("Support",new ItemArtImageBrowser("resources/img/runes/utility",440,350,1300,40,80).getScrollPane());
+    }
+
+    private void addTabsArkham(){
+        add("Characters",new ItemArtImageBrowser("resources/img/arkham/characters",440,350,1300,40,80).getScrollPane());
+        add("Conditions",new ItemArtImageBrowser("resources/img/arkham/conditions",440,350,1300,40,80).getScrollPane());
+        add("Enemies",new ItemArtImageBrowser("resources/img/arkham/enemies",440,350,1300,40,80).getScrollPane());
+        add("Items",new ItemArtImageBrowser("resources/img/arkham/items",440,350,1300,40,80).getScrollPane());
+        add("Spells",new ItemArtImageBrowser("resources/img/arkham/spells",440,350,1300,40,80).getScrollPane());
     }
 
     private void addTabsArmor(){

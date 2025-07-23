@@ -17,7 +17,7 @@ import java.awt.*;
 public class CardAttributesPanel extends JPanel{
     private int type;
     int[] buttonSize = {40,40};
-    JTextField armorClassInput;
+    JTextField armorClassInput, successesInput, damageInput;
 
     public CardAttributesPanel(int type) {
         //this.setLayout(new GridLayout(0, 1, 5, 5));
@@ -30,10 +30,82 @@ public class CardAttributesPanel extends JPanel{
             case GlobalVar.CONSUMABLE: createConsumablePanel();break;
             case GlobalVar.RUNE: createRunePanel();break;
             case GlobalVar.ACCESSOIRE: createArmorPanel();break;
+            case GlobalVar.ARKHAM: createArkhamPanel();break;
             default: createOtherPanel();break;
         }
     }
 
+    private void createArkhamPanel(){
+        successesInput = new DigitOnlyTextField();
+        successesInput.setPreferredSize(new Dimension(200,50) );
+        successesInput.setBorder(BorderFactory.createTitledBorder("Diffculty Class"));
+        successesInput.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(GlobalVar.OTHER_TEXT_UPDATE_1, successesInput.getText()));
+            }
+    
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(GlobalVar.OTHER_TEXT_UPDATE_1, successesInput.getText()));;
+            }
+    
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(GlobalVar.OTHER_TEXT_UPDATE_1, successesInput.getText()));
+            }
+        });
+
+        damageInput = new DigitOnlyTextField();
+        damageInput.setBorder(BorderFactory.createTitledBorder("Damage"));
+        damageInput.setPreferredSize(new Dimension(200,50) );
+        damageInput.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(GlobalVar.OTHER_TEXT_UPDATE_2, damageInput.getText()));
+            }
+    
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(GlobalVar.OTHER_TEXT_UPDATE_2, damageInput.getText()));;
+            }
+    
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(GlobalVar.OTHER_TEXT_UPDATE_2, damageInput.getText()));
+            }
+        });
+
+        add(damageInput);
+        add(successesInput);
+
+        JPanel weaponType = new JPanel();
+        weaponType.setBorder(BorderFactory.createTitledBorder("Weapon Type"));
+        JButton isMelee = new JButton("",loadIcon("resources/glyphs/arkham/melee.png", buttonSize[0], buttonSize[1]));
+        JButton isRanged = new JButton("",loadIcon("resources/glyphs/arkham/ranged.png", buttonSize[0], buttonSize[1]));
+        JButton none = new JButton("",loadIcon("resources/glyphs/arkham/none.png", buttonSize[0], buttonSize[1]));
+
+        isMelee.addActionListener(e -> {EventBus.publish(new ImageUpdate(GlobalVar.ARKHAM_RANGE_IMAGE_UPDATE,"resources/glyphs/arkham/melee.png"));});
+        isRanged.addActionListener(e -> {EventBus.publish(new ImageUpdate(GlobalVar.ARKHAM_RANGE_IMAGE_UPDATE,"resources/glyphs/arkham/ranged.png"));});
+        none.addActionListener(e -> {EventBus.publish(new ImageUpdate(GlobalVar.ARKHAM_RANGE_IMAGE_UPDATE_NONE,null));});
+
+        weaponType.add(isMelee);
+        weaponType.add(isRanged);
+        weaponType.add(none);
+        this.add(weaponType);
+
+        JPanel cardSide = new JPanel();
+        JButton front = new JButton("",loadIcon("resources/glyphs/arkham/frontside.png", buttonSize[0], buttonSize[1]));
+        JButton back = new JButton("",loadIcon("resources/glyphs/arkham/backside.png", buttonSize[0], buttonSize[1]));
+
+        front.addActionListener(e -> {EventBus.publish(new ImageUpdate(GlobalVar.ARKHAM_CARDSIDE_IMAGE_UPDATE,"resources/glyphs/arkham/frontside.png"));});
+        back.addActionListener(e -> {EventBus.publish(new ImageUpdate(GlobalVar.ARKHAM_CARDSIDE_IMAGE_UPDATE,"resources/glyphs/arkham/backside.png"));});
+        cardSide.add(front);
+        cardSide.add(back);
+        this.add(cardSide);
+        
+        
+    }
 
     private void createArmorPanel(){
         armorClassInput = new DigitOnlyTextField();

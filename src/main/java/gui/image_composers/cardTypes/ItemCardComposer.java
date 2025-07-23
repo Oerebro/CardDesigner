@@ -19,6 +19,7 @@ public class ItemCardComposer extends CardComposer{
 
     protected BufferedImage cardItemImage;
     protected String cardItemImagePath;
+    
 
     public String getItemImagePath(){
         return cardItemImagePath;
@@ -73,7 +74,7 @@ public class ItemCardComposer extends CardComposer{
         }
         //g2d.drawImage(paintFrame(scale), 0, 0, targetWidth, targetHeight, null);
         g2d.dispose();
-        return i;
+        return paintWhiteCorners(i);
     }
 
     private BufferedImage paintInfo(double scale){
@@ -82,9 +83,9 @@ public class ItemCardComposer extends CardComposer{
         BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = i.createGraphics();
 
-        BufferedImage infoText = new BufferedImage((int) (infoFieldBounds[2] * scale), (int) (infoFieldBounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage infoText = new BufferedImage((int) (infoTextBounds[2] * scale), (int) (infoTextBounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
         Graphics2D labelGraphics = infoText.createGraphics();
-        infoTextPane.setBounds((int) (infoFieldBounds[0] * scale), (int) (infoFieldBounds[1] * scale), (int) (infoFieldBounds[2] * scale),(int) (infoFieldBounds[3] * scale),scale);
+        infoTextPane.setBounds((int) (infoTextBounds[0] * scale), (int) (infoTextBounds[1] * scale), (int) (infoTextBounds[2] * scale),(int) (infoTextBounds[3] * scale),scale);
         infoTextPane.scaleFont(scale);
         infoTextPane.doLayout();
         infoTextPane.revalidate();
@@ -94,7 +95,7 @@ public class ItemCardComposer extends CardComposer{
         if(hasInfoBorder){
             infoText = drawStroke(infoText,(int)(3*scale),Color.WHITE);
         }
-        g2d.drawImage(infoText, (int) (infoFieldBounds[0] * scale), (int) (infoFieldBounds[1] * scale),  (int) (infoFieldBounds[2] * scale),(int) (infoFieldBounds[3] * scale), null);
+        g2d.drawImage(infoText, (int) (infoTextBounds[0] * scale), (int) (infoTextBounds[1] * scale),  (int) (infoTextBounds[2] * scale),(int) (infoTextBounds[3] * scale), null);
         g2d.dispose();
         return i;
     }
@@ -105,10 +106,10 @@ public class ItemCardComposer extends CardComposer{
         BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = i.createGraphics();
 
-        BufferedImage titleText = new BufferedImage((int) (titleFieldBounds[2] * scale), (int) (titleFieldBounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage titleText = new BufferedImage((int) (titleTextBounds[2] * scale), (int) (titleTextBounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
         Graphics2D labelGraphics = titleText.createGraphics();
 
-        titleTextPane.setSize((int) (titleFieldBounds[2] * scale), (int) (titleFieldBounds[3] * scale));   
+        titleTextPane.setSize((int) (titleTextBounds[2] * scale), (int) (titleTextBounds[3] * scale));   
         titleTextPane.revalidate();
         titleTextPane.repaint(); 
         titleTextPane.printAll(labelGraphics);
@@ -116,7 +117,7 @@ public class ItemCardComposer extends CardComposer{
         if(hasTitleBorder){
             titleText = drawStroke(titleText,(int)(3*scale),Color.WHITE);
         }
-        g2d.drawImage(titleText,(int) (titleFieldBounds[0] * scale), (int) (titleFieldBounds[1] * scale), (int) (titleFieldBounds[2] * scale), (int) (titleFieldBounds[3] * scale), null);
+        g2d.drawImage(titleText,(int) (titleTextBounds[0] * scale), (int) (titleTextBounds[1] * scale), (int) (titleTextBounds[2] * scale), (int) (titleTextBounds[3] * scale), null);
         g2d.dispose();
         return i;
     }
@@ -127,24 +128,24 @@ public class ItemCardComposer extends CardComposer{
         BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = i.createGraphics();
 
-        BufferedImage typeText = new BufferedImage((int)(typeFieldBounds[2]*scale),  (int)(typeFieldBounds[3]*scale), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage typeText = new BufferedImage((int)(typeTextBounds[2]*scale),  (int)(typeTextBounds[3]*scale), BufferedImage.TYPE_INT_ARGB);
         Graphics2D labelGraphics = typeText.createGraphics();
 
-        typeTextPane.setSize((int)(typeFieldBounds[2] * scale), (int)(typeFieldBounds[3] * scale));
+        typeTextPane.setSize((int)(typeTextBounds[2] * scale), (int)(typeTextBounds[3] * scale));
         typeTextPane.doLayout();
         typeTextPane.validate();
         typeTextPane.printAll(labelGraphics);
         labelGraphics.dispose();
 
         int offsetY = 0;
-        if(infoTextPane.getText().trim().isEmpty() || infoTextPane.getText() == null){
-            offsetY = (int)((infoFieldBounds[3] - 40)*scale);;
+        if(dynamicTextboxPosition && (infoTextPane.getText().trim().isEmpty() || infoTextPane.getText() == null)){
+            offsetY = (int)((infoTextBounds[3] - 40)*scale);;
         }
 
         if(hasTypeBorder){
             typeText = drawStroke(typeText,(int)(3*scale),Color.WHITE);
         }
-        g2d.drawImage(typeText, (int) (typeFieldBounds[0]*scale), (int)(typeFieldBounds[1]*scale) + offsetY,  (int)(typeFieldBounds[2]*scale),  (int)(typeFieldBounds[3]*scale), null);
+        g2d.drawImage(typeText, (int) (typeTextBounds[0]*scale), (int)(typeTextBounds[1]*scale) + offsetY,  (int)(typeTextBounds[2]*scale),  (int)(typeTextBounds[3]*scale), null);
         g2d.dispose();
         return i;
     }

@@ -52,10 +52,16 @@ public class CardComposer extends Loggable{
 
     protected int targetWidth, targetHeight;
 
-    protected int[] typeFieldBounds = {50,600,650,50};
-    protected int[] titleFieldBounds = {57,70,632,60};
-    protected int[] infoFieldBounds = {55,665,640,295};
+    protected int[] typeTextBounds = {50,600,650,50};
+    protected int[] titleTextBounds = {57,70,632,60};
+    protected int[] infoTextBounds = {55,665,640,295};
     protected int[] runeIconBounds = {40,40,90,90};
+    protected int[] titleImageBounds = {20,20,710,200};
+    protected int[] textboxBounds = {0,560,750,450};
+        //int[] runeIconBounds = {40,40,90,90};
+
+    protected boolean dynamicTextboxPosition = true;
+
 
     //protected boolean hasTitleBorder;
 
@@ -71,15 +77,15 @@ public class CardComposer extends Loggable{
         
 
         infoTextPane = new JScalingTextPane(9, 72);
-        infoTextPane.setBounds(infoFieldBounds[0],infoFieldBounds[1],infoFieldBounds[2],infoFieldBounds[3]);
-        infoTextPane.setSize(infoFieldBounds[2],infoFieldBounds[3]);
+        infoTextPane.setBounds(infoTextBounds[0],infoTextBounds[1],infoTextBounds[2],infoTextBounds[3]);
+        infoTextPane.setSize(infoTextBounds[2],infoTextBounds[3]);
         infoTextPane.setColor(Color.BLACK);
 
 
-        titleTextPane = new OneLineTextPane(GlobalVar.TITLE_TEXT_UPDATE, 200, titleFieldBounds[0],titleFieldBounds[1],titleFieldBounds[2],titleFieldBounds[3]);
+        titleTextPane = new OneLineTextPane(GlobalVar.TITLE_TEXT_UPDATE, 200, titleTextBounds[0],titleTextBounds[1],titleTextBounds[2],titleTextBounds[3]);
         titleTextPane.setForeground(Color.BLACK);
 
-        typeTextPane = new OneLineTextPane(GlobalVar.TYPE_TEXT_UPDATE, 200, typeFieldBounds[0],typeFieldBounds[1],typeFieldBounds[2],typeFieldBounds[3]);
+        typeTextPane = new OneLineTextPane(GlobalVar.TYPE_TEXT_UPDATE, 200, typeTextBounds[0],typeTextBounds[1],typeTextBounds[2],typeTextBounds[3]);
         typeTextPane.setOpaque(false);
         typeTextPane.setForeground(Color.BLACK);
 
@@ -99,6 +105,10 @@ public class CardComposer extends Loggable{
 
     protected void onInfoColorUpdate(InfoColorUpdate e){
         infoTextPane.setColor(e.color);
+    }
+
+    protected int[] setArray(int x, int y, int w, int h){
+        return new int[] {x,y,w,h};
     }
 
     protected void init(){};
@@ -157,6 +167,42 @@ public class CardComposer extends Loggable{
         return paintWhiteCorners(i);
     }
 
+    protected BufferedImage paintFrame(double scale){
+        targetWidth = (int) (baseWidth * scale);
+        targetHeight = (int) (baseHeight * scale);
+
+        BufferedImage finalImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = finalImage.createGraphics();
+
+        if (cardFrame != null) {
+            g2d.drawImage(cardFrame, 0, 0, targetWidth, targetHeight, null);
+        }
+
+        if(cardTitle != null){
+            g2d.drawImage(cardTitle, (int)(titleImageBounds[0]*scale), (int)(titleImageBounds[1]*scale), (int)(titleImageBounds[2]*scale), (int)(titleImageBounds[3]*scale), null);
+        }
+
+        if (cardCrown != null) {
+            g2d.drawImage(cardCrown, (int)(titleImageBounds[0]*scale), (int)(titleImageBounds[1]*scale), (int)(titleImageBounds[2]*scale), (int)(titleImageBounds[3]*scale), null);
+        }
+
+        int offsetY = 0;
+        /*if(dynamicTextboxPosition && (infoTextPane.getText().trim().isEmpty() || infoTextPane.getText() == null)){
+            offsetY = (int)((infoTextBounds[3] - 40)*scale);;
+        }*/
+
+        if (cardTextBox != null) {
+            g2d.drawImage(cardTextBox, (int)(textboxBounds[0]*scale), (int)(textboxBounds[1]*scale)+offsetY, (int)(textboxBounds[2]*scale), (int)(textboxBounds[3]*scale), null);
+        }
+
+        if (runeCut != null) {
+            g2d.drawImage(runeCut, (int)(runeIconBounds[0]*scale), (int)(runeIconBounds[1]*scale), (int)(runeIconBounds[2]*scale), (int)(runeIconBounds[3]*scale), null);
+        }
+        //return finalImage;
+        return paintWhiteCorners(finalImage);
+    }
+
     protected void onImageUpdate(ImageUpdate e){
     }
 
@@ -211,7 +257,8 @@ public class CardComposer extends Loggable{
                 cardCrownPath = path;
                 EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_CROWN)); 
                 break;
-            case GlobalVar.TEXTBOX_IMAGE: 
+            case GlobalVar.TEXTBOX_IMAGE:
+            log(path) ;
                 cardTextBox = getImageFromFile(path); 
                 cardTextBoxPath = path;
                 EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TEXTBOX)); 
@@ -286,47 +333,7 @@ public class CardComposer extends Loggable{
         return tinted;
     }
 
-    protected BufferedImage paintFrame(double scale){
-        int[] titleBounds = {20,20,710,200};
-        int[] textboxBounds = {0,560,750,450};
-        //int[] runeIconBounds = {40,40,90,90};
-        int[] runeIconBounds = {635,935,90,90};
-        
 
-        targetWidth = (int) (baseWidth * scale);
-        targetHeight = (int) (baseHeight * scale);
-
-        BufferedImage finalImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-
-        Graphics2D g2d = finalImage.createGraphics();
-
-        if (cardFrame != null) {
-            g2d.drawImage(cardFrame, 0, 0, targetWidth, targetHeight, null);
-        }
-
-        if(cardTitle != null){
-            g2d.drawImage(cardTitle, (int)(titleBounds[0]*scale), (int)(titleBounds[1]*scale), (int)(titleBounds[2]*scale), (int)(titleBounds[3]*scale), null);
-        }
-
-        if (cardCrown != null) {
-            g2d.drawImage(cardCrown, (int)(titleBounds[0]*scale), (int)(titleBounds[1]*scale), (int)(titleBounds[2]*scale), (int)(titleBounds[3]*scale), null);
-        }
-
-        int offsetY = 0;
-        if(infoTextPane.getText().trim().isEmpty() || infoTextPane.getText() == null){
-            offsetY = (int)((infoFieldBounds[3] - 40)*scale);;
-        }
-
-        if (cardTextBox != null) {
-            g2d.drawImage(cardTextBox, (int)(textboxBounds[0]*scale), (int)(textboxBounds[1]*scale)+offsetY, (int)(textboxBounds[2]*scale), (int)(textboxBounds[3]*scale), null);
-        }
-
-        if (runeCut != null) {
-            g2d.drawImage(runeCut, (int)(runeIconBounds[0]*scale), (int)(runeIconBounds[1]*scale), (int)(runeIconBounds[2]*scale), (int)(runeIconBounds[3]*scale), null);
-        }
-        //return finalImage;
-        return paintWhiteCorners(finalImage);
-    }
 
     protected CardConfig writeToConfig(CardConfig config){
         config.cardFramePath = cardFramePath;

@@ -64,6 +64,16 @@ public class OneLineTextPane extends JLabel {
                 setVerticalAlignment(SwingConstants.CENTER);
                 setHorizontalAlignment(SwingConstants.LEFT);
                 break;
+            case GlobalVar.OTHER_TEXT_UPDATE_1:
+                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
+                setVerticalAlignment(SwingConstants.CENTER);
+                setHorizontalAlignment(SwingConstants.LEFT);
+                break;
+            case GlobalVar.OTHER_TEXT_UPDATE_2:
+                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
+                setVerticalAlignment(SwingConstants.CENTER);
+                setHorizontalAlignment(SwingConstants.LEFT);
+                break;
         } 
            
         EventBus.subscribe(ColorUpdate.class, this::onColorUpdate);

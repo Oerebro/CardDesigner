@@ -9,6 +9,7 @@ public class GlobalVar {
     public static final int CONSUMABLE = 105;
     public static final int RUNE = 106;
     public static final int ACCESSOIRE = 107;
+    public static final int ARKHAM = 108;
 
     // Block 2: Weapon Types
     public static final int W_MELEE = 201;
@@ -78,12 +79,18 @@ public class GlobalVar {
     public static final int REPAINT_FRAME = 10018;
     public static final int REPAINT_TEXTBOX = 10019;
     public static final int REPAINT_CROWN = 10020;
+    public static final int OTHER_TEXT_UPDATE_1 = 10021;
+    public static final int OTHER_TEXT_UPDATE_2 = 10022;
+    public static final int ARKHAM_RANGE_IMAGE_UPDATE = 10023;
+    public static final int ARKHAM_RANGE_IMAGE_UPDATE_NONE = 10024;
+    public static final int ARKHAM_CARDSIDE_IMAGE_UPDATE = 10025;
 
     // Paths
     public static final String DICE_IMAGE_PATH = "resources/glyphs/dice/d";
     public static final String ATTRIBUTE_IMAGE_PATH = "resources/glyphs/attributes/";
     public static final String AC_IMAGE_PATH = "resources/glyphs/ac/";
     public static final String TIER_IMAGE_PATH = "resources/glyphs/tier/";
+    public static final String GLYPH_PATH = "resources/glyphs/";
     public static final String RUNECHARGE_IMAGE_PATH = "resources/glyphs/runecharge/";
     public static final String ATTRIBUTE_LABEL_COMPONENTS = "resources/glyphs/AttributeLabel/";
     public static final String CARD_COMPONENTS_IMAGE_PATH = "resources/img/card_components/";

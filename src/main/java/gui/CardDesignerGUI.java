@@ -26,9 +26,10 @@ import gui.image_composers.cardTypes.CharacterCardComposer;
 import gui.image_composers.cardTypes.EffectCardComposer;
 import gui.image_composers.cardTypes.itemTypes.AccessoireCardComposer;
 import gui.image_composers.cardTypes.itemTypes.ConsumableCardComposer;
-import gui.image_composers.cardTypes.itemTypes.RuneCardComposer;
-import gui.image_composers.cardTypes.itemTypes.equippableTypes.ArmorCardComposer;
-import gui.image_composers.cardTypes.itemTypes.equippableTypes.weaponTypes.WeaponMeleeCardComposer;
+import gui.image_composers.cardTypes.itemTypes.equippableTypes.ArkhamHorrorSpellCard;
+import gui.image_composers.cardTypes.itemTypes.equippableTypes.ArmorCard;
+import gui.image_composers.cardTypes.itemTypes.equippableTypes.RuneCard;
+import gui.image_composers.cardTypes.itemTypes.equippableTypes.WeaponCard;
 import gui.previewpanel.*;
 
 
@@ -49,7 +50,7 @@ public class CardDesignerGUI {
     public CardDesignerGUI() {     
         EventBus.subscribe(CardTypeUpdate.class, this::onCardTypeUpdate);   
 
-        int defaultType = GlobalVar.ARMOR;
+        int defaultType = GlobalVar.ARKHAM;
         setImageComposerType(defaultType);
         
         frame = new JFrame("Card Designer");
@@ -253,13 +254,14 @@ public class CardDesignerGUI {
                 /*case GlobalVar.W_MELEE: imageComposer = new WeaponMeleeCardComposer(); break;
                 case GlobalVar.W_RANGED: imageComposer = new WeaponRangedCardComposer(); break;
                 case GlobalVar.W_THROWABLE: imageComposer = new WeaponThrowableCardComposer(); break;*/
-                case GlobalVar.WEAPON: imageComposer = new WeaponMeleeCardComposer(); break;
+                case GlobalVar.WEAPON: imageComposer = new WeaponCard(); break;
                 case GlobalVar.CHARACTER: imageComposer = new CharacterCardComposer(); break;
                 case GlobalVar.EFFECT: imageComposer = new EffectCardComposer(); break;
-                case GlobalVar.ARMOR: imageComposer = new ArmorCardComposer(); break;
+                case GlobalVar.ARMOR: imageComposer = new ArmorCard(); break;
                 case GlobalVar.CONSUMABLE: imageComposer = new ConsumableCardComposer(); break;
-                case GlobalVar.RUNE: imageComposer = new RuneCardComposer(); break;
+                case GlobalVar.RUNE: imageComposer = new RuneCard(); break;
                 case GlobalVar.ACCESSOIRE: imageComposer = new AccessoireCardComposer(); break;
+                case GlobalVar.ARKHAM: imageComposer = new ArkhamHorrorSpellCard(); break;
             }
 
             loadedCardType = type;

@@ -1,4 +1,4 @@
-package gui.image_composers.cardTypes.itemTypes.equippableTypes;
+package gui.image_composers;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -19,7 +19,7 @@ import gui.GlobalVar;
 import gui.Loggable;
 import gui.previewpanel.OneLineTextPane;
 
-public class AttributeLabel extends Loggable {
+public class WeaponAttributeLabel extends Loggable {
 
     
 
@@ -33,7 +33,7 @@ public class AttributeLabel extends Loggable {
     private int[] damageTypeBounds = {123,54,44,44};
     private int[] attributeIconBounds = {27,13,85,85};
 
-    public AttributeLabel(int attribute, int damageType, int x, int y, int width, int height, double scale){
+    public WeaponAttributeLabel(int attribute, int damageType, int x, int y, int width, int height, double scale){
         this.damageType = damageType;
         EventBus.subscribe(AttributeUpdate.class, this::setAttribute);
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
@@ -219,7 +219,7 @@ public class AttributeLabel extends Loggable {
         try{
             i = ImageIO.read(new File(path));
         }catch(IOException e){
-            System.out.println("Error on AttributeLabel::getImageFromFile ("+path+"); File not found");
+            System.out.println("Error on WeaponAttributeLabel::getImageFromFile ("+path+"); File not found");
         }
         return i;
     }

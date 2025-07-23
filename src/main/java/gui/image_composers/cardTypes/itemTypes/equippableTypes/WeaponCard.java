@@ -5,33 +5,34 @@ import java.lang.reflect.Field;
 import events.CardLoadEvent;
 import events.DiceUpdateEvent;
 import events.EventBus;
+import events.ImageUpdate;
 import events.RepaintPanelEvent;
 import gui.GlobalVar;
 import gui.card_types.*;
+import gui.image_composers.*;
 import gui.image_composers.cardTypes.itemTypes.EquippableCardComposer;
 
 import java.awt.*;
 
-public class WeaponCardComposer extends EquippableCardComposer{
+public class WeaponCard extends EquippableCardComposer{
     protected BufferedImage diceImage, attributeBaseImage, rangeTypeImage;
-    protected AttributeLabel attributeLabel;
+    protected WeaponAttributeLabel WeaponAttributeLabel;
 
     protected int dice, attribute, rangeType;
     //protected OneLineTextPane rangeTextPane;
     private int[] diceFieldBounds = {530,440,180,180};
     private int[] tierFieldBounds = {550,440,180,180};
-    private int[] attributeLabelBounds = {0,470,305,105};
+    private int[] WeaponAttributeLabelBounds = {0,470,305,105};
     private int[] attributeBaseFieldBounds = {0,470,305,105};
 
-    public WeaponCardComposer(int type){
-        super(type);
+    public WeaponCard(){
+        super(GlobalVar.W_MELEE);
         this.dice = 4;
+        EventBus.subscribe(CardLoadEvent.class, this::onLoadCard);
+        EventBus.subscribe(ImageUpdate.class, this::onImageUpdate);
         setRangeType(type);
         EventBus.subscribe(DiceUpdateEvent.class, this::onDiceUpdate);
-        attributeLabel = new AttributeLabel(GlobalVar.STRENGTH, type, attributeLabelBounds[0],attributeLabelBounds[1],attributeLabelBounds[2],attributeLabelBounds[3],1.0);
-
-        //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TIER_LABEL));
-        //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));
+        WeaponAttributeLabel = new WeaponAttributeLabel(GlobalVar.STRENGTH, type, WeaponAttributeLabelBounds[0],WeaponAttributeLabelBounds[1],WeaponAttributeLabelBounds[2],WeaponAttributeLabelBounds[3],1.0);
     }
 
     public int getDice(){
@@ -58,6 +59,10 @@ public class WeaponCardComposer extends EquippableCardComposer{
         }
     }
 
+    protected void onLoadCard(CardLoadEvent e){
+        super.loadCard(e);
+    }
+
     private BufferedImage paintAll(double scale){
         targetWidth = (int) (baseWidth * scale);
         targetHeight = (int) (baseHeight * scale);
@@ -74,10 +79,10 @@ public class WeaponCardComposer extends EquippableCardComposer{
         targetHeight = (int) (baseHeight * scale);
         BufferedImage i = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics g2d = i.createGraphics();
-        BufferedImage attributeImage = attributeLabel.paint(scale);
+        BufferedImage attributeImage = WeaponAttributeLabel.paint(scale);
         int offsetY = 0;
         if(infoTextPane.getText().trim().isEmpty() || infoTextPane.getText() == null){
-            offsetY = (int)((infoFieldBounds[3] - 40)*scale);;
+            offsetY = (int)((infoTextBounds[3] - 40)*scale);;
         }
         if (attributeImage != null) {
             g2d.drawImage(attributeImage, (int)(attributeBaseFieldBounds[0]*scale), (int)(attributeBaseFieldBounds[1]*scale)+offsetY, (int)(attributeBaseFieldBounds[2]*scale), (int)(attributeBaseFieldBounds[3]*scale), null);
@@ -93,7 +98,7 @@ public class WeaponCardComposer extends EquippableCardComposer{
         Graphics g2d = i.createGraphics();
         int offsetY = 0;
         if(infoTextPane.getText().trim().isEmpty() || infoTextPane.getText() == null){
-            offsetY = (int)((infoFieldBounds[3] - 40)*scale);;
+            offsetY = (int)((infoTextBounds[3] - 40)*scale);;
         }
         if (diceImage != null) {
             g2d.drawImage(diceImage, (int)(diceFieldBounds[0]*scale), (int)(diceFieldBounds[1]*scale)+offsetY, (int)(diceFieldBounds[2]*scale), (int)(diceFieldBounds[3]*scale), null);
