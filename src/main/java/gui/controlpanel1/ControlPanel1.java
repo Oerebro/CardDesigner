@@ -18,6 +18,7 @@ import javax.swing.event.DocumentListener;
 
 import gui.CardDesignerGUI;
 import gui.GlobalVar;
+import gui.ImageBrowserManager;
 import gui.previewpanel.DigitOnlyTextField;
 import abstractclasses.*;
 import events.CardLoadEvent;
@@ -371,7 +372,7 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     private void createCardComponentSelection(){
-        cardComponentTabbedPane = new JTabbedPane();
+        cardComponentTabbedPane = ImageBrowserManager.getCardComponents();
 
         /*frameSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"frame",360,90,600,40, 64,GlobalVar.FRAME_IMAGE);
         backgroundSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"background",360,90,600,40, 64,GlobalVar.BACKGROUND_IMAGE); 

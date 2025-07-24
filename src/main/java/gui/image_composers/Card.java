@@ -24,13 +24,6 @@ public class Card extends ComponentLoader{
         preset = "resources\\card_presets\\"+preset+".json";
         loadComponents(preset);
 
-//initalize empty tabbedpanes where loaded image types can register their source paths
-        this.componentImageBrowser = new JTabbedPane();
-        componentImageBrowser.setBounds(componentBrowserBounds[0],componentBrowserBounds[1],componentBrowserBounds[2],componentBrowserBounds[3]);
-        this.cardImageBrowser = new JTabbedPane();
-        cardImageBrowser.setBounds(imageBrowserBounds[0],imageBrowserBounds[1],imageBrowserBounds[2],imageBrowserBounds[3]);
-
-
         EventBus.subscribe(ImageUpdate.class, this::onImageUpdate);
     }
 
