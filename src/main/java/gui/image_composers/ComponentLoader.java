@@ -103,8 +103,7 @@ public class ComponentLoader {
             for (JsonNode img : bufferedImages) {
                 String id = img.path("id").asText();
                 JsonNode boundsNode = img.path("bounds");
-                String sourcePath = img.path("sourcePath").asText(null);
-                String path = sourcePath+img.path("path").asText(null);
+                String path = img.path("path").asText(null);
                 int render = img.path("render").asInt(0);
                 String type = img.path("type").asText(null);
                 String name = img.path("name").asText(null);
@@ -119,21 +118,27 @@ public class ComponentLoader {
                     image = ImageIO.read(new File(path));
                 }
 
-                RenderableImage ri = new RenderableImage(id, sourcePath, image, bounds, render);
+                RenderableImage ri = new RenderableImage(id, path, image, bounds, render);
                 imageRenderQueue.add(ri);
-                imageMap.put(id, ri);
+                imageMap.put(id, ri);              
+            }
+
+            imageRenderQueue.sort(Comparator.comparingInt(r -> r.render));
+
+            JsonNode imageBrowserTabs = root.path("components").path("ImageBrowserTabs");
+            for (JsonNode tab : imageBrowserTabs) {
+                String id = tab.path("id").asText();
+                String sourcePath = tab.path("sourcePath").asText(null);
+                String type = tab.path("type").asText(null);
+                String name = tab.path("name").asText(null);
 
 //register tabs into ImageBrowserManager 
                 ImageBrowser br = new ImageBrowser(name, sourcePath, id);
                 if(!ImageBrowserManager.isTabRegistered(name)){
-                    br.init();
-                    
+                    br.init();   
+                    ImageBrowserManager.registerTab(name, br, type);
                 }
-                ImageBrowserManager.registerTab(name, br, type);
-                
             }
-
-            imageRenderQueue.sort(Comparator.comparingInt(r -> r.render));
 
         } catch (Exception e) {
             e.printStackTrace();

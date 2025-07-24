@@ -21,38 +21,70 @@
       {
         "id": "backgroundImage",
         "bounds": [0, 0, 750, 1050],
-        "path": "default.png",
-        "render": 0,
+        "path": "resources\\img\\card_components\\background\\default.png",
+        "render": 0
+      },
+      {
+        "id": "frameImage",
+        "bounds": [0, 0, 750, 1050],
+        "path": "resources\\img\\card_components\\frame\\default.png", 
+        "render": 2
+      },
+      {
+        "id": "titleImage",
+        "bounds": [20,20,710,200],
+        "path": "resources\\img\\card_components\\title\\default.png", 
+        "render": 3
+      },
+      {
+        "id": "textboxImage",
+        "bounds": [0,560,750,450],
+        "path": "resources\\img\\card_components\\textbox\\default.png",
+        "render": 3
+      },
+      {
+        "id": "cardImage",
+        "bounds": [0,0,750,1050],
+        "path": null,
+        "render": 1
+      }
+    ],
+    "ImageBrowserTabs": [
+      {
+        "id": "backgroundImage",
         "sourcePath": "resources\\img\\card_components\\background\\",
         "type": "cardComponent",
         "name": "Background"
       },
       {
         "id": "frameImage",
-        "bounds": [0, 0, 750, 1050],
-        "path": "default.png", 
-        "render": 1,
         "sourcePath": "resources\\img\\card_components\\frame\\",
         "type": "cardComponent",
         "name": "Frame"
       },
       {
         "id": "titleImage",
-        "bounds": [20,20,710,200],
-        "path": "default.png", 
-        "render": 2,
         "sourcePath": "resources\\img\\card_components\\title\\",
         "type": "cardComponent",
-        "name": "Title"
+        "name": "Tile"
       },
       {
         "id": "textboxImage",
-        "bounds": [0,560,750,450],
-        "path": "default.png",
-        "render": 2,
         "sourcePath": "resources\\img\\card_components\\textbox\\",
         "type": "cardComponent",
         "name": "Textbox"
+      },
+      {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\arkham\\items\\",
+        "type": "cardImage",
+        "name": "Items"
+      },
+      {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\arkham\\spells\\",
+        "type": "cardImage",
+        "name": "Spells"
       }
     ]
   }
