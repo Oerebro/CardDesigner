@@ -31,13 +31,14 @@ public class Card extends ComponentLoader{
 
     private void onImageUpdate(ImageUpdate e){
         BufferedImage img = getImageFromFile(e.path);
-        RenderableImage ri = imageMap.get(e.imageName);
+        RenderableImage ri = imageMap.get(e.id);
+        System.out.println(e.path);
         if (ri != null && img != null) {
             ri.image = img;
         } else {
             System.err.println("Image update failed: " +
-                (ri == null ? "No such image name. " : "")+ e.imageName +
-                (img == null ? "Image file could not be loaded." : "")
+                (ri == null ? "No such image name. " : "")+ e.id +
+                (img == null ? " Image file could not be loaded." : " from path "+e.path)
             );
         }
         EventBus.publish(new RepaintPanelEvent());

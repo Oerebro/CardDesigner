@@ -2,6 +2,8 @@ package abstractclasses;
 
 import javax.swing.*;
 
+import events.EventBus;
+import events.ImageUpdate;
 import gui.CardDesignerGUI;
 import gui.controlpanel1.IconLabel;
 
@@ -17,22 +19,25 @@ public class ImageBrowser extends ImagePublisher {
     protected JPanel filePanel;
     protected JScrollPane scrollPane;
     protected int width = 0, height = 0, iconWidth = 66, iconHeight = 88, x, y;
-    protected String name,type;
+    protected String name,type, sourcePath;
 
 
-    public ImageBrowser(String name, String type){
+    public ImageBrowser(String name, String sourcePath, String id){
+        System.out.println("Browser id: "+id);
         this.name = name;
-        this.type = type;
+        this.id = id;
+        this.sourcePath = sourcePath;
     }
 
     public void init() {
+        System.out.println("ImageBrowser init");
         filePanel = new JPanel(new GridLayout(0, 4, 1, 0));
         filePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 1));
 
         new SwingWorker<Void, IconLabel>() {
             @Override
             protected Void doInBackground() throws IOException {
-                File folder = new File(path);
+                File folder = new File(sourcePath);
                 File[] files = folder.listFiles((dir, name) -> name.endsWith(".png"));
 
                 if (files == null) {
@@ -45,7 +50,7 @@ public class ImageBrowser extends ImagePublisher {
                             .getScaledInstance(iconWidth, iconHeight, Image.SCALE_SMOOTH));
 
                     IconLabel label = new IconLabel(icon);
-                    label = addMouseListener(label, file);
+                    label = addMouseListener(label, file.getPath());
                     publish(label);
                 }
                 return null;
@@ -69,6 +74,10 @@ public class ImageBrowser extends ImagePublisher {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBounds(0, 0, width, height);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        container.revalidate();
+        container.repaint();
+
     }
 
     public JScrollPane getScrollPane() {
@@ -80,11 +89,11 @@ public class ImageBrowser extends ImagePublisher {
         scrollPane.setPreferredSize(new Dimension((int) (width * scale), (int) (height * scale)));
     }
 
-    protected IconLabel addMouseListener(IconLabel label, File file){
+    protected IconLabel addMouseListener(IconLabel label, String path){
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                publishImageUpdate(type,file.getPath());
+                EventBus.publish(new ImageUpdate(id,path));
             }
         });
         return label;

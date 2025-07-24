@@ -5,8 +5,9 @@ import events.ImageUpdate;
 
 public abstract class ImagePublisher{
     protected String path;
-    protected int type;
-    protected void publishImageUpdate(int type, String path) {
-        EventBus.publish(new ImageUpdate(type,path,"backgroundImage"));
+    protected String type;
+    protected String id;
+    protected void publishImageUpdate(String id, String path) {
+        EventBus.publish(new ImageUpdate(id,path));
     }
 }

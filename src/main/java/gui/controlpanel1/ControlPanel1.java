@@ -40,9 +40,7 @@ public class ControlPanel1 extends ControlPanel {
     
     private SelectTypePanel selectItemTypePanel;
 
-    private JTabbedPane cardComponentTabbedPane;
-    private ImageBrowser frameSelect, backgroundSelect, textboxSelect, titleSelect,effectSelect, crownSelect;
-    private VariableTabbedPane selectItemArt, weapons,rune, arkham, armor, accessoire, consumable,effect,character;
+    private JTabbedPane cardComponentTabbedPane, selectItemArt;
     private JTextField titleTextField,typeTextField;
     private DigitOnlyTextField fontSizeManual;
     private JTextArea infoTextField;
@@ -90,7 +88,7 @@ public class ControlPanel1 extends ControlPanel {
         runeAtt = new CardAttributesPanel(GlobalVar.RUNE);
         effectAtt = new CardAttributesPanel(GlobalVar.EFFECT);
         arkhamAtt = new CardAttributesPanel(GlobalVar.ARKHAM);
-        selectItemArt = new VariableTabbedPane();
+        selectItemArt = ImageBrowserManager.getCardImages();
         
         setLayout(null);
         createButtons();
@@ -396,10 +394,10 @@ public class ControlPanel1 extends ControlPanel {
 
     private void itemArtChangeToType(int type){
         //EventBus.publish(new ImageUpdateEvent(CARD,"resources/"+type+".png"));
-        remove(selectItemArt);
+        //remove(selectItemArt);
 
         switch(type){
-            case GlobalVar.WEAPON: 
+            /*case GlobalVar.WEAPON: 
                 if(weapons == null) {
                     weapons = new VariableTabbedPane(); 
                     weapons.init(type);
@@ -438,7 +436,7 @@ public class ControlPanel1 extends ControlPanel {
                 selectItemArt = arkham;   
                 break;
             //case "effect":
-            //case "character":
+            //case "character":*/
         }
 
         add(selectItemArt);
@@ -450,10 +448,6 @@ public class ControlPanel1 extends ControlPanel {
     }
     
     public void rescale(double scale) {
-        //these rescales should be done in a better way, but they work atm
-        frameSelect.rescale(scale);
-        backgroundSelect.rescale(scale);
-        //textboxSelect.rescale(scale);
 
         //set the absolute position of these menus within the controlpanel
         cardComponentTabbedPane.setBounds((int)(10 * scale), (int)(0), (int)(360 * scale), (int)(295 * scale));   

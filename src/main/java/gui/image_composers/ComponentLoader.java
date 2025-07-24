@@ -124,11 +124,13 @@ public class ComponentLoader {
                 imageMap.put(id, ri);
 
 //register tabs into ImageBrowserManager 
-                ImageBrowser br = new ImageBrowser(name, type);
+                ImageBrowser br = new ImageBrowser(name, sourcePath, id);
                 if(!ImageBrowserManager.isTabRegistered(name)){
                     br.init();
+                    
                 }
                 ImageBrowserManager.registerTab(name, br, type);
+                
             }
 
             imageRenderQueue.sort(Comparator.comparingInt(r -> r.render));

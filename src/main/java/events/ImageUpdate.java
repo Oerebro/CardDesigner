@@ -3,17 +3,17 @@ package events;
 public class ImageUpdate {
     public final int type;
     public final String path;
-    public final String imageName;
+    public final String id;
 
     public ImageUpdate(int type, String path) {
         this.type = type;
         this.path = path;
-        this.imageName = "";
+        this.id = "";
     }
 
-    public ImageUpdate(int type, String path, String imgName) {
-        this.type = type;
+    public ImageUpdate(String id, String path) {
+        this.id = id;
         this.path = path;
-        this.imageName = imgName;
+        this.type = 999;
     }
 }
