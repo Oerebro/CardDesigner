@@ -1,4 +1,4 @@
-package gui.image_composers;
+package gui.image_composers.components;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;

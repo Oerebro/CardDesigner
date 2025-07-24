@@ -90,7 +90,7 @@ public class ItemCardComposer extends CardComposer{
         infoTextPane.doLayout();
         infoTextPane.revalidate();
         infoTextPane.repaint(); 
-        infoTextPane.printAll(labelGraphics);
+        infoTextPane.textPane.printAll(labelGraphics);
         labelGraphics.dispose();
         if(hasInfoBorder){
             infoText = drawStroke(infoText,(int)(3*scale),Color.WHITE);

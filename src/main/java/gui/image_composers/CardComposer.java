@@ -23,7 +23,7 @@ import java.awt.geom.Ellipse2D;
 import gui.GlobalVar;
 import gui.Loggable;
 import gui.card_types.*;
-import gui.previewpanel.JScalingTextPane;
+import gui.image_composers.components.JScalingTextPane;
 import gui.previewpanel.OneLineTextPane;
 import java.awt.geom.Area;
 

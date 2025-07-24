@@ -156,10 +156,7 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     public void updatePanel(int type){
-        System.out.println("WARUM ZUM FICK GEHST DU NICHT");
-        System.out.println(cardType + " " + type);
         if(cardType != type){
-            System.out.println("GEHT DAS HIER?");
             this.cardType = type;
             attributeSelectionPanel.remove(attributePanel);
             attributePanel = decideAttPanel(type);
@@ -175,7 +172,6 @@ public class ControlPanel1 extends ControlPanel {
     private CardAttributesPanel decideAttPanel(int type){
         switch(type){
             case GlobalVar.WEAPON:
-            System.out.println("to weapon");
                 return weaponAtt;
             case GlobalVar.ARMOR:
                 return armorAtt;
@@ -394,7 +390,6 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     public void onTypeUpdate(CardTypeUpdate e){
-        System.out.println("test");
         itemArtChangeToType(e.type);
     }
 

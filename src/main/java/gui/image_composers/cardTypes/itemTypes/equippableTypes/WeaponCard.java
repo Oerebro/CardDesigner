@@ -11,6 +11,7 @@ import gui.GlobalVar;
 import gui.card_types.*;
 import gui.image_composers.*;
 import gui.image_composers.cardTypes.itemTypes.EquippableCardComposer;
+import gui.image_composers.components.WeaponAttributeLabel;
 
 import java.awt.*;
 

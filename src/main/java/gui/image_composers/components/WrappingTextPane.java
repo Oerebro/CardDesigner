@@ -1,4 +1,4 @@
-package gui.previewpanel;
+package gui.image_composers.components;
 
 import javax.swing.*;
 import javax.swing.text.*;
