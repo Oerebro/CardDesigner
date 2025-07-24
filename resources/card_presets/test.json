@@ -22,29 +22,37 @@
         "id": "backgroundImage",
         "bounds": [0, 0, 750, 1050],
         "path": "default.png",
+        "render": 0,
         "sourcePath": "resources\\img\\card_components\\background\\",
-        "render": 0
+        "type": "cardComponent",
+        "name": "Background"
       },
       {
         "id": "frameImage",
         "bounds": [0, 0, 750, 1050],
-        "path": "default.png",
+        "path": "default.png", 
+        "render": 1,
         "sourcePath": "resources\\img\\card_components\\frame\\",
-        "render": 1
+        "type": "cardComponent",
+        "name": "Frame"
       },
       {
         "id": "titleImage",
         "bounds": [20,20,710,200],
-        "path": "default.png",
+        "path": "default.png", 
+        "render": 2,
         "sourcePath": "resources\\img\\card_components\\title\\",
-        "render": 2
+        "type": "cardComponent",
+        "name": "Title"
       },
       {
         "id": "textboxImage",
         "bounds": [0,560,750,450],
         "path": "default.png",
+        "render": 2,
         "sourcePath": "resources\\img\\card_components\\textbox\\",
-        "render": 2
+        "type": "cardComponent",
+        "name": "Textbox"
       }
     ]
   }

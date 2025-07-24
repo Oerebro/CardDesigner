@@ -373,7 +373,7 @@ public class ControlPanel1 extends ControlPanel {
     private void createCardComponentSelection(){
         cardComponentTabbedPane = new JTabbedPane();
 
-        frameSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"frame",360,90,600,40, 64,GlobalVar.FRAME_IMAGE);
+        /*frameSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"frame",360,90,600,40, 64,GlobalVar.FRAME_IMAGE);
         backgroundSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"background",360,90,600,40, 64,GlobalVar.BACKGROUND_IMAGE); 
         textboxSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"textbox",360,90,600,40, 64,GlobalVar.TEXTBOX_IMAGE);
         titleSelect = new CardImageBrowser(GlobalVar.CARD_COMPONENTS_IMAGE_PATH+"title",360,90,600,40, 64,GlobalVar.TITLE_IMAGE);
@@ -386,7 +386,7 @@ public class ControlPanel1 extends ControlPanel {
         cardComponentTabbedPane.addTab("Choose Textbox",textboxSelect.getScrollPane());
         cardComponentTabbedPane.addTab("Choose Title",titleSelect.getScrollPane());
         cardComponentTabbedPane.addTab("Choose Crown",crownSelect.getScrollPane());
-        cardComponentTabbedPane.addTab("Choose Effect Background",effectSelect.getScrollPane());
+        cardComponentTabbedPane.addTab("Choose Effect Background",effectSelect.getScrollPane());*/
     }
 
     public void onTypeUpdate(CardTypeUpdate e){

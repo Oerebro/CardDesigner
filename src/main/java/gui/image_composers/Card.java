@@ -3,20 +3,34 @@ package gui.image_composers;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JTabbedPane;
+
 import events.EventBus;
 import events.ImageUpdate;
 import events.RepaintPanelEvent;
 
 public class Card extends ComponentLoader{
+    private int[] componentBrowserBounds = {0,0,0,0};
+    private int[] imageBrowserBounds = {0,0,0,0};
     public final int REPAINT_JCOMPONENT = 1;
     public final int REPAINT_IMAGE = 2;
     protected int baseWidth = 750;
     protected int baseHeight = 1050;
     protected int targetWidth, targetHeight;
 
+    
+
     public Card(String preset){
         preset = "resources\\card_presets\\"+preset+".json";
         loadComponents(preset);
+
+//initalize empty tabbedpanes where loaded image types can register their source paths
+        this.componentImageBrowser = new JTabbedPane();
+        componentImageBrowser.setBounds(componentBrowserBounds[0],componentBrowserBounds[1],componentBrowserBounds[2],componentBrowserBounds[3]);
+        this.cardImageBrowser = new JTabbedPane();
+        cardImageBrowser.setBounds(imageBrowserBounds[0],imageBrowserBounds[1],imageBrowserBounds[2],imageBrowserBounds[3]);
+
+
         EventBus.subscribe(ImageUpdate.class, this::onImageUpdate);
     }
 

@@ -1,7 +1,13 @@
 package gui.image_composers;
 
 import com.fasterxml.jackson.databind.*;
+
+import abstractclasses.ImageBrowser;
+import gui.ImageBrowserManager;
+
 import javax.imageio.ImageIO;
+import javax.swing.JTabbedPane;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +34,15 @@ public class ComponentLoader {
     protected List<RenderableImage> imageRenderQueue = new ArrayList<>();
     protected Map<String, RenderableImage> imageMap = new HashMap<>();
     protected List<Object> componentRenderQueue = new ArrayList<>();
+    //protected JTabbedPane componentImageBrowser, cardImageBrowser;
+
+//lists to keep track which imagebrowser has registered which tab, to avoid unnecessary loading
+/*keeps track of
+    *all created tabs (to avoid re-creating them when switching card)
+    *currently registered tabs in cardComponents
+    *currently registered tabs in cardImages
+*/
+    //protected Map<String, RenderableImage> imageMap = new HashMap<>();
 
     protected int baseWidth = 750;
     protected int baseHeight = 1050;
@@ -91,6 +106,8 @@ public class ComponentLoader {
                 String sourcePath = img.path("sourcePath").asText(null);
                 String path = sourcePath+img.path("path").asText(null);
                 int render = img.path("render").asInt(0);
+                String type = img.path("type").asText(null);
+                String name = img.path("name").asText(null);
 
                 int[] bounds = new int[4];
                 for (int i = 0; i < boundsNode.size(); i++) {
@@ -105,6 +122,13 @@ public class ComponentLoader {
                 RenderableImage ri = new RenderableImage(id, sourcePath, image, bounds, render);
                 imageRenderQueue.add(ri);
                 imageMap.put(id, ri);
+
+//register tabs into ImageBrowserManager 
+                ImageBrowser br = new ImageBrowser(name, type);
+                if(!ImageBrowserManager.isTabRegistered(name)){
+                    br.init();
+                }
+                ImageBrowserManager.registerTab(name, br, type);
             }
 
             imageRenderQueue.sort(Comparator.comparingInt(r -> r.render));

@@ -11,18 +11,21 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;;
 
-public abstract class ImageBrowser extends ImagePublisher {
+public class ImageBrowser extends ImagePublisher {
 
     protected CardDesignerGUI parent;
     protected JPanel filePanel;
     protected JScrollPane scrollPane;
     protected int width = 0, height = 0, iconWidth = 66, iconHeight = 88, x, y;
+    protected String name,type;
 
-    protected CardDesignerGUI getParentGUI() {
-        return parent;
+
+    public ImageBrowser(String name, String type){
+        this.name = name;
+        this.type = type;
     }
 
-    protected void init() {
+    public void init() {
         filePanel = new JPanel(new GridLayout(0, 4, 1, 0));
         filePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 1));
 
