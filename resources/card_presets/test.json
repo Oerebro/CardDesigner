@@ -1,0 +1,51 @@
+{
+  "components": {
+    "JComponents": {
+      "gui.image_composers.components.OneLineTextPane": [
+        {
+          "type": 1,
+          "bounds": [57, 70, 632, 60]
+        },
+        {
+          "type": 1,
+          "bounds": [50, 600, 650, 50]
+        }
+      ],
+      "gui.image_composers.components.WrappingTextPane": [
+        {
+          "bounds": [55, 665, 640, 295]
+        }
+      ]
+    },
+    "BufferedImage": [
+      {
+        "id": "backgroundImage",
+        "bounds": [0, 0, 750, 1050],
+        "path": "default.png",
+        "sourcePath": "resources\\img\\card_components\\background\\",
+        "render": 0
+      },
+      {
+        "id": "frameImage",
+        "bounds": [0, 0, 750, 1050],
+        "path": "default.png",
+        "sourcePath": "resources\\img\\card_components\\frame\\",
+        "render": 1
+      },
+      {
+        "id": "titleImage",
+        "bounds": [20,20,710,200],
+        "path": "default.png",
+        "sourcePath": "resources\\img\\card_components\\title\\",
+        "render": 2
+      },
+      {
+        "id": "textboxImage",
+        "bounds": [0,560,750,450],
+        "path": "default.png",
+        "sourcePath": "resources\\img\\card_components\\textbox\\",
+        "render": 2
+      }
+    ]
+  }
+}

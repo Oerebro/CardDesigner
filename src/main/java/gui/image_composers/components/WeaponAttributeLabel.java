@@ -17,7 +17,6 @@ import events.RepaintPanelEvent;
 import events.TextUpdate;
 import gui.GlobalVar;
 import gui.Loggable;
-import gui.previewpanel.OneLineTextPane;
 
 public class WeaponAttributeLabel extends Loggable {
 
@@ -44,8 +43,8 @@ public class WeaponAttributeLabel extends Loggable {
         setDamageType(damageType);
         setBaseLabel(damageType);
 
-        rangeNormal = new OneLineTextPane(GlobalVar.RANGE_NORMAL_TEXT_UPDATE, 50, (int)(rangeNormalBounds[0]*scale), (int)(rangeNormalBounds[1]*scale), (int)(rangeNormalBounds[2]*scale), (int)(rangeNormalBounds[3]*scale));
-        rangeMax = new OneLineTextPane(GlobalVar.RANGE_MAX_TEXT_UPDATE, 50, (int)(rangeMaxBounds[0]*scale), (int)(rangeMaxBounds[1]*scale), (int)(rangeMaxBounds[2]*scale), (int)(rangeMaxBounds[3]*scale));
+        rangeNormal = new OneLineTextPane(GlobalVar.RANGE_NORMAL_TEXT_UPDATE, new int[] {(int)(rangeNormalBounds[0]*scale), (int)(rangeNormalBounds[1]*scale), (int)(rangeNormalBounds[2]*scale), (int)(rangeNormalBounds[3]*scale)});
+        rangeMax = new OneLineTextPane(GlobalVar.RANGE_MAX_TEXT_UPDATE, new int[] {(int)(rangeMaxBounds[0]*scale), (int)(rangeMaxBounds[1]*scale), (int)(rangeMaxBounds[2]*scale), (int)(rangeMaxBounds[3]*scale)});
 
         rangeNormal.setText("");
         rangeMax.setText("");

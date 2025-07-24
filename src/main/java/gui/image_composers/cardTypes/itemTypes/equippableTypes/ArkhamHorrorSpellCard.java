@@ -14,7 +14,7 @@ import events.TextUpdate;
 import gui.GlobalVar;
 import gui.card_types.*;
 import gui.image_composers.cardTypes.itemTypes.EquippableCardComposer;
-import gui.previewpanel.OneLineTextPane;
+import gui.image_composers.components.OneLineTextPane;
 
 import java.awt.*;
 
@@ -48,10 +48,10 @@ public class ArkhamHorrorSpellCard extends EquippableCardComposer{
         dynamicTextboxPosition = false;
         infoTextPane.setStyleConstantAlignement(StyleConstants.ALIGN_CENTER);
 
-        damage = new OneLineTextPane(GlobalVar.OTHER_TEXT_UPDATE_2, 60, damageTextBounds[0], damageTextBounds[1], damageTextBounds[2], damageTextBounds[3]);
+        damage = new OneLineTextPane(GlobalVar.OTHER_TEXT_UPDATE_2, damageTextBounds);
         damage.setForeground(Color.BLACK);
         damage.setHorizontalAlignment(SwingConstants.CENTER);
-        successesNeed = new OneLineTextPane(GlobalVar.OTHER_TEXT_UPDATE_1, 60, successesTextBounds[0], successesTextBounds[1], successesTextBounds[2], successesTextBounds[3]);
+        successesNeed = new OneLineTextPane(GlobalVar.OTHER_TEXT_UPDATE_1, successesTextBounds);
         successesNeed.setForeground(Color.RED);
         successesNeed.setHorizontalAlignment(SwingConstants.RIGHT);
         EventBus.subscribe(CardLoadEvent.class, this::loadCard);

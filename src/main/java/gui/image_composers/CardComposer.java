@@ -23,15 +23,16 @@ import java.awt.geom.Ellipse2D;
 import gui.GlobalVar;
 import gui.Loggable;
 import gui.card_types.*;
-import gui.image_composers.components.JScalingTextPane;
-import gui.previewpanel.OneLineTextPane;
+import gui.image_composers.components.ScalingTextPane;
+import gui.image_composers.components.OneLineTextPane;
+
 import java.awt.geom.Area;
 
 public class CardComposer extends Loggable{
     protected int type;
     protected BufferedImage cardFrame, cardBackground,cardType,runeCut,overlayImage, cardTextBox, cardTitle, cardCrown;
     protected String cardFramePath, cardBackgroundPath,cardTypePath,overlayPath,runeCutPath, cardTextBoxPath, cardTitlePath, cardCrownPath;
-    protected JScalingTextPane infoTextPane;
+    protected ScalingTextPane infoTextPane;
     protected OneLineTextPane titleTextPane,typeTextPane;
     protected Boolean hasTitleBorder, hasRuneCut, hasInfoBorder, hasTypeBorder;
 
@@ -76,16 +77,16 @@ public class CardComposer extends Loggable{
 
         
 
-        infoTextPane = new JScalingTextPane(9, 72);
+        infoTextPane = new ScalingTextPane(9, 72);
         infoTextPane.setBounds(infoTextBounds[0],infoTextBounds[1],infoTextBounds[2],infoTextBounds[3]);
         infoTextPane.setSize(infoTextBounds[2],infoTextBounds[3]);
         infoTextPane.setColor(Color.BLACK);
 
 
-        titleTextPane = new OneLineTextPane(GlobalVar.TITLE_TEXT_UPDATE, 200, titleTextBounds[0],titleTextBounds[1],titleTextBounds[2],titleTextBounds[3]);
+        titleTextPane = new OneLineTextPane(GlobalVar.TITLE_TEXT_UPDATE, titleTextBounds);
         titleTextPane.setForeground(Color.BLACK);
 
-        typeTextPane = new OneLineTextPane(GlobalVar.TYPE_TEXT_UPDATE, 200, typeTextBounds[0],typeTextBounds[1],typeTextBounds[2],typeTextBounds[3]);
+        typeTextPane = new OneLineTextPane(GlobalVar.TYPE_TEXT_UPDATE, typeTextBounds);
         typeTextPane.setOpaque(false);
         typeTextPane.setForeground(Color.BLACK);
 

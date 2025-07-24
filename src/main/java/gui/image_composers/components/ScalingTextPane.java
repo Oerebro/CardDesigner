@@ -5,10 +5,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import javax.swing.text.View;
 import javax.swing.text.Style;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +22,7 @@ import events.TextUpdate;
 import events.RepaintPanelEvent;
 import events.InfoFontUpdate;
 
-public class JScalingTextPane extends JScrollPane {
+public class ScalingTextPane extends JScrollPane {
     private final int maxNumLines;
     private int maxSizeFont, currentFontSize;
     private Font currentFont, fontRegular, fontItalic, fontBold;
@@ -44,7 +42,7 @@ public class JScalingTextPane extends JScrollPane {
         return textPane.getText();
     }
 
-    public JScalingTextPane(int maxNumLines, int maxSizeFont) {
+    public ScalingTextPane(int maxNumLines, int maxSizeFont) {
         fontName = "";
         loadIconsFromDirectory();
         this.maxNumLines = maxNumLines;

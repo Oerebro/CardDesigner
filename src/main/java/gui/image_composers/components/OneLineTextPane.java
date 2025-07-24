@@ -1,4 +1,4 @@
-package gui.previewpanel;
+package gui.image_composers.components;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -12,19 +12,17 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import events.EventBus;
-import events.InfoColorUpdate;
 import events.InfoFontUpdate;
 import events.RepaintPanelEvent;
 import events.ColorUpdate;
 import events.TitleFontUpdate;
 import events.TextUpdate;
 import gui.GlobalVar;
-import gui.Loggable;
 import gui.controlpanel1.FontLoader;
 
 
 public class OneLineTextPane extends JLabel {
-    private int type, id;
+    private int type;
 
     public static final int TITLE = 1;
     public static final int RANGE_NORMAL = 2;
@@ -33,10 +31,10 @@ public class OneLineTextPane extends JLabel {
     private BufferedImage fontRenderImg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     
 
-    public OneLineTextPane(int type, int maxSizeFont,int x, int y, int width,int height) {
+    public OneLineTextPane(int type,int[] bounds) {
         this.type=type;
-        this.setBounds(x,y,width,height);
-        this.setSize(width,height);
+        this.setBounds(bounds[0],bounds[1],bounds[2],bounds[3]);
+        this.setSize(bounds[2],bounds[3]);
         this.setLayout(null);
         this.setOpaque(false);
 

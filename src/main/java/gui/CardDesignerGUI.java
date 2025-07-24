@@ -10,6 +10,7 @@ import java.io.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -36,7 +37,7 @@ import gui.previewpanel.*;
 public class CardDesignerGUI {
     public JFrame frame;
     private int loadedCardType;
-    private CardComposer imageComposer;
+    private Card imageComposer;
     private PreviewPanel previewPanel;
     ControlPanel1 controlPanel;
     ControlPanel2 controlPanel2;
@@ -245,15 +246,16 @@ public class CardDesignerGUI {
     }
 
     private void onCardTypeUpdate(CardTypeUpdate e){
-        setImageComposerType(e.type);
+        //setImageComposerType(e.type);
     }
 
     private void setImageComposerType(int type){
-        if(type != loadedCardType){
+        imageComposer = new Card("test");
+        /*if(type != loadedCardType){
             switch(type){
                 /*case GlobalVar.W_MELEE: imageComposer = new WeaponMeleeCardComposer(); break;
                 case GlobalVar.W_RANGED: imageComposer = new WeaponRangedCardComposer(); break;
-                case GlobalVar.W_THROWABLE: imageComposer = new WeaponThrowableCardComposer(); break;*/
+                case GlobalVar.W_THROWABLE: imageComposer = new WeaponThrowableCardComposer(); break;
                 case GlobalVar.WEAPON: imageComposer = new WeaponCard(); break;
                 case GlobalVar.CHARACTER: imageComposer = new CharacterCardComposer(); break;
                 case GlobalVar.EFFECT: imageComposer = new EffectCardComposer(); break;
@@ -270,7 +272,7 @@ public class CardDesignerGUI {
         }
         //this will load the stuff from the previous card / load defaults
         //EventBus.publish(new RepaintPanelEvent());
-        
+     */   
     }
     
     

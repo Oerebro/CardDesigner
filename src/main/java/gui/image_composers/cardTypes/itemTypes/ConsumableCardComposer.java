@@ -6,7 +6,7 @@ import events.RepaintPanelEvent;
 import gui.GlobalVar;
 import gui.card_types.*;
 import gui.image_composers.cardTypes.ItemCardComposer;
-import gui.previewpanel.OneLineTextPane;
+import gui.image_composers.components.OneLineTextPane;
 
 import java.awt.*;
 
@@ -23,7 +23,7 @@ public class ConsumableCardComposer extends ItemCardComposer{
     public ConsumableCardComposer(){
         super(GlobalVar.CONSUMABLE);
 
-        usesTextPane = new OneLineTextPane(OneLineTextPane.TYPE, 200, 600,935,100,60);
+        usesTextPane = new OneLineTextPane(OneLineTextPane.TYPE, new int[] {600,935,100,60});
         usesTextPane.setOpaque(false);
         usesTextPane.setForeground(Color.WHITE);
     }
