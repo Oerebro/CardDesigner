@@ -39,7 +39,6 @@ public class RenderManager {
     }
 
     public static BufferedImage renderLayer(int baseWidth, int baseHeight, int renderLayer, double scale){
-        System.out.println("render layer: "+renderLayer);
         BufferedImage image = new BufferedImage(baseWidth, baseHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = image.createGraphics();
         int[] bounds;
@@ -48,10 +47,11 @@ public class RenderManager {
             RenderableImage img = entry.getValue();
             if (img.render == renderLayer) {
                 bounds = img.bounds;
-                System.out.println("image: "+img.id);
                 g2d.drawImage(img.image,(int) (bounds[0]*scale),(int) (bounds[1]*scale),(int) (bounds[2]*scale),(int) (bounds[3]*scale),null);
             }
         }
+        g2d.dispose();
+        System.out.println(image);
         return image;
     }
 }

@@ -104,7 +104,6 @@ public class PreviewPanel {
     }
 
     private void onRepaintEvent(RepaintPanelEvent e){
-        
         int render = e.render;
         String type = e.type;
         System.out.println("trying to render layer: "+render+" with type: "+type);
@@ -122,7 +121,8 @@ public class PreviewPanel {
                 renderText(render);
         }
         
-        this.repaint();
+        SwingUtilities.invokeLater( () -> panel.repaint());
+        
     }
 
     private void renderImages(int render){
@@ -137,6 +137,7 @@ public class PreviewPanel {
                         break;
                     case 1:
                         imageLayer1 = RenderManager.renderLayer(baseWidth, baseHeight, 1, scale);
+                        System.out.println(imageLayer1);
                         break;
                     case 2:
                         imageLayer2 = RenderManager.renderLayer(baseWidth, baseHeight, 2, scale);
@@ -152,11 +153,11 @@ public class PreviewPanel {
                         break;
                     default:
                         imageLayer0 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
-                        imageLayer1 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
-                        imageLayer2 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
-                        imageLayer3 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
-                        imageLayer4 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
-                        imageLayer5 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
+                        imageLayer1 = RenderManager.renderLayer(baseWidth, baseHeight, 1, scale);
+                        imageLayer2 = RenderManager.renderLayer(baseWidth, baseHeight, 2, scale);
+                        imageLayer3 = RenderManager.renderLayer(baseWidth, baseHeight, 3, scale);
+                        imageLayer4 = RenderManager.renderLayer(baseWidth, baseHeight, 4, scale);
+                        imageLayer5 = RenderManager.renderLayer(baseWidth, baseHeight, 5, scale);
 
                         break;
                 }
