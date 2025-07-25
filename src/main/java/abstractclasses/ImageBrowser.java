@@ -31,7 +31,8 @@ public class ImageBrowser extends ImagePublisher {
 
     public void init() {
         System.out.println("ImageBrowser init");
-        filePanel = new JPanel(new GridLayout(0, 4, 1, 0));
+        //filePanel = new JPanel(new GridLayout(0, 4, 1, 0));
+        filePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         filePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 1));
 
         new SwingWorker<Void, IconLabel>() {

@@ -1,16 +1,23 @@
 package gui.image_composers.components;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentListener;
 
+import abstractclasses.InputComponentProvider;
 import events.EventBus;
 import events.InfoFontUpdate;
 import events.RepaintPanelEvent;
@@ -21,8 +28,10 @@ import gui.GlobalVar;
 import gui.controlpanel1.FontLoader;
 
 
-public class OneLineTextPane extends JLabel {
+public class OneLineTextPane extends JLabel implements InputComponentProvider {
     private int type;
+    private String id, labelName;
+    private int[] bounds;
 
     public static final int TITLE = 1;
     public static final int RANGE_NORMAL = 2;
@@ -31,49 +40,22 @@ public class OneLineTextPane extends JLabel {
     private BufferedImage fontRenderImg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     
 
-    public OneLineTextPane(int type,int[] bounds) {
-        this.type=type;
+    public OneLineTextPane(String id, String labelName, int[] bounds) {
+        this.id=id;
+        this.labelName = labelName;
+        this.bounds = bounds;
         this.setBounds(bounds[0],bounds[1],bounds[2],bounds[3]);
         this.setSize(bounds[2],bounds[3]);
         this.setLayout(null);
         this.setOpaque(false);
 
         this.setText("");
+
         
-        EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
-        switch(type){
-            case GlobalVar.TITLE_TEXT_UPDATE:
-                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);     
-                setVerticalAlignment(SwingConstants.CENTER);
-                setHorizontalAlignment(SwingConstants.CENTER); 
-                break;
-            case GlobalVar.RANGE_NORMAL_TEXT_UPDATE:
-                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
-                setVerticalAlignment(SwingConstants.CENTER);
-                setHorizontalAlignment(SwingConstants.LEFT); 
-                break;
-            case GlobalVar.RANGE_MAX_TEXT_UPDATE:
-                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
-                setVerticalAlignment(SwingConstants.CENTER);
-                setHorizontalAlignment(SwingConstants.LEFT); 
-                break;
-            case GlobalVar.TYPE_TEXT_UPDATE:
-                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
-                setVerticalAlignment(SwingConstants.CENTER);
-                setHorizontalAlignment(SwingConstants.LEFT);
-                break;
-            case GlobalVar.OTHER_TEXT_UPDATE_1:
-                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
-                setVerticalAlignment(SwingConstants.CENTER);
-                setHorizontalAlignment(SwingConstants.LEFT);
-                break;
-            case GlobalVar.OTHER_TEXT_UPDATE_2:
-                EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
-                setVerticalAlignment(SwingConstants.CENTER);
-                setHorizontalAlignment(SwingConstants.LEFT);
-                break;
-        } 
-           
+        setVerticalAlignment(SwingConstants.CENTER);
+        setHorizontalAlignment(SwingConstants.LEFT); 
+        EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
+        EventBus.subscribe(TextUpdate.class, this::onTextUpdate); 
         EventBus.subscribe(ColorUpdate.class, this::onColorUpdate);
         
     }
@@ -93,31 +75,29 @@ public class OneLineTextPane extends JLabel {
     private void publishRepaint(){
         switch(type){
             case GlobalVar.TITLE_TEXT_UPDATE:
-                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TITLE));  
+                EventBus.publish(new RepaintPanelEvent("text",-1));  
                 break;
             case GlobalVar.RANGE_NORMAL_TEXT_UPDATE:
-                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));
+                EventBus.publish(new RepaintPanelEvent());
                 break;
             case GlobalVar.RANGE_MAX_TEXT_UPDATE:
-                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));
+                EventBus.publish(new RepaintPanelEvent("text",-1)); 
                 break;
             case GlobalVar.TYPE_TEXT_UPDATE:
-                EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TYPE));
+                EventBus.publish(new RepaintPanelEvent("text",-1)); 
                 break;
         }
     }
 
     private void publishFontRepaint(){
-        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TITLE));
-        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));  
-        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ATTRIBUTE_LABEL));
-        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_TYPE));
+        EventBus.publish(new RepaintPanelEvent("text",-1)); 
     }
 
 
     
 
     private void onTextUpdate(TextUpdate e){
+        System.out.println(e.text);
         if(e.type == this.type)
             {
                 String str = e.text;
@@ -148,27 +128,33 @@ public class OneLineTextPane extends JLabel {
         
     }
 
+    public JPanel getInputComponent() {
+        JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            panel.setBorder(BorderFactory.createTitledBorder(labelName));
 
-    private static String htmlToPlainText(String html) {
-        if (html == null) return "";
-        String text = html
-            .replaceAll("(?i)<br\\s*/?>", "\n")
-            .replaceAll("(?i)</p>", "\n")
-            .replaceAll("(?i)<li>", "• ")
-            .replaceAll("(?i)</li>", "\n")
-            .replaceAll("(?i)<div.*?>", "")
-            .replaceAll("(?i)</div>", "\n");
+            JTextField input = new JTextField();
+            input.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
 
-        //text = text.replaceAll("<[^>]+>", "");
-        text = text.replaceAll("<html>","");
-        text = text.replaceAll("</html>","");
+            input.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                    EventBus.publish(new TextUpdate(id, input.getText()));
+                }
 
-        text = text.replace("&nbsp;", " ")
-                .replace("&lt;", "<")
-                .replace("&gt;", ">")
-                .replace("&amp;", "&");
+                @Override
+                public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                    EventBus.publish(new TextUpdate(id, input.getText()));
+                }
 
-        return text.trim();
+                @Override
+                public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                    EventBus.publish(new TextUpdate(id, input.getText()));
+                }
+            });
+
+        panel.add(input); 
+        return panel;
     }
 
     private Font getScaledFontLabel(String text, Font baseFont, int maxWidth, int maxHeight, OneLineTextPane label) {

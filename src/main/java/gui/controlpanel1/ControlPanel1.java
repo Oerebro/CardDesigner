@@ -1,5 +1,6 @@
 package gui.controlpanel1;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 //import java.io.File;
@@ -19,6 +20,7 @@ import javax.swing.event.DocumentListener;
 import gui.CardDesignerGUI;
 import gui.GlobalVar;
 import gui.ImageBrowserManager;
+import gui.TextComponentManager;
 import gui.previewpanel.DigitOnlyTextField;
 import abstractclasses.*;
 import events.CardLoadEvent;
@@ -74,27 +76,27 @@ public class ControlPanel1 extends ControlPanel {
 
     public void init(int type, CardDesignerGUI parent) {
         this.parent = parent;
-        //this.cardType = type;
+        setLayout(new GridLayout(1,3));
+        //left side: all major text components like title, info etc.
+        //right side: all minor text components, like damage
+        JPanel imageBrowsers = new JPanel();
+        imageBrowsers.setLayout(new GridLayout(2,1));
+        imageBrowsers.add(ImageBrowserManager.getCardComponents());
+        imageBrowsers.add(ImageBrowserManager.getCardImages());
+        JPanel leftSide = TextComponentManager.getLeftSide();
+        JPanel rightSide = TextComponentManager.getRightSide();
+        leftSide.setMaximumSize(new Dimension(Integer.MAX_VALUE, 500));
         
+        add(imageBrowsers);
+        add(leftSide);
+        add(rightSide);
+
         EventBus.subscribe(CardTypeUpdate.class, this::onTypeUpdate);
         EventBus.subscribe(TextLoadEvent.class, this::onTextLoad);
         EventBus.subscribe(CardLoadEvent.class, this::onCardLoad);
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         
-        weaponAtt = new CardAttributesPanel(GlobalVar.WEAPON);
-        armorAtt = new CardAttributesPanel(GlobalVar.ARMOR);
-        accessoireAtt = new CardAttributesPanel(GlobalVar.ACCESSOIRE);
-        consumableAtt = new CardAttributesPanel(GlobalVar.WEAPON);
-        runeAtt = new CardAttributesPanel(GlobalVar.RUNE);
-        effectAtt = new CardAttributesPanel(GlobalVar.EFFECT);
-        arkhamAtt = new CardAttributesPanel(GlobalVar.ARKHAM);
-        selectItemArt = ImageBrowserManager.getCardImages();
-        
-        setLayout(null);
-        createButtons();
-        updatePanel(type);
-        compose();
-        rescale(1.0);
+
     }
 
     private void onTextLoad(TextLoadEvent e){
@@ -111,25 +113,10 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     private void createButtons() {
-        createCardComponentSelection();
-        attributeSelectionPanel = new JPanel();
-        selectItemTypePanel = new SelectTypePanel(this);
-        attributeSelectionPanel.setLayout(new FlowLayout());
-        attributeSelectionPanel.add(selectItemTypePanel);
-        attributePanel = new CardAttributesPanel(cardType);
-        attributeSelectionPanel.add(attributePanel);
-        this.add(attributeSelectionPanel);
-        attributeSelectionPanel.setBounds((int) (770), (int) (0), (int) (400), (int) (2000));
-    
-        // Item Art VariableTabbedPane with default state weapons
-        //weapons = new VariableTabbedPane();
-        //weapons.init(GlobalVar.WEAPON);
-        
     
         // Create title input field and font selector
         createTitleFontSelection();
         createInfoFontSelection();
-        createTextFieldsAndPreview();
         
         
     }
@@ -139,7 +126,8 @@ public class ControlPanel1 extends ControlPanel {
     }
 
     public String getTitleFont(){
-        return (String) titleFontSelection.getSelectedItem();
+        return "";
+        //return (String) titleFontSelection.getSelectedItem();
     }
 
     public Boolean getTitleStroke(){
@@ -158,7 +146,6 @@ public class ControlPanel1 extends ControlPanel {
         if(cardType != type){
             this.cardType = type;
             attributeSelectionPanel.remove(attributePanel);
-            attributePanel = decideAttPanel(type);
             attributePanel.revalidate();
             attributeSelectionPanel.add(attributePanel);
             attributeSelectionPanel.repaint();
@@ -168,170 +155,7 @@ public class ControlPanel1 extends ControlPanel {
         }    
     }
 
-    private CardAttributesPanel decideAttPanel(int type){
-        switch(type){
-            case GlobalVar.WEAPON:
-                return weaponAtt;
-            case GlobalVar.ARMOR:
-                return armorAtt;
-            case GlobalVar.ACCESSOIRE:
-                return accessoireAtt;
-            case GlobalVar.RUNE :
-                return runeAtt;
-            case GlobalVar.EFFECT:
-                return effectAtt;
-            case GlobalVar.CONSUMABLE:
-                return consumableAtt;
-            case GlobalVar.ARKHAM:
-                return arkhamAtt;
-        }
 
-        return null;
-    }
-
-    private void createTextFieldsAndPreview() {
-        titleTextField = new JTextField();
-        //titleTextField.setBounds(10, 290, 260, 30);
-        add(titleTextField);
-
-        typeTextField = new JTextField();
-        //titleTextField.setBounds(10, 290, 260, 30);
-        add(typeTextField);
-
-        infoTextField = new JTextArea();
-        infoTextField.setPreferredSize(new java.awt.Dimension(485, 320));
-        infoTextField.setLineWrap(true);
-        infoTextField.setWrapStyleWord(true);
-        infoTextField.setBorder(UIManager.getBorder("TextField.border"));
-        add(infoTextField);
-
-        titleColor = new ColorPicker(parent, titleColorBounds[0], titleColorBounds[1],titleColorBounds[2],titleColorBounds[3],GlobalVar.TITLE_TEXT_UPDATE);
-        infoColor = new ColorPicker(parent, infoColorBounds[0], infoColorBounds[1],infoColorBounds[2],infoColorBounds[3], GlobalVar.INFO_TEXT_UPDATE);
-        ColorPicker typeColor = new ColorPicker(parent, typeColorBounds[0], typeColorBounds[1],typeColorBounds[2],typeColorBounds[3], GlobalVar.TYPE_TEXT_UPDATE);
-
-        titleStroke = new JCheckBox("Title Outline",true);
-        titleStroke.setBounds(460,290,100,30);
-        titleStroke.addActionListener(e->{EventBus.publish(new ToggleTextBorder(GlobalVar.TITLE_BORDER,titleStroke.isSelected()));});
-
-        typeStroke = new JCheckBox("Type Info Outline",true);
-        typeStroke.setBounds(460,335,100,30);
-        typeStroke.addActionListener(e->{EventBus.publish(new ToggleTextBorder(GlobalVar.TYPE_BORDER,typeStroke.isSelected()));});
-
-        infoStroke = new JCheckBox("Rules Text Outline",true);
-        infoStroke.setBounds(460,380,100,30);
-        infoStroke.addActionListener(e->{EventBus.publish(new ToggleTextBorder(GlobalVar.INFO_BORDER,infoStroke.isSelected()));});
-
-        JButton fontUp = new JButton("+");
-        JButton fontDown = new JButton("-");
-        fontUp.setBounds(infoFontBounds[0],425+50,30,30);
-        fontUp.addActionListener(e->{EventBus.publish(new TextUpdate(GlobalVar.FONTSIZE_TEXT_UPDATE,"+"));});
-        fontDown.setBounds(infoFontBounds[0]+40,425+50,30,30);
-        fontDown.addActionListener(e->{EventBus.publish(new TextUpdate(GlobalVar.FONTSIZE_TEXT_UPDATE,"-"));});
-        fontSizeManual = new DigitOnlyTextField();
-        fontSizeManual.setBounds(infoFontBounds[0],460+50,60,30);
-        fontSizeManual.setText("19");
-        add(fontSizeManual);
-        add(fontUp);
-        add(fontDown);
-        add(titleStroke);
-        add(typeStroke);
-        add(infoStroke);
-        add(titleColor);
-        add(infoColor);
-        add(typeColor);
-
-    
-        // Listen for text changes
-        titleTextField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                updateTitlePreview();
-            }
-    
-            @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                updateTitlePreview();
-            }
-    
-            @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                updateTitlePreview();
-            }
-        });
-
-        typeTextField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                updateTypePreview();
-            }
-    
-            @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                updateTypePreview();
-            }
-    
-            @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                updateTypePreview();
-            }
-        });
-
-        infoTextField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                updateInfoPreview();
-            }
-    
-            @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                updateInfoPreview();
-            }
-    
-            @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                updateInfoPreview();
-            }
-        });
-
-        fontSizeManual.addActionListener(e -> {
-            if (fontSizeManual.isFocusOwner()) {
-                EventBus.publish(new TextUpdate(GlobalVar.FONTSIZE_TEXT_UPDATE, fontSizeManual.getText()));
-            }
-        });
-
-    
-        titleFontSelection.addActionListener(e -> updateTitlePreview());
-        infoFontSelection.addActionListener(e -> updateInfoPreview());
-        
-    }
-
-    
-    
-    private void updateTitlePreview() {    
-        String text = titleTextField.getText();
-        String selectedFontName = (String) titleFontSelection.getSelectedItem();
-        //Font font = new Font(selectedFontName, Font.PLAIN, 72);
-        
-        EventBus.publish(new TitleFontUpdate(selectedFontName));
-        EventBus.publish(new TextUpdate(GlobalVar.TITLE_TEXT_UPDATE,text));
-    }
-
-    private void updateTypePreview() {    
-        String text = typeTextField.getText();
-        //String selectedFontName = (String) titleFontSelection.getSelectedItem();
-        //Font font = new Font(selectedFontName, Font.PLAIN, 72);
-        
-        EventBus.publish(new TextUpdate(GlobalVar.TYPE_TEXT_UPDATE,text));
-    }
-
-    private void updateInfoPreview() {
-        String text = infoTextField.getText();
-        String selectedFontName = (String) infoFontSelection.getSelectedItem();
-        //Font font = new Font((String) infoFontSelection.getSelectedItem(), Font.PLAIN, 72); 
-        EventBus.publish(new InfoFontUpdate(selectedFontName));
-        EventBus.publish(new TextUpdate(GlobalVar.INFO_TEXT_UPDATE,text));
-        
-    }
 
     private void createTitleFontSelection(){
         titleFontSelection = createFontSelection();

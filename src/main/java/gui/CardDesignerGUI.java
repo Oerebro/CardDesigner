@@ -70,6 +70,8 @@ public class CardDesignerGUI {
         // Control Panel on the right
         controlPanel = new ControlPanel1();
         controlPanel.init(defaultType, this);
+        controlPanel.setBounds(600,0,1200,800);
+        controlPanel.setBorder(BorderFactory.createTitledBorder("controlPanel"));
 
         controlPanel2 = new ControlPanel2();
         controlPanel2.init(this);

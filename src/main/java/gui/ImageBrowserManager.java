@@ -7,6 +7,13 @@ import javax.swing.JTabbedPane;
 
 import abstractclasses.ImageBrowser;
 
+//lists to keep track which imagebrowser has registered which tab, to avoid unnecessary loading
+/*keeps track of
+    *all created tabs (to avoid re-creating them when switching card)
+    *currently registered tabs in cardComponents
+    *currently registered tabs in cardImages
+*/
+
 public class ImageBrowserManager {
     private static final Map<String, ImageBrowser> allComponents = new HashMap<>();
     private static final JTabbedPane cardComponents = new JTabbedPane();

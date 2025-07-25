@@ -1,19 +1,32 @@
 {
   "components": {
-    "JComponents": {
+    "TextComponents": {
       "gui.image_composers.components.OneLineTextPane": [
         {
-          "type": 1,
-          "bounds": [57, 70, 632, 60]
+          "id": "titleText",
+          "labelName": "Card Title",
+          "bounds": [57, 70, 632, 60],
+          "render":0,
+          "side": "leftSide"
+          
         },
         {
-          "type": 1,
-          "bounds": [50, 600, 650, 50]
+          "id": "typeText",
+          "labelName": "Card Types",
+          "bounds": [50, 600, 650, 50],
+          "render":0,
+          "side": "leftSide"
+          
         }
       ],
-      "gui.image_composers.components.WrappingTextPane": [
+      "gui.image_composers.components.ScalingTextPane": [
         {
-          "bounds": [55, 665, 640, 295]
+          "id": "infoText",
+          "labelName": "Info Text",
+          "bounds": [55, 665, 640, 295],
+          "render":0,
+          "side": "leftSide"
+          
         }
       ]
     },

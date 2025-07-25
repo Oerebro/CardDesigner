@@ -4,9 +4,14 @@ import com.fasterxml.jackson.databind.*;
 
 import abstractclasses.ImageBrowser;
 import gui.ImageBrowserManager;
+import gui.RenderManager;
+import gui.TextComponentManager;
+import gui.image_composers.components.RenderableImage;
+import gui.image_composers.components.RenderableText;
 
 import javax.imageio.ImageIO;
-import javax.swing.JTabbedPane;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,36 +19,6 @@ import java.io.IOException;
 import java.util.*;
 
 public class ComponentLoader {
-
-    public class RenderableImage {
-        public String id, sourcePath;
-        public BufferedImage image;
-        public int[] bounds;
-        public int render;
-
-        public RenderableImage(String id, String sourcePath,BufferedImage image, int[] bounds, int render) {
-            this.id = id;
-            this.sourcePath = sourcePath;
-            this.image = image;
-            this.bounds = bounds;
-            this.render = render;
-        }
-    }
-
-
-    protected List<RenderableImage> imageRenderQueue = new ArrayList<>();
-    protected Map<String, RenderableImage> imageMap = new HashMap<>();
-    protected List<Object> componentRenderQueue = new ArrayList<>();
-    //protected JTabbedPane componentImageBrowser, cardImageBrowser;
-
-//lists to keep track which imagebrowser has registered which tab, to avoid unnecessary loading
-/*keeps track of
-    *all created tabs (to avoid re-creating them when switching card)
-    *currently registered tabs in cardComponents
-    *currently registered tabs in cardImages
-*/
-    //protected Map<String, RenderableImage> imageMap = new HashMap<>();
-
     protected int baseWidth = 750;
     protected int baseHeight = 1050;
 
@@ -53,31 +28,28 @@ public class ComponentLoader {
         try {
             JsonNode root = mapper.readTree(new File(filePath));
 
-            JsonNode jComponents = root.path("components").path("JComponents");
-            Iterator<String> classNames = jComponents.fieldNames();
+            JsonNode textComponents = root.path("components").path("TextComponents");
+            Iterator<String> classNames = textComponents.fieldNames();
             while (classNames.hasNext()) {
                 String fqcn = classNames.next();
-                JsonNode instances = jComponents.get(fqcn);
+                JsonNode instances = textComponents.get(fqcn);
 
                 for (JsonNode instance : instances) {
-                    List<Object> constructorArgs = new ArrayList<>();
-
-                    instance.fields().forEachRemaining(entry -> {
-                        if (!entry.getKey().equals("bounds")) {
-                            JsonNode val = entry.getValue();
-                            if (val.isInt()) constructorArgs.add(val.asInt());
-                            else if (val.isTextual()) constructorArgs.add(val.asText());
-                        }
-                    });
-
-                    JsonNode bounds = instance.get("bounds");
-                    if (bounds != null && bounds.isArray()) {
-                        int[] boundsArray = new int[bounds.size()];
-                        for (int i = 0; i < bounds.size(); i++) {
-                            boundsArray[i] = bounds.get(i).asInt();
-                        }
-                        constructorArgs.add(boundsArray);
+                    String id = instance.path("id").asText(null);
+                    String labelName = instance.path("labelName").asText(null);
+                    int render = instance.path("render").asInt(0);
+                    String side = instance.path("side").asText(null);
+                    
+                    JsonNode boundsNode = instance.path("bounds");
+                    int[] bounds = new int[4];
+                    for (int i = 0; i < boundsNode.size() && i < 4; i++) {
+                        bounds[i] = boundsNode.get(i).asInt();
                     }
+
+                    List<Object> constructorArgs = new ArrayList<>();
+                    constructorArgs.add(id); 
+                    constructorArgs.add(labelName);   
+                    constructorArgs.add(bounds); 
 
                     Object[] args = constructorArgs.toArray();
                     Class<?>[] paramTypes = Arrays.stream(args)
@@ -92,9 +64,21 @@ public class ComponentLoader {
                     try {
                         Class<?> clazz = Class.forName(fqcn);
                         Object obj = clazz.getConstructor(paramTypes).newInstance(args);
-                        componentRenderQueue.add(obj);
+
+                        // must be a JComponent
+                        if (!(obj instanceof JComponent)) {
+                            throw new IllegalArgumentException("Object is not a JComponent: " + fqcn);
+                        }
+
+                        RenderableText comp = new RenderableText(id, labelName, render, bounds, (JComponent) obj);
+                        RenderManager.addToTextMap(comp);
+                        JPanel panel = comp.getInputComponent();
+                        if(!TextComponentManager.isComponentRegistered(id)){
+                            TextComponentManager.registerComponents(id, panel, side);
+                        }
                     } catch (Exception e) {
                         System.err.println("Failed to instantiate " + fqcn + ": " + e.getMessage());
+                        e.printStackTrace();
                     }
                 }
             }
@@ -118,12 +102,9 @@ public class ComponentLoader {
                     image = ImageIO.read(new File(path));
                 }
 
-                RenderableImage ri = new RenderableImage(id, path, image, bounds, render);
-                imageRenderQueue.add(ri);
-                imageMap.put(id, ri);              
+                RenderableImage ri = new RenderableImage(id, path, image, bounds, render);  
+                RenderManager.addToImageMap(ri);       
             }
-
-            imageRenderQueue.sort(Comparator.comparingInt(r -> r.render));
 
             JsonNode imageBrowserTabs = root.path("components").path("ImageBrowserTabs");
             for (JsonNode tab : imageBrowserTabs) {
@@ -143,14 +124,6 @@ public class ComponentLoader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public List<RenderableImage> getImageRenderQueue() {
-        return imageRenderQueue;
-    }
-
-    public List<Object> getComponentRenderQueue() {
-        return componentRenderQueue;
     }
 
     protected BufferedImage getImageFromFile(String path){

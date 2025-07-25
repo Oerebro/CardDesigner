@@ -1,11 +1,12 @@
 package gui.previewpanel;
+
 import javax.swing.*;
 import events.EventBus;
 import events.RepaintPanelEvent;
 import gui.*;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
+
 
 public class PreviewPanel {
     public JPanel panel;
@@ -13,8 +14,11 @@ public class PreviewPanel {
     private CardDesignerGUI parent;
     private double panelRatio = 0.7;
     private int scaledWidth,scaledHeight;
+    private int baseWidth = 750;
+    private int baseHeight = 1050;
 
-    private BufferedImage backgroundLayer,imageLayer,frameLayer,crownLayer, textboxLayer,runecutLayer,titleLayer,infoLayer, attributeLabelLayer,tierLabelLayer,runechargeLabelLayer,typeLayer;
+    private BufferedImage imageLayer0,imageLayer1,imageLayer2,imageLayer3,imageLayer4, imageLayer5;
+    private BufferedImage textLayer0,textLayer1,textLayer2,textLayer3,textLayer4,textLayer5;
 
     public PreviewPanel(CardDesignerGUI parent){
         this.parent = parent;
@@ -24,34 +28,32 @@ public class PreviewPanel {
     
     private void init() {
         EventBus.subscribe(RepaintPanelEvent.class, this::onRepaintEvent);
-        scaledWidth = (int) (parent.getFrameScale() * (750*panelRatio));
-        scaledHeight = (int) (parent.getFrameScale() * (1050*panelRatio));
+        scaledWidth = (int) (parent.getFrameScale() * (baseWidth*panelRatio));
+        scaledHeight = (int) (parent.getFrameScale() * (baseHeight*panelRatio));
 
         object = new JPanel() {
             @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     double scale = parent.getFrameScale();
-                    if (backgroundLayer != null)
-                        g.drawImage(backgroundLayer, 0, 0, scaledWidth, scaledHeight, this);
-                    if (imageLayer != null)
-                        g.drawImage(imageLayer, 0, 0, scaledWidth, scaledHeight, this);
-                    if (frameLayer != null)
-                        g.drawImage(frameLayer, 0, 0, scaledWidth, scaledHeight, this);
-                    if (runecutLayer != null)
-                        g.drawImage(runecutLayer, 0, 0, scaledWidth, scaledHeight, this);
-                    if (titleLayer != null)
-                        g.drawImage(titleLayer, 0, 0, scaledWidth, scaledHeight, this);
-                    if (infoLayer != null)
-                        g.drawImage(infoLayer, 0, 0, scaledWidth, scaledHeight, this);
-                    if (attributeLabelLayer != null)
-                        g.drawImage(attributeLabelLayer, 0, 0, scaledWidth, scaledHeight, this);
-                    if (tierLabelLayer != null)
-                        g.drawImage(tierLabelLayer, 0, 0, scaledWidth, scaledHeight, this);
-                    if (runechargeLabelLayer != null)
-                        g.drawImage(runechargeLabelLayer, 0, 0, scaledWidth, scaledHeight, this);
-                    if (typeLayer != null)
-                        g.drawImage(typeLayer, 0, 0, scaledWidth, scaledHeight, this);
+
+                    g.drawImage(imageLayer0, 0, 0, scaledWidth, scaledHeight, this);
+                    g.drawImage(textLayer0, 0, 0, scaledWidth, scaledHeight, this);
+
+                    g.drawImage(imageLayer1, 0, 0, scaledWidth, scaledHeight, this);
+                    g.drawImage(textLayer1, 0, 0, scaledWidth, scaledHeight, this);
+
+                    g.drawImage(imageLayer2, 0, 0, scaledWidth, scaledHeight, this);
+                    g.drawImage(textLayer2, 0, 0, scaledWidth, scaledHeight, this);
+
+                    g.drawImage(imageLayer3, 0, 0, scaledWidth, scaledHeight, this);
+                    g.drawImage(textLayer3, 0, 0, scaledWidth, scaledHeight, this);
+
+                    g.drawImage(imageLayer4, 0, 0, scaledWidth, scaledHeight, this);
+                    g.drawImage(textLayer4, 0, 0, scaledWidth, scaledHeight, this);
+                    
+                    g.drawImage(imageLayer5, 0, 0, scaledWidth, scaledHeight, this);
+                    g.drawImage(textLayer5, 0, 0, scaledWidth, scaledHeight, this);
                 }
 
         };
@@ -64,7 +66,7 @@ public class PreviewPanel {
         panel.add(object, BorderLayout.LINE_START);
         
         rescale(1.0);  
-        EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_ALL));
+        EventBus.publish(new RepaintPanelEvent());
     }
     
     public int[] getScaledDimensions(int imageWidth, int imageHeight, int maxWidth, int maxHeight) {
@@ -102,64 +104,69 @@ public class PreviewPanel {
     }
 
     private void onRepaintEvent(RepaintPanelEvent e){
-        double scale = parent.getFrameScale();
-        int type = e.type;
+        
+        int render = e.render;
+        String type = e.type;
+        System.out.println("trying to render layer: "+render+" with type: "+type);
 
-        switch (type) {
-            case GlobalVar.REPAINT_BACKGROUND:
-                backgroundLayer = parent.getComposedCard(scale * panelRatio, type);
-                //frameLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_FRAME);
+        switch(type){
+            case "image": {
+                renderImages(render);
                 break;
-            case GlobalVar.REPAINT_IMAGE:
-                imageLayer = parent.getComposedCard(scale * panelRatio, type);
+            }
+            case "text":
+                renderText(render);
                 break;
-            case GlobalVar.REPAINT_CROWN:
-                frameLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_FRAME);
-                break;
-            case GlobalVar.REPAINT_TEXTBOX:
-                frameLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_FRAME);
-                break;
-            case GlobalVar.REPAINT_FRAME:
-                frameLayer = parent.getComposedCard(scale * panelRatio, type);
-                break;
-            case GlobalVar.REPAINT_RUNECUT:
-                runecutLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_RUNECUT);
-                break;
-            case GlobalVar.REPAINT_TITLE:
-                titleLayer = parent.getComposedCard(scale * panelRatio, type);
-                break;
-            case GlobalVar.REPAINT_INFO:
-                infoLayer = parent.getComposedCard(scale * panelRatio, type);
-                break;
-            case GlobalVar.REPAINT_ATTRIBUTE_LABEL:
-                attributeLabelLayer = parent.getComposedCard(scale * panelRatio, type);
-                break;
-            case GlobalVar.REPAINT_TIER_LABEL:
-                tierLabelLayer = parent.getComposedCard(scale * panelRatio, type);
-                break;
-            case GlobalVar.REPAINT_RUNECHARGE_LABEL:
-                runechargeLabelLayer = parent.getComposedCard(scale * panelRatio, type);
-                break;
-            case GlobalVar.REPAINT_TYPE:
-                typeLayer = parent.getComposedCard(scale * panelRatio, type);
-                break;
-            case GlobalVar.REPAINT_ALL:
-                backgroundLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_BACKGROUND);
-                imageLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_IMAGE);
-                frameLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_FRAME);
-                runecutLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_RUNECUT);
-                titleLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_TITLE);
-                infoLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_INFO);
-                attributeLabelLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_ATTRIBUTE_LABEL);
-                tierLabelLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_TIER_LABEL);
-                runechargeLabelLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_RUNECHARGE_LABEL);
-                typeLayer = parent.getComposedCard(scale * panelRatio, GlobalVar.REPAINT_TYPE);
-                break;
+            default:
+                renderImages(render);
+                renderText(render);
         }
         
         this.repaint();
     }
 
+    private void renderImages(int render){
+        double scale = parent.getFrameScale();
+        scaledWidth = (int) (scale * baseWidth*panelRatio);
+        scaledHeight = (int) (scale * baseHeight*panelRatio);
+        
+        
+        switch (render) {
+                    case 0:
+                        imageLayer0 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
+                        break;
+                    case 1:
+                        imageLayer1 = RenderManager.renderLayer(baseWidth, baseHeight, 1, scale);
+                        break;
+                    case 2:
+                        imageLayer2 = RenderManager.renderLayer(baseWidth, baseHeight, 2, scale);
+                        break;
+                    case 3:
+                        imageLayer3 = RenderManager.renderLayer(baseWidth, baseHeight, 3, scale);
+                        break;
+                    case 4:
+                        imageLayer4 = RenderManager.renderLayer(baseWidth, baseHeight, 4, scale);
+                        break;
+                    case 5:
+                        imageLayer5 = RenderManager.renderLayer(baseWidth, baseHeight, 5, scale);
+                        break;
+                    default:
+                        imageLayer0 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
+                        imageLayer1 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
+                        imageLayer2 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
+                        imageLayer3 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
+                        imageLayer4 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
+                        imageLayer5 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
+
+                        break;
+                }
+    }
+
+    private void renderText(int render){
+        scaledWidth = (int) (parent.getFrameScale() * (750*panelRatio));
+        scaledHeight = (int) (parent.getFrameScale() * (1050*panelRatio));
+        return;
+    }
 
 }
 
