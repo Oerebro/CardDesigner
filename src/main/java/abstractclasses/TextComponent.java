@@ -2,6 +2,7 @@ package abstractclasses;
 
 import javax.swing.JPanel;
 
-public interface InputComponentProvider {
+public interface TextComponent {
     JPanel getInputComponent();
+    String getText();
 }

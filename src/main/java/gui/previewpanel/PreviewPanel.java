@@ -4,8 +4,13 @@ import javax.swing.*;
 import events.EventBus;
 import events.RepaintPanelEvent;
 import gui.*;
-import java.awt.*;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PreviewPanel {
@@ -133,40 +138,69 @@ public class PreviewPanel {
         
         switch (render) {
                     case 0:
-                        imageLayer0 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
+                        imageLayer0 = RenderManager.renderImageLayer(baseWidth, baseHeight, 0, scale);
                         break;
                     case 1:
-                        imageLayer1 = RenderManager.renderLayer(baseWidth, baseHeight, 1, scale);
-                        System.out.println(imageLayer1);
+                        imageLayer1 = RenderManager.renderImageLayer(baseWidth, baseHeight, 1, scale);
                         break;
                     case 2:
-                        imageLayer2 = RenderManager.renderLayer(baseWidth, baseHeight, 2, scale);
+                        imageLayer2 = RenderManager.renderImageLayer(baseWidth, baseHeight, 2, scale);
                         break;
                     case 3:
-                        imageLayer3 = RenderManager.renderLayer(baseWidth, baseHeight, 3, scale);
+                        imageLayer3 = RenderManager.renderImageLayer(baseWidth, baseHeight, 3, scale);
                         break;
                     case 4:
-                        imageLayer4 = RenderManager.renderLayer(baseWidth, baseHeight, 4, scale);
+                        imageLayer4 = RenderManager.renderImageLayer(baseWidth, baseHeight, 4, scale);
                         break;
                     case 5:
-                        imageLayer5 = RenderManager.renderLayer(baseWidth, baseHeight, 5, scale);
+                        imageLayer5 = RenderManager.renderImageLayer(baseWidth, baseHeight, 5, scale);
                         break;
                     default:
-                        imageLayer0 = RenderManager.renderLayer(baseWidth, baseHeight, 0, scale);
-                        imageLayer1 = RenderManager.renderLayer(baseWidth, baseHeight, 1, scale);
-                        imageLayer2 = RenderManager.renderLayer(baseWidth, baseHeight, 2, scale);
-                        imageLayer3 = RenderManager.renderLayer(baseWidth, baseHeight, 3, scale);
-                        imageLayer4 = RenderManager.renderLayer(baseWidth, baseHeight, 4, scale);
-                        imageLayer5 = RenderManager.renderLayer(baseWidth, baseHeight, 5, scale);
+                        imageLayer0 = RenderManager.renderImageLayer(baseWidth, baseHeight, 0, scale);
+                        imageLayer1 = RenderManager.renderImageLayer(baseWidth, baseHeight, 1, scale);
+                        imageLayer2 = RenderManager.renderImageLayer(baseWidth, baseHeight, 2, scale);
+                        imageLayer3 = RenderManager.renderImageLayer(baseWidth, baseHeight, 3, scale);
+                        imageLayer4 = RenderManager.renderImageLayer(baseWidth, baseHeight, 4, scale);
+                        imageLayer5 = RenderManager.renderImageLayer(baseWidth, baseHeight, 5, scale);
 
                         break;
                 }
     }
 
     private void renderText(int render){
-        scaledWidth = (int) (parent.getFrameScale() * (750*panelRatio));
-        scaledHeight = (int) (parent.getFrameScale() * (1050*panelRatio));
-        return;
+        double scale = parent.getFrameScale();
+        scaledWidth = (int) (scale * (baseWidth*panelRatio));
+        scaledHeight = (int) (scale * (baseHeight*panelRatio));
+
+        switch (render) {
+                    case 0:
+                        textLayer0 = RenderManager.renderTextLayer(baseWidth, baseHeight, 0, scale);
+                        break;
+                    case 1:
+                        textLayer1 = RenderManager.renderTextLayer(baseWidth, baseHeight, 1, scale);
+                        break;
+                    case 2:
+                        textLayer2 = RenderManager.renderTextLayer(baseWidth, baseHeight, 2, scale);
+                        break;
+                    case 3:
+                        textLayer3 = RenderManager.renderTextLayer(baseWidth, baseHeight, 3, scale);
+                        break;
+                    case 4:
+                        textLayer4 = RenderManager.renderTextLayer(baseWidth, baseHeight, 4, scale);
+                        break;
+                    case 5:
+                        textLayer5 = RenderManager.renderTextLayer(baseWidth, baseHeight, 5, scale);
+                        break;
+                    default:
+                        textLayer0 = RenderManager.renderTextLayer(baseWidth, baseHeight, 0, scale);
+                        textLayer1 = RenderManager.renderTextLayer(baseWidth, baseHeight, 1, scale);
+                        textLayer2 = RenderManager.renderTextLayer(baseWidth, baseHeight, 2, scale);
+                        textLayer3 = RenderManager.renderTextLayer(baseWidth, baseHeight, 3, scale);
+                        textLayer4 = RenderManager.renderTextLayer(baseWidth, baseHeight, 4, scale);
+                        textLayer5 = RenderManager.renderTextLayer(baseWidth, baseHeight, 5, scale);
+
+                        break;
+        }
     }
 
 }

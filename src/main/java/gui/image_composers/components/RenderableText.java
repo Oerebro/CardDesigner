@@ -3,7 +3,7 @@ package gui.image_composers.components;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import abstractclasses.InputComponentProvider;
+import abstractclasses.TextComponent;
 
 public class RenderableText {
         public String id, labelName;
@@ -20,8 +20,8 @@ public class RenderableText {
         }
 
         public JPanel getInputComponent() {
-            if (component instanceof InputComponentProvider) {
-                return ((InputComponentProvider) component).getInputComponent();
+            if (component instanceof TextComponent) {
+                return ((TextComponent) component).getInputComponent();
             } else {
                 throw new IllegalStateException("Component does not implement InputComponentProvider");
             }

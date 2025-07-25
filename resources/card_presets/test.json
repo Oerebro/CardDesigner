@@ -6,7 +6,7 @@
           "id": "titleText",
           "labelName": "Card Title",
           "bounds": [57, 70, 632, 60],
-          "render":0,
+          "render":4,
           "side": "leftSide"
           
         },
@@ -14,7 +14,7 @@
           "id": "typeText",
           "labelName": "Card Types",
           "bounds": [50, 600, 650, 50],
-          "render":0,
+          "render":4,
           "side": "leftSide"
           
         }
@@ -24,7 +24,7 @@
           "id": "infoText",
           "labelName": "Info Text",
           "bounds": [55, 665, 640, 295],
-          "render":0,
+          "render":4,
           "side": "leftSide"
           
         }
@@ -41,13 +41,13 @@
         "id": "frameImage",
         "bounds": [0, 0, 750, 1050],
         "path": "resources\\img\\card_components\\frame\\default.png", 
-        "render": 2
+        "render": 3
       },
       {
         "id": "titleImage",
         "bounds": [20,20,710,200],
         "path": "resources\\img\\card_components\\title\\default.png", 
-        "render": 3
+        "render": 2
       },
       {
         "id": "textboxImage",

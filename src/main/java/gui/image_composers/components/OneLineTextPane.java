@@ -17,7 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentListener;
 
-import abstractclasses.InputComponentProvider;
+import abstractclasses.TextComponent;
 import events.EventBus;
 import events.InfoFontUpdate;
 import events.RepaintPanelEvent;
@@ -28,8 +28,8 @@ import gui.GlobalVar;
 import gui.controlpanel1.FontLoader;
 
 
-public class OneLineTextPane extends JLabel implements InputComponentProvider {
-    private int type;
+public class OneLineTextPane extends JLabel implements TextComponent {
+    private int type, render;
     private String id, labelName;
     private int[] bounds;
 
@@ -40,7 +40,8 @@ public class OneLineTextPane extends JLabel implements InputComponentProvider {
     private BufferedImage fontRenderImg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     
 
-    public OneLineTextPane(String id, String labelName, int[] bounds) {
+    public OneLineTextPane(String id, String labelName, int render, int[] bounds) {
+        this.render = render;
         this.id=id;
         this.labelName = labelName;
         this.bounds = bounds;
@@ -97,15 +98,14 @@ public class OneLineTextPane extends JLabel implements InputComponentProvider {
     
 
     private void onTextUpdate(TextUpdate e){
-        System.out.println(e.text);
-        if(e.type == this.type)
+        if(e.id.equals(this.id))
             {
                 String str = e.text;
                 //this.setFont(getScaledFontLabel(str, getFont(), getWidth(), getHeight(), this));
                 this.setText(str.replaceAll("<->", "—").replaceAll("<\\.>", "•"));
                 this.revalidate();
                 this.repaint();
-                publishRepaint();
+                EventBus.publish(new RepaintPanelEvent("text",render));
         }
     }
 
@@ -130,28 +130,28 @@ public class OneLineTextPane extends JLabel implements InputComponentProvider {
 
     public JPanel getInputComponent() {
         JPanel panel = new JPanel();
-            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-            panel.setBorder(BorderFactory.createTitledBorder(labelName));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createTitledBorder(labelName));
 
-            JTextField input = new JTextField();
-            input.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+        JTextField input = new JTextField();
+        input.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
 
-            input.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                    EventBus.publish(new TextUpdate(id, input.getText()));
-                }
+        input.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(id, input.getText()));
+            }
 
-                @Override
-                public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                    EventBus.publish(new TextUpdate(id, input.getText()));
-                }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(id, input.getText()));
+            }
 
-                @Override
-                public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                    EventBus.publish(new TextUpdate(id, input.getText()));
-                }
-            });
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                EventBus.publish(new TextUpdate(id, input.getText()));
+            }
+        });
 
         panel.add(input); 
         return panel;

@@ -49,6 +49,7 @@ public class ComponentLoader {
                     List<Object> constructorArgs = new ArrayList<>();
                     constructorArgs.add(id); 
                     constructorArgs.add(labelName);   
+                    constructorArgs.add(render);   
                     constructorArgs.add(bounds); 
 
                     Object[] args = constructorArgs.toArray();
@@ -56,6 +57,7 @@ public class ComponentLoader {
                             .map(arg -> {
                                 if (arg instanceof Integer) return int.class;
                                 if (arg instanceof String) return String.class;
+                                if (arg instanceof Integer) return int.class;
                                 if (arg instanceof int[]) return int[].class;
                                 return arg.getClass();
                             })

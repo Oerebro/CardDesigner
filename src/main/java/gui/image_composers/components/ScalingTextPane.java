@@ -7,7 +7,7 @@ import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import abstractclasses.InputComponentProvider;
+import abstractclasses.TextComponent;
 
 import javax.swing.text.Style;
 import java.awt.*;
@@ -20,36 +20,67 @@ import gui.controlpanel1.FontLoader;
 import gui.previewpanel.TextLineIcon;
 import events.ColorUpdate;
 import events.EventBus;
-import events.FontSizeUpdate;
-import events.InfoColorUpdate;
 import events.TextUpdate;
 import events.RepaintPanelEvent;
 import events.InfoFontUpdate;
 
-public class ScalingTextPane extends JScrollPane implements InputComponentProvider{
+public class ScalingTextPane extends JTextPane implements TextComponent{
     private final int maxNumLines;
     private int maxSizeFont, currentFontSize;
     private Font currentFont, fontRegular, fontItalic, fontBold;
-    public JTextPane textPane;
     private Boolean wasEmpty = true;
     String fontName;
-    private int iconSize, StyleConstantsAlignement;
+    private int iconSize, StyleConstantsAlignement, render;
     private String id, labelName;
 
 
     private static final Map<String, String> ICON_MAP = new HashMap<>();
 
-    public String getFontName() {
-        return textPane.getFont().getName();
+    public ScalingTextPane(String id, String labelName, int render, int[] bounds) {
+        this.render = render;
+        this.id = id;
+        this.labelName = labelName;
+        fontName = "";
+        loadIconsFromDirectory();
+        this.maxNumLines = 8;
+        //this.maxSizeFont = maxSizeFont;
+        this.maxSizeFont = 200;
+        this.currentFontSize = 19;
+        Font baseFont = UIManager.getFont("Label.font");
+        if (baseFont == null) {
+            baseFont = new Font("SansSerif", Font.PLAIN, maxSizeFont);
+        }
+
+        currentFont = baseFont.deriveFont((float) maxSizeFont);
+        StyleConstantsAlignement = StyleConstants.ALIGN_LEFT;
+
+        setFont(baseFont.deriveFont((float) maxSizeFont));
+        setForeground(Color.WHITE);
+        setBorder(null);
+        DefaultCaret caret = (DefaultCaret) getCaret();
+        caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+
+        this.setBorder(null);
+
+        this.setOpaque(false);
+        setOpaque(false);
+
+        stylesInit();
+
+        EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
+        EventBus.subscribe(InfoFontUpdate.class, this::onFontUpdate);
+        EventBus.subscribe(ColorUpdate.class, this::onColorUpdate);
+        
     }
 
-    public String getText() {
-        return textPane.getText();
+    public String getFontName() {
+        return getFont().getName();
     }
 
      public JPanel getInputComponent(){
         JPanel panel = new JPanel();
-        JTextField input = new JTextField();
+        JTextArea input = new JTextArea();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createTitledBorder(labelName));
         input.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -67,54 +98,14 @@ public class ScalingTextPane extends JScrollPane implements InputComponentProvid
                 EventBus.publish(new TextUpdate(id, input.getText()));
             }
         });
+        panel.add(input);
         return panel;
     }
 
-    public ScalingTextPane(String id, String labelName, int[] bounds) {
-        this.id = id;
-        this.labelName = labelName;
-        fontName = "";
-        loadIconsFromDirectory();
-        this.maxNumLines = 8;
-        //this.maxSizeFont = maxSizeFont;
-        this.maxSizeFont = 200;
-        this.currentFontSize = 19;
-        
-
-        
-
-        textPane = new JTextPane();
-
-        Font baseFont = UIManager.getFont("Label.font");
-        if (baseFont == null) {
-            baseFont = new Font("SansSerif", Font.PLAIN, maxSizeFont);
-        }
-
-        currentFont = baseFont.deriveFont((float) maxSizeFont);
-        StyleConstantsAlignement = StyleConstants.ALIGN_LEFT;
-
-        textPane.setFont(baseFont.deriveFont((float) maxSizeFont));
-        textPane.setForeground(Color.WHITE);
-        textPane.setBorder(null);
-        DefaultCaret caret = (DefaultCaret) textPane.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-
-        this.setBorder(null);
-        this.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        this.setViewportView(textPane);
-
-        this.setOpaque(false);
-        this.getViewport().setOpaque(false);
-        textPane.setOpaque(false);
-
-        stylesInit();
-
-        EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
-        EventBus.subscribe(InfoFontUpdate.class, this::onFontUpdate);
-        EventBus.subscribe(ColorUpdate.class, this::onColorUpdate);
-        
+    @Override
+    public void setBounds(int x, int y, int width, int height){
+        super.setBounds(x, y, width, height);
+        scaleFont(height);
     }
 
     public float getMaxSizeFont() {
@@ -122,39 +113,39 @@ public class ScalingTextPane extends JScrollPane implements InputComponentProvid
     }
 
     public void setColor(Color color) {
-            textPane.setForeground(color);
-            setFormattedText(textPane.getText());
+            setForeground(color);
+            setFormattedText(getText());
             //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_INFO));
     }
 
     private void stylesInit(){
-        Font font = textPane.getFont();
-        Color color = textPane.getForeground();
-        Style defaultStyle = textPane.addStyle("default", null);
+        Font font = getFont();
+        Color color = getForeground();
+        Style defaultStyle = addStyle("default", null);
         StyleConstants.setFontFamily(defaultStyle, font.getFamily());
         StyleConstants.setFontSize(defaultStyle, font.getSize());
         StyleConstants.setForeground(defaultStyle, color);
 
-        Style boldStyle = textPane.addStyle("bold", null);
+        Style boldStyle = addStyle("bold", null);
         StyleConstants.setBold(boldStyle, true);
         StyleConstants.setFontFamily(boldStyle, font.getFamily());
         StyleConstants.setFontSize(boldStyle, font.getSize());
         StyleConstants.setForeground(boldStyle, color);
 
-        Style italicStyle = textPane.addStyle("italic", null);
+        Style italicStyle = addStyle("italic", null);
         StyleConstants.setItalic(italicStyle, true);
         StyleConstants.setFontFamily(italicStyle, font.getFamily());
         StyleConstants.setFontSize(italicStyle, font.getSize());
         StyleConstants.setForeground(italicStyle, color);
 
-        Style boldItalicStyle = textPane.addStyle("bolditalic", null);
+        Style boldItalicStyle = addStyle("bolditalic", null);
         StyleConstants.setBold(boldItalicStyle, true);
         StyleConstants.setItalic(boldItalicStyle, true);
         StyleConstants.setFontFamily(boldItalicStyle, font.getFamily());
         StyleConstants.setFontSize(boldItalicStyle, font.getSize());
         StyleConstants.setForeground(boldItalicStyle, color);
 
-        Style paragraphStyle = textPane.addStyle("paragraph", null);
+        Style paragraphStyle = addStyle("paragraph", null);
         StyleConstants.setAlignment(paragraphStyle, StyleConstantsAlignement);
     }
 
@@ -178,33 +169,33 @@ public class ScalingTextPane extends JScrollPane implements InputComponentProvid
 
     public void setStyleConstantAlignement(int i){
         StyleConstantsAlignement = i;
-        Style paragraphStyle = textPane.getStyle("paragraph");
+        Style paragraphStyle = getStyle("paragraph");
         StyleConstants.setAlignment(paragraphStyle, StyleConstantsAlignement);
         EventBus.publish(new RepaintPanelEvent("text",-1)); 
     }
 
     private void setFormattedText(String rawText) {
         rawText = rawText.replaceAll("<->", "—").replaceAll("<\\.>", "•");
-        StyledDocument doc = textPane.getStyledDocument();
+        StyledDocument doc = getStyledDocument();
          try {
             doc.remove(0, doc.getLength());
 
-            Style paragraphStyle = textPane.getStyle("paragraph");
+            Style paragraphStyle = getStyle("paragraph");
             doc.setParagraphAttributes(0, 1, paragraphStyle, false);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
 
-        Font font = textPane.getFont();
-        FontMetrics metrics = textPane.getFontMetrics(font);
+        Font font = getFont();
+        FontMetrics metrics = getFontMetrics(font);
         int lineHeight = metrics.getHeight();
         iconSize = (int) (lineHeight * 0.8);
 
-        Style defaultStyle = textPane.getStyle("default");
+        Style defaultStyle = getStyle("default");
         /*StyleConstants.setFontFamily(defaultStyle, font.getFamily());
         StyleConstants.setFontSize(defaultStyle, font.getSize());*/
 
-        Style iconStyle = textPane.addStyle("icon", null);
+        Style iconStyle = addStyle("icon", null);
 
         try {
             for (String paragraph : rawText.split("\n")) {
@@ -267,13 +258,13 @@ public class ScalingTextPane extends JScrollPane implements InputComponentProvid
     private void insertStyledText(StyledDocument doc, String text, boolean bold, boolean italic) throws BadLocationException {
         if (text.isEmpty()) return;
         String styleName = bold && italic ? "bolditalic" : bold ? "bold" : italic ? "italic" : "default";
-        doc.insertString(doc.getLength(), text, textPane.getStyle(styleName));
+        doc.insertString(doc.getLength(), text, getStyle(styleName));
     }
 
 
     private void onFontUpdate(InfoFontUpdate e){
         fontName = e.fontName;
-        textPane.setFont(FontLoader.loadFont(e.fontName,Font.PLAIN, currentFontSize));
+        setFont(FontLoader.loadFont(e.fontName,Font.PLAIN, currentFontSize));
         fontRegular = FontLoader.loadFont(e.fontName,Font.PLAIN, currentFontSize);
         fontItalic = FontLoader.loadFont(e.fontName,Font.ITALIC, currentFontSize);
         fontBold = FontLoader.loadFont(e.fontName,Font.BOLD, currentFontSize);
@@ -282,47 +273,47 @@ public class ScalingTextPane extends JScrollPane implements InputComponentProvid
     }
 
     private void updateStylesFontSize(float size){
-        textPane.setFont(textPane.getFont().deriveFont(size)); 
+        setFont(getFont().deriveFont(size)); 
 
-        Style defaultStyle = textPane.getStyle("default");
+        Style defaultStyle = getStyle("default");
         StyleConstants.setFontSize(defaultStyle, (int) size);
 
-        Style boldStyle = textPane.getStyle("bold");
+        Style boldStyle = getStyle("bold");
         StyleConstants.setFontSize(boldStyle, (int) size);
 
-        Style italicStyle = textPane.getStyle("italic");
+        Style italicStyle = getStyle("italic");
         StyleConstants.setFontSize(italicStyle, (int) size);
 
-        Style boldItalicStyle = textPane.getStyle("bolditalic");
+        Style boldItalicStyle = getStyle("bolditalic");
         StyleConstants.setFontSize(boldItalicStyle, (int) size);
     }
 
     private void updateStylesToCurrentFont() {
-        Color color = textPane.getForeground();
+        Color color = getForeground();
 
-        float fontSize = textPane.getFont().getSize();
-        Font font = textPane.getFont();
+        float fontSize = getFont().getSize();
+        Font font = getFont();
         
 
         // Apply to styles
-        Style defaultStyle = textPane.getStyle("default");
+        Style defaultStyle = getStyle("default");
         StyleConstants.setFontFamily(defaultStyle, fontRegular.getFamily());
         StyleConstants.setFontSize(defaultStyle, font.getSize());
         StyleConstants.setForeground(defaultStyle, color);
 
-        Style boldStyle = textPane.getStyle("bold");
+        Style boldStyle = getStyle("bold");
         StyleConstants.setFontFamily(boldStyle, fontBold.getFamily());
         StyleConstants.setFontSize(boldStyle, font.getSize());
         StyleConstants.setBold(boldStyle, true);
         StyleConstants.setForeground(boldStyle, color);
 
-        Style italicStyle = textPane.getStyle("italic");
+        Style italicStyle = getStyle("italic");
         StyleConstants.setFontFamily(italicStyle, fontItalic.getFamily());
         StyleConstants.setFontSize(italicStyle, font.getSize());
         StyleConstants.setItalic(italicStyle, true);
         StyleConstants.setForeground(italicStyle, color);
 
-        Style boldItalicStyle = textPane.getStyle("bolditalic");
+        Style boldItalicStyle = getStyle("bolditalic");
         StyleConstants.setFontFamily(boldItalicStyle, font.getFamily());
         StyleConstants.setFontSize(boldItalicStyle, font.getSize());
         StyleConstants.setBold(boldItalicStyle, true);
@@ -334,51 +325,38 @@ public class ScalingTextPane extends JScrollPane implements InputComponentProvid
 
     private void onColorUpdate(ColorUpdate e) {
         if(e.type == GlobalVar.INFO_TEXT_UPDATE){
-            textPane.setForeground(e.color);
-            setFormattedText(textPane.getText());
+            setForeground(e.color);
+            setFormattedText(getText());
             EventBus.publish(new RepaintPanelEvent("text",-1)); 
         }
     }
 
-    private void onTextUpdate(TextUpdate event) {
+    private void onTextUpdate(TextUpdate e) {
         
-        if(event.type == GlobalVar.FONTSIZE_TEXT_UPDATE){
-            if(event.text.matches("")) return;
-            if(event.text.equals("+")||event.text.equals("-")){
-                onFontSizeUpdate(event.text.charAt(0));
+        if(e.type == GlobalVar.FONTSIZE_TEXT_UPDATE){
+            if(e.text.matches("")) return;
+            if(e.text.equals("+")||e.text.equals("-")){
+                onFontSizeUpdate(e.text.charAt(0));
                 return;
             }
-            this.currentFontSize = Integer.parseInt(event.text);
+            this.currentFontSize = Integer.parseInt(e.text);
             updateStylesFontSize((float) this.currentFontSize);
-            setFormattedText(textPane.getText());
+            setFormattedText(getText());
             EventBus.publish(new RepaintPanelEvent("text",-1)); 
             return;
         }
 
-        if(event.type == GlobalVar.INFO_TEXT_UPDATE) {
-            boolean isNowEmpty = event.text.trim().isEmpty();
-            String text = event.text;
-            Font font = textPane.getFont();
+        if(e.id.equals(this.id)) {
+            boolean isNowEmpty = e.text.trim().isEmpty();
+            String text = e.text;
+            Font font = getFont();
             if (text == null) {
                 text = "";
             }  
             setFormattedText(text);
-            EventBus.publish(new RepaintPanelEvent("text",-1)); 
-            if (wasEmpty != isNowEmpty) {
-                EventBus.publish(new RepaintPanelEvent());
-            }
+            EventBus.publish(new RepaintPanelEvent("text",render)); 
             wasEmpty = isNowEmpty;
         }
-    }
-
-
-    public void setBounds(int x, int y, int width, int height, double scale) {
-        currentFont = textPane.getFont();
-        maxSizeFont = (int) (100 * scale);
-        super.setBounds(x, y, width, height);
-        this.setPreferredSize(new Dimension(width, height));
-        textPane.setBounds(0,0, width, height);
-        textPane.setSize(width, height);
     }
 
     private void onFontSizeUpdate(char scaler){
@@ -389,7 +367,7 @@ public class ScalingTextPane extends JScrollPane implements InputComponentProvid
 
         
         updateStylesFontSize((float) this.currentFontSize);
-        setFormattedText(textPane.getText());
+        setFormattedText(getText());
         EventBus.publish(new RepaintPanelEvent("text",-1)); 
         EventBus.publish(new TextUpdate(GlobalVar.FONTSIZE_FIELD_UPDATE, String.valueOf(currentFontSize)));
     }
@@ -397,7 +375,7 @@ public class ScalingTextPane extends JScrollPane implements InputComponentProvid
     public void scaleFont(double scale){
         float newSize = currentFontSize * ((float) scale / 0.7f);
         updateStylesFontSize(newSize);
-        setFormattedText(textPane.getText());
+        setFormattedText(getText());
     }
 
 
