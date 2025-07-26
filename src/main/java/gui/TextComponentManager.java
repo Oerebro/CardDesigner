@@ -33,7 +33,6 @@ public class TextComponentManager {
         if(!isComponentRegistered(componentID)){
             allComponents.put(componentID, component);
         }
-        System.out.println("register: "+componentID);
         switch (targetPanel) {
             case "leftSide":
                 leftSide.add(componentID, component);

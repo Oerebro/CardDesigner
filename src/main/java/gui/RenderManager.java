@@ -1,9 +1,13 @@
 package gui;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Method;
-import java.nio.Buffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +18,7 @@ import events.EventBus;
 import events.RepaintPanelEvent;
 import gui.image_composers.components.RenderableImage;
 import gui.image_composers.components.RenderableText;
+import java.awt.Rectangle;
 
 public class RenderManager {
 //this keeps track which image is assigned to which id (i.e. cardBackground etc)
@@ -56,8 +61,7 @@ public class RenderManager {
             }
         }
         g2d.dispose();
-        System.out.println(image);
-        return image;
+        return paintWhiteCorners(image);
     }
 
     public static BufferedImage renderTextLayer(int baseWidth, int baseHeight, int renderLayer, double scale){
@@ -72,7 +76,6 @@ public class RenderManager {
                 JComponent comp = txt.component;
                 if (comp instanceof TextComponent) {
                     String text = ((TextComponent) comp).getText();
-                    System.out.println(text);
                 }
                 bounds = txt.bounds;
                 i = new BufferedImage((int) (bounds[2] * scale), (int) (bounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
@@ -96,7 +99,61 @@ public class RenderManager {
             }
         }
         g2d.dispose();
-        System.out.println(image);
         return image;
+    }
+
+    public static BufferedImage paintWhiteCorners(BufferedImage input) {
+        int width = input.getWidth();
+        int height = input.getHeight();
+
+        double realWidthMM = 66.0;
+        double realHeightMM = 88.0;
+
+        // Calculate pixels per mm (average)
+        double pxPerMM_X = width / realWidthMM;
+        double pxPerMM_Y = height / realHeightMM;
+        double pxPerMM = (pxPerMM_X + pxPerMM_Y) / 2.0;
+
+        int r = (int) Math.round(3.0 * pxPerMM);
+
+        BufferedImage output = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = output.createGraphics();
+
+        try {
+            g2.drawImage(input, 0, 0, null);
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            // Set transparent composite
+            g2.setComposite(AlphaComposite.Clear);
+
+            // Top-left corner
+            Area tl = new Area(new Rectangle(0, 0, r, r));
+            Shape tlCircle = new Ellipse2D.Double(0, 0, 2 * r, 2 * r);
+            tl.subtract(new Area(tlCircle));
+            g2.fill(tl);
+
+            // Top-right corner
+            Area tr = new Area(new Rectangle(width - r, 0, r, r));
+            Shape trCircle = new Ellipse2D.Double(width - 2 * r, 0, 2 * r, 2 * r);
+            tr.subtract(new Area(trCircle));
+            g2.fill(tr);
+
+            // Bottom-right corner
+            Area br = new Area(new Rectangle(width - r, height - r, r, r));
+            Shape brCircle = new Ellipse2D.Double(width - 2 * r, height - 2 * r, 2 * r, 2 * r);
+            br.subtract(new Area(brCircle));
+            g2.fill(br);
+
+            // Bottom-left corner
+            Area bl = new Area(new Rectangle(0, height - r, r, r));
+            Shape blCircle = new Ellipse2D.Double(0, height - 2 * r, 2 * r, 2 * r);
+            bl.subtract(new Area(blCircle));
+            g2.fill(bl);
+
+        } finally {
+            g2.dispose();
+        }
+
+        return output;
     }
 }

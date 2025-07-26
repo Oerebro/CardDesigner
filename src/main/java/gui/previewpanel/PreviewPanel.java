@@ -111,7 +111,6 @@ public class PreviewPanel {
     private void onRepaintEvent(RepaintPanelEvent e){
         int render = e.render;
         String type = e.type;
-        System.out.println("trying to render layer: "+render+" with type: "+type);
 
         switch(type){
             case "image": {

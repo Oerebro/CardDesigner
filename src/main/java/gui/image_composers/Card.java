@@ -38,7 +38,6 @@ public class Card extends ComponentLoader{
     
 
     private void onImageUpdate(ImageUpdate e){
-        System.out.println("setting "+e.id+" to "+e.path);
         BufferedImage img = getImageFromFile(e.path);
         RenderableImage ri = RenderManager.getImageMap().get(e.id);
         if (ri != null && img != null) {

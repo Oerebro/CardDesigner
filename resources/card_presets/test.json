@@ -41,7 +41,7 @@
         "id": "frameImage",
         "bounds": [0, 0, 750, 1050],
         "path": "resources\\img\\card_components\\frame\\default.png", 
-        "render": 3
+        "render": 2
       },
       {
         "id": "titleImage",

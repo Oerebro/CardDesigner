@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import org.apache.poi.common.usermodel.fonts.FontFamily;
+
 import gui.Loggable;
 
 public class FontLoader{
@@ -15,20 +17,21 @@ public class FontLoader{
         // Map the style int to suffix string in filename
         switch (style) {
             case Font.BOLD:
-                styleSuffix = "-bold";
+                styleSuffix = "bold";
                 break;
             case Font.ITALIC:
-                styleSuffix = "-italic";
+                styleSuffix = "italic";
                 break;
             /*case Font.BOLD | Font.ITALIC:
                 System.out.println("loading "+family+"-bold");
                 styleSuffix = "-bolditalic";
                 break;*/
+            case Font.PLAIN:
+                styleSuffix = "regular";
+                break;
             default:
-                
-                styleSuffix = "-regular";
+                styleSuffix = "regular";
         }
-
         String[] extensions = {".ttf", ".otf"};
         System.out.println("loading "+basePath + family + styleSuffix);
         for (String ext : extensions) {
@@ -38,7 +41,7 @@ public class FontLoader{
                 try (FileInputStream fis = new FileInputStream(file)) {
                     
                     Font font = Font.createFont(Font.TRUETYPE_FONT, fis);
-                    System.out.println(font.getFamily());
+                    System.out.println("loaded font: "+font.getFamily());
                     GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
                     return font.deriveFont(size);
                 } catch (FontFormatException | IOException e) {
@@ -46,7 +49,7 @@ public class FontLoader{
                 }
             }
         }
-        /*
+        
         // Fallback to regular if style font not found
         for (String ext : extensions) {
             File file = new File(basePath + family + "-regular" + ext);
@@ -58,7 +61,7 @@ public class FontLoader{
                     // optionally log error
                 }
             }
-        }*/
+        }
 
         // Final fallback to system font
         System.out.println("Font not found, loading Sans Serif");

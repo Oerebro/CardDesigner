@@ -2,14 +2,18 @@ package gui.image_composers.components;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -21,10 +25,12 @@ import abstractclasses.TextComponent;
 import events.EventBus;
 import events.InfoFontUpdate;
 import events.RepaintPanelEvent;
+import events.TextAlignUpdate;
 import events.ColorUpdate;
 import events.TitleFontUpdate;
 import events.TextUpdate;
 import gui.GlobalVar;
+import gui.controlpanel1.ColorPicker;
 import gui.controlpanel1.FontLoader;
 
 
@@ -58,43 +64,28 @@ public class OneLineTextPane extends JLabel implements TextComponent {
         EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate); 
         EventBus.subscribe(ColorUpdate.class, this::onColorUpdate);
+        EventBus.subscribe(TextAlignUpdate.class, this::onTextAlignUpdate);
         
     }
 
 
     private void onColorUpdate(ColorUpdate e){
-        if(e.type == this.type){
+        if(e.id.equals(this.id)){
             setColor(e.color);
         }
-        publishRepaint();
+        EventBus.publish(new RepaintPanelEvent("text",this.render));;
     }
 
     private void setColor(Color color){
         setForeground(color);    
     }
 
-    private void publishRepaint(){
-        switch(type){
-            case GlobalVar.TITLE_TEXT_UPDATE:
-                EventBus.publish(new RepaintPanelEvent("text",-1));  
-                break;
-            case GlobalVar.RANGE_NORMAL_TEXT_UPDATE:
-                EventBus.publish(new RepaintPanelEvent());
-                break;
-            case GlobalVar.RANGE_MAX_TEXT_UPDATE:
-                EventBus.publish(new RepaintPanelEvent("text",-1)); 
-                break;
-            case GlobalVar.TYPE_TEXT_UPDATE:
-                EventBus.publish(new RepaintPanelEvent("text",-1)); 
-                break;
+    private void onTextAlignUpdate(TextAlignUpdate e){
+        if(e.id.equals(this.id)){
+            this.setHorizontalAlignment(e.c);
+            EventBus.publish( new RepaintPanelEvent("text",this.render));
         }
     }
-
-    private void publishFontRepaint(){
-        EventBus.publish(new RepaintPanelEvent("text",-1)); 
-    }
-
-
     
 
     private void onTextUpdate(TextUpdate e){
@@ -114,7 +105,7 @@ public class OneLineTextPane extends JLabel implements TextComponent {
         Font scaledFont = getScaledFontLabel(this.getText(), font, this.getWidth(), this.getHeight(), this);
         this.setFont(scaledFont);
         //(FontLoader.loadFont(e.fontName,Font.PLAIN, scaledFont.getSize())
-        publishRepaint();
+        //publishRepaint();
     }
 
     @Override
@@ -132,6 +123,10 @@ public class OneLineTextPane extends JLabel implements TextComponent {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createTitledBorder(labelName));
+
+        JPanel settings = new JPanel();
+        settings.setLayout(new BoxLayout(settings, BoxLayout.X_AXIS));
+        settings.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JTextField input = new JTextField();
         input.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
@@ -152,10 +147,27 @@ public class OneLineTextPane extends JLabel implements TextComponent {
                 EventBus.publish(new TextUpdate(id, input.getText()));
             }
         });
+        ColorPicker colorPicker = new ColorPicker(20,20,this.id);
+        colorPicker.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        settings.add(colorPicker);
 
+//text alignement buttons
+        Dimension dim = new Dimension(20,20);
+        JButton alignLeft = new IconButton("resources/glyphs/buttons/text_left.png",dim, this.id, e -> {EventBus.publish( new TextAlignUpdate(SwingConstants.LEFT,this.id));});
+        JButton alignCenter = new IconButton("resources/glyphs/buttons/text_center.png",dim, this.id, e -> {EventBus.publish( new TextAlignUpdate(SwingConstants.CENTER,this.id));});
+        JButton alignRight = new IconButton("resources/glyphs/buttons/text_right.png",dim, this.id, e -> {EventBus.publish( new TextAlignUpdate(SwingConstants.RIGHT,this.id));});
+        
+        JButton[] alignButtons = { alignLeft, alignCenter, alignRight };
+
+        for (JButton btn : alignButtons) {
+            settings.add(btn);
+        }
+        panel.add(settings);
         panel.add(input); 
         return panel;
     }
+
+    
 
     private Font getScaledFontLabel(String text, Font baseFont, int maxWidth, int maxHeight, OneLineTextPane label) {
         int fontSize = baseFont.getSize();

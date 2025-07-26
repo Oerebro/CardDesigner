@@ -23,16 +23,13 @@ public class ImageBrowser extends ImagePublisher {
 
 
     public ImageBrowser(String name, String sourcePath, String id){
-        System.out.println("Browser id: "+id);
         this.name = name;
         this.id = id;
         this.sourcePath = sourcePath;
     }
 
     public void init() {
-        System.out.println("ImageBrowser init");
-        //filePanel = new JPanel(new GridLayout(0, 4, 1, 0));
-        filePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        filePanel = new JPanel(new GridLayout(0, 5, 1, 0));
         filePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 1));
 
         new SwingWorker<Void, IconLabel>() {

@@ -12,40 +12,24 @@ import java.awt.*;
 public class ColorPicker extends JButton{
     //private CardDesignerGUI parent;
 
-    public ColorPicker(CardDesignerGUI parent, int x, int y,int width,int height, int type){
+    public ColorPicker(int width,int height, String id){
         this.setBackground(Color.BLACK);  
         this.setFocusPainted(false);
-        //this.parent = parent;
-        this.setBounds(x,y,width,height);
+        Dimension dim = new Dimension(width,height);
+        this.setPreferredSize(dim);
+        this.setMaximumSize(dim); 
 
         this.addActionListener(e -> {
-                Color selected = JColorChooser.showDialog(parent.frame, "Choose a color", this.getBackground());
+                Color selected = JColorChooser.showDialog(this, "Choose a color", this.getBackground());
                 if (selected != null) {
                     this.setBackground(selected);
                     
-                    EventBus.publish(new ColorUpdate(type,selected));
+                    EventBus.publish(new ColorUpdate(id,selected));
 
 
                 }
             });
     }
 
-    public ColorPicker(CardDesignerGUI parent, int x, int y,int width,int height, int type, Color color){
-        this.setBackground(color);  
-        this.setFocusPainted(false);
-        //this.parent = parent;
-        this.setBounds(x,y,width,height);
-
-        this.addActionListener(e -> {
-                Color selected = JColorChooser.showDialog(parent.frame, "Choose a color", this.getBackground());
-                if (selected != null) {
-                    this.setBackground(selected);
-                    
-                    EventBus.publish(new ColorUpdate(type,selected));
-
-
-                }
-            });
-    }
 }
 
