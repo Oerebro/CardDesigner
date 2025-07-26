@@ -43,7 +43,7 @@ public class OneLineTextPane extends JLabel implements TextComponent {
     public static final int RANGE_NORMAL = 2;
     public static final int RANGE_MAX = 4;
     public static final int TYPE = 3;
-    private BufferedImage fontRenderImg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+   
     
 
     public OneLineTextPane(String id, String labelName, int render, int[] bounds) {
@@ -100,6 +100,12 @@ public class OneLineTextPane extends JLabel implements TextComponent {
         }
     }
 
+    /*public void scaleForPaint(double scale){
+        System.out.println("scale for paint");
+        float newSize = this.getFont().getSize() * ((float) scale / 0.7f);
+        this.setFont(this.getFont().deriveFont(newSize));
+    }*/
+
     private void onTitleFontUpdate(TitleFontUpdate e){
         Font font = FontLoader.loadFont(e.fontFamily, Font.BOLD,100f);
         Font scaledFont = getScaledFontLabel(this.getText(), font, this.getWidth(), this.getHeight(), this);
@@ -111,7 +117,7 @@ public class OneLineTextPane extends JLabel implements TextComponent {
     @Override
     public void setSize(int w, int h){
         super.setSize(w,h);
-        Font scaledFont = getScaledFontLabel(this.getText(), this.getFont().deriveFont(100f), w, h, this);
+        Font scaledFont = getScaledFontLabel(this.getText(), this.getFont().deriveFont(200f), w, h, this);
         this.setFont(scaledFont);
     }
 
@@ -172,7 +178,7 @@ public class OneLineTextPane extends JLabel implements TextComponent {
     private Font getScaledFontLabel(String text, Font baseFont, int maxWidth, int maxHeight, OneLineTextPane label) {
         int fontSize = baseFont.getSize();
         FontMetrics metrics;
-        
+        BufferedImage fontRenderImg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = fontRenderImg.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);

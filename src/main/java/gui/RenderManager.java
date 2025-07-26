@@ -8,6 +8,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Method;
+import java.nio.Buffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +49,21 @@ public class RenderManager {
         return textMap;
     }
 
+    public static BufferedImage renderAll(int baseWidth, int baseHeight, double scale){
+        baseWidth = (int) (baseWidth*scale);
+        baseHeight = (int) (baseHeight*scale);
+
+        BufferedImage img = new BufferedImage(baseWidth, baseHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = img.createGraphics();
+
+        for(int i=0; i<=10;i++){
+            g2d.drawImage(renderImageLayer(baseWidth, baseHeight, i, scale), 0, 0, baseWidth,baseHeight,null);
+            g2d.drawImage(renderTextLayer(baseWidth, baseHeight, i, scale), 0, 0, baseWidth,baseHeight,null);
+        }
+
+        return img;
+    }
+
     public static BufferedImage renderImageLayer(int baseWidth, int baseHeight, int renderLayer, double scale){
         BufferedImage image = new BufferedImage(baseWidth, baseHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = image.createGraphics();
@@ -76,22 +92,24 @@ public class RenderManager {
                 JComponent comp = txt.component;
                 if (comp instanceof TextComponent) {
                     String text = ((TextComponent) comp).getText();
+                    //((TextComponent) comp).scaleForPaint(scale);
                 }
                 bounds = txt.bounds;
                 i = new BufferedImage((int) (bounds[2] * scale), (int) (bounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
                 Graphics2D labelGraphics = i.createGraphics();
 
-                try {
-                    Method method = comp.getClass().getMethod("setBounds", int.class, int.class, int.class, int.class, double.class);
-
-                    method.invoke(comp,(int) (bounds[0] * scale),(int) (bounds[1] * scale),(int) (bounds[2] * scale),(int) (bounds[3] * scale),scale);
+                /*try {
+                    Method method = comp.getClass().getMethod("scaleFont", double.class);
+                    method.invoke(comp,scale);
                 } catch (NoSuchMethodException e) {
-                    comp.setBounds( (int) (bounds[0] * scale),(int) (bounds[1] * scale), (int) (bounds[2] * scale),(int) (bounds[3] * scale));
+                    comp.setSize( (int) (bounds[2] * scale),(int) (bounds[3] * scale));
                 } catch (Exception e) {
                     e.printStackTrace(); 
-                }
+                }*/
+                comp.setSize( (int) (bounds[2] * scale),(int) (bounds[3] * scale));
                 comp.doLayout();
                 comp.revalidate();
+    
                 comp.printAll(labelGraphics);
                 labelGraphics.dispose();
                     //add check for stroke outline here

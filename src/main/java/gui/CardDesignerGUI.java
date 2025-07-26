@@ -211,22 +211,19 @@ public class CardDesignerGUI {
     }
 
     public void exportImage() {
-        /*int targetWidth = 750;
+        int targetWidth = 750;
         int targetHeight = 1050;
 
-        double previewScaleWidth = 750.0*0.7;
-        double previewScaleHeight = 1050.0*0.7;*/
-
         //WHY DOES THIS STUPID THING WORK PERFECTLY WITH 0.7 RESOLUTION BUT NOT ANYTHING ELSE??? The stupid effing font just doesnt scale up.
-        double scale = 2.0;
+        double scale = 1.5;
 
-        BufferedImage finalImage = getComposedCard(scale, GlobalVar.REPAINT_ALL);
+        BufferedImage finalImage = RenderManager.renderAll(targetWidth, targetHeight,scale);
 
-        Graphics2D g2d = finalImage.createGraphics();
+        /*Graphics2D g2d = finalImage.createGraphics();
 
         g2d.setColor(Color.WHITE);
         //g2d.fillRect(0, 0, targetWidth, targetHeight);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);*/
 
         try {
             File outputfile = new File("export//"+generateDateTimeString()+".png");
@@ -237,7 +234,7 @@ public class CardDesignerGUI {
         }
 
 
-        rescaleComponents();
+        //rescaleComponents();
         
     }
 

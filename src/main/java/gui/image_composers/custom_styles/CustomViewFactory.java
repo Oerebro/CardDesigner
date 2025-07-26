@@ -11,7 +11,7 @@ public class CustomViewFactory implements ViewFactory {
                 case AbstractDocument.ContentElementName:
                     return new CustomGlyphView(elem);
                 case AbstractDocument.ParagraphElementName:
-                    return new ParagraphView(elem);
+                    return new CustomParagraphView(elem);
                 case AbstractDocument.SectionElementName:
                     return new BoxView(elem, View.Y_AXIS);
                 case StyleConstants.ComponentElementName:
