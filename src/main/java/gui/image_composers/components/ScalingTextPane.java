@@ -24,11 +24,12 @@ import events.TextUpdate;
 import events.RepaintPanelEvent;
 import events.InfoFontUpdate;
 
-public class ScalingTextPane extends JTextPane implements TextComponent{
+public class ScalingTextPane extends JScrollPane implements TextComponent{
     private final int maxNumLines;
     private int maxSizeFont, currentFontSize;
     private Font currentFont, fontRegular, fontItalic, fontBold;
     private Boolean wasEmpty = true;
+    private JTextPane textPane = new JTextPane();
     String fontName;
     private int iconSize, StyleConstantsAlignement, render;
     private String id, labelName;
@@ -45,25 +46,30 @@ public class ScalingTextPane extends JTextPane implements TextComponent{
         this.maxNumLines = 8;
         //this.maxSizeFont = maxSizeFont;
         this.maxSizeFont = 200;
-        this.currentFontSize = 19;
+        this.currentFontSize = 24;
         Font baseFont = UIManager.getFont("Label.font");
         if (baseFont == null) {
-            baseFont = new Font("SansSerif", Font.PLAIN, maxSizeFont);
+            baseFont = new Font("SansSerif", Font.PLAIN, currentFontSize);
         }
 
-        currentFont = baseFont.deriveFont((float) maxSizeFont);
+        currentFont = baseFont.deriveFont((float) currentFontSize);
         StyleConstantsAlignement = StyleConstants.ALIGN_LEFT;
 
-        setFont(baseFont.deriveFont((float) maxSizeFont));
-        setForeground(Color.WHITE);
-        setBorder(null);
-        DefaultCaret caret = (DefaultCaret) getCaret();
+        textPane.setFont(baseFont.deriveFont((float) currentFontSize));
+        textPane.setForeground(Color.WHITE);
+        textPane.setBorder(null);
+        DefaultCaret caret = (DefaultCaret) textPane.getCaret();
         caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
         this.setBorder(null);
+        this.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        this.setViewportView(textPane);
 
         this.setOpaque(false);
-        setOpaque(false);
+        this.getViewport().setOpaque(false);
+        textPane.setOpaque(false);
 
         stylesInit();
 
@@ -74,7 +80,15 @@ public class ScalingTextPane extends JTextPane implements TextComponent{
     }
 
     public String getFontName() {
-        return getFont().getName();
+        return textPane.getFont().getName();
+    }
+
+    public String getText(){
+        return textPane.getText();
+    }
+
+    public void printAll(Graphics2D g){
+        textPane.printAll(g);
     }
 
      public JPanel getInputComponent(){
@@ -105,7 +119,9 @@ public class ScalingTextPane extends JTextPane implements TextComponent{
     @Override
     public void setBounds(int x, int y, int width, int height){
         super.setBounds(x, y, width, height);
-        scaleFont(height);
+        this.setPreferredSize(new Dimension(width, height));
+        textPane.setBounds(0,0, width, height);
+        textPane.setSize(width, height);
     }
 
     public float getMaxSizeFont() {
@@ -113,39 +129,39 @@ public class ScalingTextPane extends JTextPane implements TextComponent{
     }
 
     public void setColor(Color color) {
-            setForeground(color);
+            textPane.setForeground(color);
             setFormattedText(getText());
             //EventBus.publish(new RepaintPanelEvent(GlobalVar.REPAINT_INFO));
     }
 
     private void stylesInit(){
-        Font font = getFont();
-        Color color = getForeground();
-        Style defaultStyle = addStyle("default", null);
+        Font font =  textPane.getFont();
+        Color color =  textPane.getForeground();
+        Style defaultStyle = textPane.addStyle("default", null);
         StyleConstants.setFontFamily(defaultStyle, font.getFamily());
         StyleConstants.setFontSize(defaultStyle, font.getSize());
         StyleConstants.setForeground(defaultStyle, color);
 
-        Style boldStyle = addStyle("bold", null);
+        Style boldStyle = textPane.addStyle("bold", null);
         StyleConstants.setBold(boldStyle, true);
         StyleConstants.setFontFamily(boldStyle, font.getFamily());
         StyleConstants.setFontSize(boldStyle, font.getSize());
         StyleConstants.setForeground(boldStyle, color);
 
-        Style italicStyle = addStyle("italic", null);
+        Style italicStyle = textPane.addStyle("italic", null);
         StyleConstants.setItalic(italicStyle, true);
         StyleConstants.setFontFamily(italicStyle, font.getFamily());
         StyleConstants.setFontSize(italicStyle, font.getSize());
         StyleConstants.setForeground(italicStyle, color);
 
-        Style boldItalicStyle = addStyle("bolditalic", null);
+        Style boldItalicStyle = textPane.addStyle("bolditalic", null);
         StyleConstants.setBold(boldItalicStyle, true);
         StyleConstants.setItalic(boldItalicStyle, true);
         StyleConstants.setFontFamily(boldItalicStyle, font.getFamily());
         StyleConstants.setFontSize(boldItalicStyle, font.getSize());
         StyleConstants.setForeground(boldItalicStyle, color);
 
-        Style paragraphStyle = addStyle("paragraph", null);
+        Style paragraphStyle = textPane.addStyle("paragraph", null);
         StyleConstants.setAlignment(paragraphStyle, StyleConstantsAlignement);
     }
 
@@ -169,33 +185,33 @@ public class ScalingTextPane extends JTextPane implements TextComponent{
 
     public void setStyleConstantAlignement(int i){
         StyleConstantsAlignement = i;
-        Style paragraphStyle = getStyle("paragraph");
+        Style paragraphStyle = textPane.getStyle("paragraph");
         StyleConstants.setAlignment(paragraphStyle, StyleConstantsAlignement);
         EventBus.publish(new RepaintPanelEvent("text",-1)); 
     }
 
     private void setFormattedText(String rawText) {
         rawText = rawText.replaceAll("<->", "—").replaceAll("<\\.>", "•");
-        StyledDocument doc = getStyledDocument();
+        StyledDocument doc = textPane.getStyledDocument();
          try {
             doc.remove(0, doc.getLength());
 
-            Style paragraphStyle = getStyle("paragraph");
+            Style paragraphStyle = textPane.getStyle("paragraph");
             doc.setParagraphAttributes(0, 1, paragraphStyle, false);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
 
-        Font font = getFont();
+        Font font = textPane.getFont();
         FontMetrics metrics = getFontMetrics(font);
         int lineHeight = metrics.getHeight();
         iconSize = (int) (lineHeight * 0.8);
 
-        Style defaultStyle = getStyle("default");
+        Style defaultStyle = textPane.getStyle("default");
         /*StyleConstants.setFontFamily(defaultStyle, font.getFamily());
         StyleConstants.setFontSize(defaultStyle, font.getSize());*/
 
-        Style iconStyle = addStyle("icon", null);
+        Style iconStyle = textPane.addStyle("icon", null);
 
         try {
             for (String paragraph : rawText.split("\n")) {
@@ -258,13 +274,13 @@ public class ScalingTextPane extends JTextPane implements TextComponent{
     private void insertStyledText(StyledDocument doc, String text, boolean bold, boolean italic) throws BadLocationException {
         if (text.isEmpty()) return;
         String styleName = bold && italic ? "bolditalic" : bold ? "bold" : italic ? "italic" : "default";
-        doc.insertString(doc.getLength(), text, getStyle(styleName));
+        doc.insertString(doc.getLength(), text, textPane.getStyle(styleName));
     }
 
 
     private void onFontUpdate(InfoFontUpdate e){
         fontName = e.fontName;
-        setFont(FontLoader.loadFont(e.fontName,Font.PLAIN, currentFontSize));
+        textPane.setFont(FontLoader.loadFont(e.fontName,Font.PLAIN, currentFontSize));
         fontRegular = FontLoader.loadFont(e.fontName,Font.PLAIN, currentFontSize);
         fontItalic = FontLoader.loadFont(e.fontName,Font.ITALIC, currentFontSize);
         fontBold = FontLoader.loadFont(e.fontName,Font.BOLD, currentFontSize);
@@ -273,47 +289,47 @@ public class ScalingTextPane extends JTextPane implements TextComponent{
     }
 
     private void updateStylesFontSize(float size){
-        setFont(getFont().deriveFont(size)); 
+        textPane.setFont(textPane.getFont().deriveFont(size)); 
 
-        Style defaultStyle = getStyle("default");
+        Style defaultStyle = textPane.getStyle("default");
         StyleConstants.setFontSize(defaultStyle, (int) size);
 
-        Style boldStyle = getStyle("bold");
+        Style boldStyle = textPane.getStyle("bold");
         StyleConstants.setFontSize(boldStyle, (int) size);
 
-        Style italicStyle = getStyle("italic");
+        Style italicStyle = textPane.getStyle("italic");
         StyleConstants.setFontSize(italicStyle, (int) size);
 
-        Style boldItalicStyle = getStyle("bolditalic");
+        Style boldItalicStyle = textPane.getStyle("bolditalic");
         StyleConstants.setFontSize(boldItalicStyle, (int) size);
     }
 
     private void updateStylesToCurrentFont() {
-        Color color = getForeground();
+        Color color = textPane.getForeground();
 
-        float fontSize = getFont().getSize();
-        Font font = getFont();
+        float fontSize = textPane.getFont().getSize();
+        Font font = textPane.getFont();
         
 
         // Apply to styles
-        Style defaultStyle = getStyle("default");
+        Style defaultStyle = textPane.getStyle("default");
         StyleConstants.setFontFamily(defaultStyle, fontRegular.getFamily());
         StyleConstants.setFontSize(defaultStyle, font.getSize());
         StyleConstants.setForeground(defaultStyle, color);
 
-        Style boldStyle = getStyle("bold");
+        Style boldStyle = textPane.getStyle("bold");
         StyleConstants.setFontFamily(boldStyle, fontBold.getFamily());
         StyleConstants.setFontSize(boldStyle, font.getSize());
         StyleConstants.setBold(boldStyle, true);
         StyleConstants.setForeground(boldStyle, color);
 
-        Style italicStyle = getStyle("italic");
+        Style italicStyle = textPane.getStyle("italic");
         StyleConstants.setFontFamily(italicStyle, fontItalic.getFamily());
         StyleConstants.setFontSize(italicStyle, font.getSize());
         StyleConstants.setItalic(italicStyle, true);
         StyleConstants.setForeground(italicStyle, color);
 
-        Style boldItalicStyle = getStyle("bolditalic");
+        Style boldItalicStyle = textPane.getStyle("bolditalic");
         StyleConstants.setFontFamily(boldItalicStyle, font.getFamily());
         StyleConstants.setFontSize(boldItalicStyle, font.getSize());
         StyleConstants.setBold(boldItalicStyle, true);
@@ -325,7 +341,7 @@ public class ScalingTextPane extends JTextPane implements TextComponent{
 
     private void onColorUpdate(ColorUpdate e) {
         if(e.type == GlobalVar.INFO_TEXT_UPDATE){
-            setForeground(e.color);
+            textPane.setForeground(e.color);
             setFormattedText(getText());
             EventBus.publish(new RepaintPanelEvent("text",-1)); 
         }
@@ -347,9 +363,10 @@ public class ScalingTextPane extends JTextPane implements TextComponent{
         }
 
         if(e.id.equals(this.id)) {
+            System.out.println("Textupdate");
             boolean isNowEmpty = e.text.trim().isEmpty();
             String text = e.text;
-            Font font = getFont();
+            Font font = textPane.getFont();
             if (text == null) {
                 text = "";
             }  

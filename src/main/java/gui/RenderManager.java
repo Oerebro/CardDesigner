@@ -77,6 +77,7 @@ public class RenderManager {
                 bounds = txt.bounds;
                 i = new BufferedImage((int) (bounds[2] * scale), (int) (bounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
                 Graphics2D labelGraphics = i.createGraphics();
+
                 try {
                     Method method = comp.getClass().getMethod("setBounds", int.class, int.class, int.class, int.class, double.class);
 
@@ -86,6 +87,8 @@ public class RenderManager {
                 } catch (Exception e) {
                     e.printStackTrace(); 
                 }
+                comp.doLayout();
+                comp.revalidate();
                 comp.printAll(labelGraphics);
                 labelGraphics.dispose();
                     //add check for stroke outline here
