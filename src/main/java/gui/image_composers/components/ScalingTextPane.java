@@ -48,7 +48,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
 
     private static final Map<String, String> ICON_MAP = new HashMap<>();
 
-    public ScalingTextPane(String id, String labelName, int render, int[] bounds) {
+    public ScalingTextPane(String id, String labelName, int render, int[] bounds, int minLineCount) {
         this.render = render;
         this.id = id;
         this.labelName = labelName;
@@ -60,7 +60,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
     //settings for minimum line count, dynamically scales font
         this.maxSizeFont = 100;
         this.currentFontSize = 24;
-        this.minLineCount = 7;
+        this.minLineCount = minLineCount;
 
 
         Font baseFont = UIManager.getFont("Label.font");

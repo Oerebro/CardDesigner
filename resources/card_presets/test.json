@@ -24,6 +24,7 @@
           "id": "infoText",
           "labelName": "Info Text",
           "bounds": [55, 665, 640, 295],
+          "minLineCount": 7,
           "render":4,
           "side": "leftSide"
           

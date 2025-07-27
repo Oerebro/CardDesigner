@@ -39,33 +39,47 @@ public class ComponentLoader {
                     String labelName = instance.path("labelName").asText(null);
                     int render = instance.path("render").asInt(0);
                     String side = instance.path("side").asText(null);
-                    
+                    int minLineCount = instance.path("minLineCount").asInt(1);
+
                     JsonNode boundsNode = instance.path("bounds");
                     int[] bounds = new int[4];
                     for (int i = 0; i < boundsNode.size() && i < 4; i++) {
                         bounds[i] = boundsNode.get(i).asInt();
                     }
 
-                    List<Object> constructorArgs = new ArrayList<>();
-                    constructorArgs.add(id); 
-                    constructorArgs.add(labelName);   
-                    constructorArgs.add(render);   
-                    constructorArgs.add(bounds); 
+                    List<Object> argsWithMinLine = new ArrayList<>();
+                    argsWithMinLine.add(id);
+                    argsWithMinLine.add(labelName);
+                    argsWithMinLine.add(render);
+                    argsWithMinLine.add(bounds);
+                    argsWithMinLine.add(minLineCount);
 
-                    Object[] args = constructorArgs.toArray();
-                    Class<?>[] paramTypes = Arrays.stream(args)
-                            .map(arg -> {
-                                if (arg instanceof Integer) return int.class;
-                                if (arg instanceof String) return String.class;
-                                if (arg instanceof Integer) return int.class;
-                                if (arg instanceof int[]) return int[].class;
-                                return arg.getClass();
-                            })
-                            .toArray(Class<?>[]::new);
+                    List<Object> argsWithoutMinLine = argsWithMinLine.subList(0, 4);
 
                     try {
                         Class<?> clazz = Class.forName(fqcn);
-                        Object obj = clazz.getConstructor(paramTypes).newInstance(args);
+
+                        Object obj = null;
+
+                        // local lambda to get param types
+                        java.util.function.Function<List<Object>, Class<?>[]> getParamTypes = (argList) -> 
+                            argList.stream()
+                                .map(arg -> {
+                                    if (arg instanceof Integer) return int.class;
+                                    if (arg instanceof String) return String.class;
+                                    if (arg instanceof int[]) return int[].class;
+                                    return arg.getClass();
+                                }).toArray(Class<?>[]::new);
+
+                        try {
+                            // Try constructor with minLineCount
+                            Class<?>[] paramTypesWithMin = getParamTypes.apply(argsWithMinLine);
+                            obj = clazz.getConstructor(paramTypesWithMin).newInstance(argsWithMinLine.toArray());
+                        } catch (NoSuchMethodException e) {
+                            // Fallback: try constructor without minLineCount
+                            Class<?>[] paramTypesWithoutMin = getParamTypes.apply(argsWithoutMinLine);
+                            obj = clazz.getConstructor(paramTypesWithoutMin).newInstance(argsWithoutMinLine.toArray());
+                        }
 
                         // must be a JComponent
                         if (!(obj instanceof JComponent)) {
@@ -75,7 +89,7 @@ public class ComponentLoader {
                         RenderableText comp = new RenderableText(id, labelName, render, bounds, (JComponent) obj);
                         RenderManager.addToTextMap(comp);
                         JPanel panel = comp.getInputComponent();
-                        if(!TextComponentManager.isComponentRegistered(id)){
+                        if (!TextComponentManager.isComponentRegistered(id)) {
                             TextComponentManager.registerComponents(id, panel, side);
                         }
                     } catch (Exception e) {
@@ -84,6 +98,8 @@ public class ComponentLoader {
                     }
                 }
             }
+
+
 
             JsonNode bufferedImages = root.path("components").path("BufferedImage");
             for (JsonNode img : bufferedImages) {
