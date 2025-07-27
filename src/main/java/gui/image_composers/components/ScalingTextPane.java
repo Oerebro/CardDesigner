@@ -40,7 +40,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
     private int maxSizeFont, currentFontSize,minLineCount;
     private Font currentFont, fontRegular, fontItalic, fontBold;
     private Boolean wasEmpty = true;
-    private JTextPane textPane = new JTextPane();
+    private JTextPane textPane = new WrappingTextPane();
     String fontName;
     private int iconSize, StyleConstantsAlignement, render;
     private String id, labelName;
