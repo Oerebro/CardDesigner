@@ -148,6 +148,8 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         settings.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JTextArea input = new JTextArea();
+        input.setLineWrap(true);
+        input.setWrapStyleWord(true);
         input.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
         input.setPreferredSize(new Dimension(200,500));
 
