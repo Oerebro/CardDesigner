@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class ComponentLoader {
-    protected int baseWidth = 750;
-    protected int baseHeight = 1050;
+    protected int[] baseResolution;
+    protected int[] bleedResolution;
 
     public void loadComponents(String filePath) {
         ObjectMapper mapper = new ObjectMapper();
@@ -29,6 +29,16 @@ public class ComponentLoader {
             JsonNode root = mapper.readTree(new File(filePath));
 
             JsonNode components = root.path("components");
+            
+            //get aspect ratio and base resolution of card
+            JsonNode boundsNode = components.path("resolution");
+            JsonNode boundsNode2 = components.path("bleed_resolution");
+            baseResolution = new int[2];
+            bleedResolution = new int[2];
+            for (int i = 0; i < boundsNode.size(); i++) {
+                baseResolution[i] = boundsNode.get(i).asInt();
+                bleedResolution[i] = boundsNode2.get(i).asInt();
+            }
 
             String textComponentsPath = components.path("TextComponents").asText(null);
             String bufferedImagesPath = components.path("BufferedImages").asText(null);
@@ -44,6 +54,9 @@ public class ComponentLoader {
 
             
     }
+
+    
+
 
     protected void loadTextComponents(String filePath){
         ObjectMapper mapper = new ObjectMapper();

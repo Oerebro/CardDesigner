@@ -74,7 +74,7 @@ public class ControlPanel1 extends ControlPanel {
 
     
 
-    public void init(int type, CardDesignerGUI parent) {
+    public void init(CardDesignerGUI parent) {
         this.parent = parent;
         setLayout(new GridLayout(1,3));
         //left side: all major text components like title, info etc.

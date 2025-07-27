@@ -1,5 +1,7 @@
 {
   "components": {
+    "resolution":[750,1050],
+    "bleed_resolution": [825,1125],
     "TextComponents": "resources/card_presets/dnd5e/weapon/TextComponents.json",
     "BufferedImages": "resources/card_presets/dnd5e/weapon/BufferedImages.json",
     "ImageBrowserTabs": "resources/card_presets/dnd5e/weapon/ImageBrowserTabs.json",

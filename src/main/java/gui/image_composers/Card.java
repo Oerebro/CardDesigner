@@ -1,15 +1,6 @@
 package gui.image_composers;
-
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Rectangle;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JTabbedPane;
 
 import events.EventBus;
 import events.ImageUpdate;
@@ -35,6 +26,13 @@ public class Card extends ComponentLoader{
         EventBus.subscribe(ImageUpdate.class, this::onImageUpdate);
     }
 
+    public int[] getResolution(){
+        return baseResolution;
+    }
+
+    public int[] getBleedResolution(){
+        return bleedResolution;
+    }
     
 
     private void onImageUpdate(ImageUpdate e){

@@ -33,6 +33,7 @@ public class CardDesignerGUI {
     private PreviewPanel previewPanel;
     ControlPanel1 controlPanel;
     ControlPanel2 controlPanel2;
+    private boolean hasBleedEdge = true;
 
 
     public Frame getFrame(){
@@ -43,8 +44,8 @@ public class CardDesignerGUI {
     public CardDesignerGUI() {     
         EventBus.subscribe(CardTypeUpdate.class, this::onCardTypeUpdate);   
 
-        int defaultType = GlobalVar.ARKHAM;
-        setImageComposerType(defaultType);
+        String defaultPreset = "arkham";
+        
         
         frame = new JFrame("Card Designer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -55,13 +56,11 @@ public class CardDesignerGUI {
 
         // Preview Panel on the left
         previewPanel = new PreviewPanel(this);
-        //previewPanel.loadDefault();
-        
-        
+        setImageComposerType(defaultPreset);
 
         // Control Panel on the right
         controlPanel = new ControlPanel1();
-        controlPanel.init(defaultType, this);
+        controlPanel.init(this);
         controlPanel.setBounds(600,0,1200,800);
         controlPanel.setBorder(BorderFactory.createTitledBorder("controlPanel"));
 
@@ -203,13 +202,9 @@ public class CardDesignerGUI {
     }
 
     public void exportImage() {
-        int targetWidth = 750;
-        int targetHeight = 1050;
-
-        //WHY DOES THIS STUPID THING WORK PERFECTLY WITH 0.7 RESOLUTION BUT NOT ANYTHING ELSE??? The stupid effing font just doesnt scale up.
         double scale = 1.5;
 
-        BufferedImage finalImage = RenderManager.renderAll(targetWidth, targetHeight,scale);
+        BufferedImage finalImage = RenderManager.renderAll(imageComposer,scale, hasBleedEdge);
 
         /*Graphics2D g2d = finalImage.createGraphics();
 
@@ -240,18 +235,13 @@ public class CardDesignerGUI {
         //setImageComposerType(e.type);
     }
 
-    private void setImageComposerType(int type){
-        imageComposer = new Card("arkham");
+    private void setImageComposerType(String preset){
+        imageComposer = new Card(preset);
+        previewPanel.setResolution(imageComposer.getResolution());
 
     }
     
     
-
-    public BufferedImage getComposedCard(double scale, int type){
-        return imageComposer.composeCard(scale, type);
-    }
-
-
 
     public static void main(String[] args) {
         try {

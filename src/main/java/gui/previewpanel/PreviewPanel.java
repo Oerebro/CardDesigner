@@ -4,6 +4,7 @@ import javax.swing.*;
 import events.EventBus;
 import events.RepaintPanelEvent;
 import gui.*;
+import gui.image_composers.Card;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -21,6 +22,7 @@ public class PreviewPanel {
     private int scaledWidth,scaledHeight;
     private int baseWidth = 750;
     private int baseHeight = 1050;
+    private Card card;
 
     private BufferedImage[] imageLayers = new BufferedImage[6];
     private BufferedImage[] textLayers = new BufferedImage[6];
@@ -62,7 +64,10 @@ public class PreviewPanel {
         rescale(1.0);  
         EventBus.publish(new RepaintPanelEvent());
     }
-    
+    public void setResolution(int[] res){
+        baseWidth = res[0];
+        baseHeight = res[1];
+    }
     public int[] getScaledDimensions(int imageWidth, int imageHeight, int maxWidth, int maxHeight) {
         // Compute scale factors for width and height
         double scaleX = (double) maxWidth / imageWidth;
