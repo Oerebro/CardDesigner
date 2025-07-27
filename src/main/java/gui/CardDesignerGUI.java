@@ -249,29 +249,8 @@ public class CardDesignerGUI {
     }
 
     private void setImageComposerType(int type){
-        imageComposer = new Card("test");
-        /*if(type != loadedCardType){
-            switch(type){
-                /*case GlobalVar.W_MELEE: imageComposer = new WeaponMeleeCardComposer(); break;
-                case GlobalVar.W_RANGED: imageComposer = new WeaponRangedCardComposer(); break;
-                case GlobalVar.W_THROWABLE: imageComposer = new WeaponThrowableCardComposer(); break;
-                case GlobalVar.WEAPON: imageComposer = new WeaponCard(); break;
-                case GlobalVar.CHARACTER: imageComposer = new CharacterCardComposer(); break;
-                case GlobalVar.EFFECT: imageComposer = new EffectCardComposer(); break;
-                case GlobalVar.ARMOR: imageComposer = new ArmorCard(); break;
-                case GlobalVar.CONSUMABLE: imageComposer = new ConsumableCardComposer(); break;
-                case GlobalVar.RUNE: imageComposer = new RuneCard(); break;
-                case GlobalVar.ACCESSOIRE: imageComposer = new AccessoireCardComposer(); break;
-                case GlobalVar.ARKHAM: imageComposer = new ArkhamHorrorSpellCard(); break;
-            }
+        imageComposer = new Card("arkham");
 
-            loadedCardType = type;
-            EventBus.publish(new CardLoadEvent());
-            EventBus.publish(new RepaintPanelEvent());
-        }
-        //this will load the stuff from the previous card / load defaults
-        //EventBus.publish(new RepaintPanelEvent());
-     */   
     }
     
     

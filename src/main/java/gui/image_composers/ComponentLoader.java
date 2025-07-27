@@ -28,7 +28,29 @@ public class ComponentLoader {
         try {
             JsonNode root = mapper.readTree(new File(filePath));
 
-            JsonNode textComponents = root.path("components").path("TextComponents");
+            JsonNode components = root.path("components");
+
+            String textComponentsPath = components.path("TextComponents").asText(null);
+            String bufferedImagesPath = components.path("BufferedImages").asText(null);
+            String imageBrowserTabsPath = components.path("ImageBrowserTabs").asText(null);
+            String cardAttributesPath = components.path("CardAttributes").asText(null);
+            System.out.println(bufferedImagesPath);
+            loadTextComponents(textComponentsPath);
+            loadBufferedImages(bufferedImagesPath);
+            loadImageBrowserTabs(imageBrowserTabsPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }  
+
+            
+    }
+
+    protected void loadTextComponents(String filePath){
+        ObjectMapper mapper = new ObjectMapper();
+        try{
+            JsonNode root = mapper.readTree(new File(filePath));
+            JsonNode textComponents = root;
+
             Iterator<String> classNames = textComponents.fieldNames();
             while (classNames.hasNext()) {
                 String fqcn = classNames.next();
@@ -98,18 +120,21 @@ public class ComponentLoader {
                     }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-
-
-            JsonNode bufferedImages = root.path("components").path("BufferedImage");
+    protected void loadBufferedImages(String filePath){
+        ObjectMapper mapper = new ObjectMapper();
+        try{
+            JsonNode root = mapper.readTree(new File(filePath));
+            JsonNode bufferedImages = root;
             for (JsonNode img : bufferedImages) {
                 String id = img.path("id").asText();
                 JsonNode boundsNode = img.path("bounds");
                 String path = img.path("path").asText(null);
                 int render = img.path("render").asInt(0);
-                String type = img.path("type").asText(null);
-                String name = img.path("name").asText(null);
-
                 int[] bounds = new int[4];
                 for (int i = 0; i < boundsNode.size(); i++) {
                     bounds[i] = boundsNode.get(i).asInt();
@@ -119,19 +144,29 @@ public class ComponentLoader {
                 if (path != null) {
                     image = ImageIO.read(new File(path));
                 }
-
+                //System.out.println("Loaded image: " + id + ", render: " + render);
                 RenderableImage ri = new RenderableImage(id, path, image, bounds, render);  
                 RenderManager.addToImageMap(ri);       
             }
 
-            JsonNode imageBrowserTabs = root.path("components").path("ImageBrowserTabs");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void loadImageBrowserTabs(String filePath){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode root = mapper.readTree(new File(filePath));
+            JsonNode imageBrowserTabs = root;
             for (JsonNode tab : imageBrowserTabs) {
                 String id = tab.path("id").asText();
                 String sourcePath = tab.path("sourcePath").asText(null);
                 String type = tab.path("type").asText(null);
                 String name = tab.path("name").asText(null);
 
-//register tabs into ImageBrowserManager 
+            //register tabs into ImageBrowserManager 
                 ImageBrowser br = new ImageBrowser(name, sourcePath, id);
                 if(!ImageBrowserManager.isTabRegistered(name)){
                     br.init();   
@@ -153,7 +188,7 @@ public class ComponentLoader {
          try{
             i = ImageIO.read(new File(path));
         }catch(IOException e){
-            System.out.println("Error on ImageComposer::getImageFromFile ("+path+"); File not found");
+            System.out.println("Error on ComponentLoader::getImageFromFile ("+path+"); File not found");
             return null;
      
         }

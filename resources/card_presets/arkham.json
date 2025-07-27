@@ -1,0 +1,8 @@
+{
+  "components": {
+    "TextComponents": "resources/card_presets/arkham/TextComponents.json",
+    "BufferedImages": "resources/card_presets/arkham/BufferedImages.json",
+    "ImageBrowserTabs": "resources/card_presets/arkham/ImageBrowserTabs.json",
+    "CardAttributes": "resources/card_presets/arkham/CardAttributes.json"
+  }
+}

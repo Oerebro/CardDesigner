@@ -11,7 +11,7 @@ import events.AttributeUpdate;
 import events.CardTypeUpdate;
 import events.DiceUpdateEvent;
 import gui.*;
-import gui.previewpanel.DigitOnlyTextField;
+import gui.image_composers.components.DigitOnlyTextField;
 
 import java.awt.*;
 public class CardAttributesPanel extends JPanel{

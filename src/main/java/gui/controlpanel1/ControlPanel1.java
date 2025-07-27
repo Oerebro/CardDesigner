@@ -21,7 +21,7 @@ import gui.CardDesignerGUI;
 import gui.GlobalVar;
 import gui.ImageBrowserManager;
 import gui.TextComponentManager;
-import gui.previewpanel.DigitOnlyTextField;
+import gui.image_composers.components.DigitOnlyTextField;
 import abstractclasses.*;
 import events.CardLoadEvent;
 import events.EventBus;
