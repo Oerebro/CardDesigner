@@ -203,7 +203,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         //this.setSize(w,h);
         textPane.setSize(w,h);
         //System.out.println("############### export w: "+w+" h: "+h);
-        scaleFont();
+        //scaleFont();
         
     }
 
@@ -211,7 +211,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         float newSize = getScaledFont(textPane.getFont());
         //System.out.println("scale Font: "+newSize);
         updateStylesFontSize(newSize);
-        setFormattedText(textPane.getText());
+        //setFormattedText(textPane.getText());
         textPane.revalidate();
         textPane.doLayout();
         textPane.repaint();
@@ -221,26 +221,25 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
     private float getScaledFont(Font font) {
         int height = textPane.getHeight();
         int size = currentFontSize;
-        Font font2 = font.deriveFont(size);
+        int lineCount = Math.max(minLineCount, getVisualLineCount(textPane));
+        Font testFont = font.deriveFont((float)size);
 
-        FontMetrics fm = textPane.getFontMetrics(font2);
+        FontMetrics fm = textPane.getFontMetrics(testFont);
         int lineHeight = fm.getHeight();
-        int lineCount = getVisualLineCount(textPane);
-        if(lineCount < minLineCount){
-            lineCount = minLineCount;
-        }
+
 
         if(lineHeight * lineCount < height){
                 size = maxSizeFont;
-                fm = textPane.getFontMetrics(font2.deriveFont((float) size));
+                testFont = font.deriveFont((float)size);
+                fm = textPane.getFontMetrics(testFont);
                 lineHeight = fm.getHeight();
         }
 
         while(lineHeight * lineCount > height && size > 1){
             //System.out.println("text height: "+(lineHeight * lineCount));
             size--;
-            font2 = font2.deriveFont((float)size);
-            fm = textPane.getFontMetrics(font2);
+            testFont = testFont.deriveFont((float)size);
+            fm = textPane.getFontMetrics(testFont);
             lineHeight = fm.getHeight();
         
         }
@@ -434,9 +433,9 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         float fontSize = textPane.getFont().getSize();
         Font font = textPane.getFont();
 
-        defaultStyle.removeAttribute("fontInstance");
-        boldStyle.removeAttribute("fontInstance");
-        italicStyle.removeAttribute("fontInstance");
+        //defaultStyle.removeAttribute("fontInstance");
+        //boldStyle.removeAttribute("fontInstance");
+        //italicStyle.removeAttribute("fontInstance");
 
         // Apply to styles
         defaultStyle.addAttribute("fontInstance", fontRegular);
@@ -466,10 +465,10 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         //System.out.println("test "+size);
         if(fontRegular == null || fontBold == null || fontItalic == null) return;
         //System.out.println("font size set to "+size);
-        textPane.setFont(textPane.getFont().deriveFont(size)); 
+        /*textPane.setFont(textPane.getFont().deriveFont(size)); 
         fontRegular = fontRegular.deriveFont((float)size);
         fontBold = fontBold.deriveFont((float)size);
-        fontItalic = fontItalic.deriveFont((float)size);
+        fontItalic = fontItalic.deriveFont((float)size);*/
 
         defaultStyle.addAttribute("fontInstance", fontRegular);
         boldStyle.addAttribute("fontInstance", fontBold);
