@@ -43,7 +43,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
     private JTextPane textPane = new WrappingTextPane();
     String fontName;
     private int iconSize, StyleConstantsAlignement, render;
-    private String id, labelName;
+    private String id, labelName, text;
     private SimpleAttributeSet defaultStyle,boldStyle,italicStyle;
 
     private static final Map<String, String> ICON_MAP = new HashMap<>();
@@ -55,6 +55,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         fontName = "";
         loadIconsFromDirectory();
         this.maxNumLines = 8;
+        text = "";
 
     //settings for minimum line count, dynamically scales font
         this.maxSizeFont = 100;
@@ -111,7 +112,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
     }
 
     public String getText(){
-        return textPane.getText();
+        return this.text;
     }
 
     
@@ -127,7 +128,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         StyleConstantsAlignement = i;
         Style paragraphStyle = textPane.getStyle("paragraph");
         StyleConstants.setAlignment(paragraphStyle, StyleConstantsAlignement);
-        setFormattedText(textPane.getText());
+        setFormattedText(this.text);
         SwingUtilities.invokeLater(() -> EventBus.publish(new RepaintPanelEvent("text", this.render)));
         //EventBus.publish(new RepaintPanelEvent("text", this.render)); 
     }
@@ -194,29 +195,29 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
     public void printAll(Graphics g){
         //System.out.println("print All");
         //scaleFont();
+        //setFormattedText(this.text);
         textPane.printAll(g);
     }
 
     @Override
     public void setSize(int w, int h){
-        //System.out.println("Test");
-        //this.setSize(w,h);
         textPane.setSize(w,h);
         System.out.println("############### export w: "+w+" h: "+h);
+        
         scaleFont();
-        setFormattedText(textPane.getText());
+        setFormattedText(text);
+        textPane.revalidate();
+        textPane.repaint(); 
         
     }
+
 
     public void scaleFont(){
         float newSize = getScaledFont(textPane.getFont());
         currentFontSize = (int) newSize;
         //System.out.println("scale Font: "+newSize);
         updateStylesFontSize(newSize);
-        setFormattedText(textPane.getText());
-        textPane.revalidate();
-        textPane.doLayout();
-        textPane.repaint();
+        
         
     }
 
@@ -246,7 +247,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
             lineHeight = fm.getHeight();
         
         }
-        //textPane.setFont(currentFont);
+        textPane.setFont(currentFont);
         System.out.println("final size: "+size);
         return (float)size;
     }
@@ -324,16 +325,15 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
-
+        
         Font font = textPane.getFont();
         FontMetrics metrics = getFontMetrics(font);
         int lineHeight = metrics.getHeight();
         iconSize = (int) (lineHeight * 0.8);
 
-        Style defaultStyle = textPane.getStyle("default");
         Style paragraphStyle = textPane.getStyle("paragraph");
         Style iconStyle = textPane.addStyle("icon", null);
-
+        
         try {
             for (String paragraph : rawText.split("\n")) {
                 StringBuilder wordBuffer = new StringBuilder();
@@ -390,10 +390,13 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
                 int paraStart = doc.getParagraphElement(doc.getLength() - 1).getStartOffset();
                 doc.setParagraphAttributes(paraStart, 1, paragraphStyle, true);
             }
-
+            textPane.revalidate();
+            textPane.repaint();
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
+
+        
     }
 
 
@@ -423,7 +426,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
             fontBold = FontLoader.loadFont(e.fontName,Font.BOLD, currentFontSize);
             updateStylesToCurrentFont();
             //scaleFont();
-            setFormattedText(textPane.getText());
+            setFormattedText(this.text);
             
             SwingUtilities.invokeLater(() -> EventBus.publish(new RepaintPanelEvent("text", this.render)));
          }
@@ -506,12 +509,14 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
 
         if(e.id.equals(this.id)) {
             boolean isNowEmpty = e.text.trim().isEmpty();
-            String text = e.text;
+            String txt = e.text;
             Font font = textPane.getFont();
-            if (text == null) {
-                text = "";
+            if (txt == null) {
+                txt = "";
             }  
-            //scaleFont();
+
+            this.text = txt;
+            scaleFont();
             setFormattedText(text);
             
             EventBus.publish(new RepaintPanelEvent("text",render)); 
