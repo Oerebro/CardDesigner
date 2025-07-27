@@ -43,7 +43,6 @@ public class PreviewPanel {
                     double scale = parent.getFrameScale();
 
                     for(int i = 0; i < imageLayers.length; i++){
-                        System.out.print(imageLayers[i]);
                         g.drawImage(imageLayers[i], 0, 0, scaledWidth, scaledHeight, this);
                         g.drawImage(textLayers[i], 0, 0, scaledWidth, scaledHeight, this);
                     }

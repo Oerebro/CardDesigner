@@ -8,19 +8,19 @@
     {
         "id": "frameImage",
         "bounds": [0, 0, 750, 1050],
-        "path": "resources\\img\\card_components\\frame\\eldritch.png", 
+        "path": "resources\\img\\card_components\\frame\\default.png", 
         "render": 2
     },
     {
         "id": "titleImage",
-        "bounds": [0,440,750,200],
-        "path": "resources\\img\\card_components\\title\\arkham_spell.png", 
-        "render": 3
+        "bounds": [20,20,710,200],
+        "path": "resources\\img\\card_components\\title\\default.png", 
+        "render": 2
     },
     {
         "id": "textboxImage",
-        "bounds": [0,640,750,450],
-        "path": "resources\\img\\card_components\\textbox\\arkham_spell.png",
+        "bounds": [0,560,750,450],
+        "path": "resources\\img\\card_components\\textbox\\default.png",
         "render": 3
     },
     {
@@ -28,5 +28,11 @@
         "bounds": [0,0,750,1050],
         "path": null,
         "render": 1
+    },
+    {
+        "id": "armorBaseLabel",
+        "bounds": [530,405,180,180],
+        "path": null,
+        "render": 4
     }
 ]

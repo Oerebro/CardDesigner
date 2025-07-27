@@ -48,7 +48,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
 
     private static final Map<String, String> ICON_MAP = new HashMap<>();
 
-    public ScalingTextPane(String id, String labelName, int render, int[] bounds, int minLineCount) {
+    public ScalingTextPane(String id, String labelName, String alignement, int render, int[] bounds, int minLineCount) {
         this.render = render;
         this.id = id;
         this.labelName = labelName;
@@ -73,7 +73,13 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         italicStyle = new SimpleAttributeSet();
 
         currentFont = baseFont.deriveFont((float) currentFontSize);
-        StyleConstantsAlignement = StyleConstants.ALIGN_LEFT;
+
+        switch(alignement){
+            case "center": StyleConstantsAlignement = StyleConstants.ALIGN_CENTER; break;
+            case "right": StyleConstantsAlignement = StyleConstants.ALIGN_RIGHT; break;
+            default: StyleConstantsAlignement = StyleConstants.ALIGN_LEFT; break;
+        }
+        
 
         fontRegular = currentFont;
         fontBold = currentFont;

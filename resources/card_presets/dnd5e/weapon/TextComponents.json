@@ -3,19 +3,17 @@
         {
           "id": "titleText",
           "labelName": "Card Title",
-          "bounds": [57, 570, 632, 60],
+          "bounds": [57, 70, 632, 60],
           "render":4,
-          "side": "leftSide",
-          "alignement": "center"
+          "side": "leftSide"
           
         },
         {
           "id": "typeText",
           "labelName": "Card Types",
-          "bounds": [50, 620, 650, 40],
+          "bounds": [50, 600, 650, 50],
           "render":4,
-          "side": "leftSide",
-          "alignement": "center"
+          "side": "leftSide"
           
         }
       ],
@@ -23,11 +21,10 @@
         {
           "id": "infoText",
           "labelName": "Info Text",
-          "bounds": [55, 710, 640, 295],
-          "minLineCount": 6,
+          "bounds": [55, 665, 640, 295],
+          "minLineCount": 7,
           "render":4,
-          "side": "leftSide",
-          "alignement": "center"
+          "side": "leftSide"
           
         }
       ]

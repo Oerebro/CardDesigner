@@ -1,0 +1,8 @@
+{
+  "components": {
+    "TextComponents": "resources/card_presets/dnd5e/armor/TextComponents.json",
+    "BufferedImages": "resources/card_presets/dnd5e/armor/BufferedImages.json",
+    "ImageBrowserTabs": "resources/card_presets/dnd5e/armor/ImageBrowserTabs.json",
+    "CardAttributes": "resources/card_presets/dnd5e/armor/CardAttributes.json"
+  }
+}

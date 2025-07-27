@@ -46,7 +46,7 @@ public class OneLineTextPane extends JLabel implements TextComponent {
    
     
 
-    public OneLineTextPane(String id, String labelName, int render, int[] bounds) {
+    public OneLineTextPane(String id, String labelName, String alignement, int render, int[] bounds) {
         this.render = render;
         this.id=id;
         this.labelName = labelName;
@@ -58,9 +58,14 @@ public class OneLineTextPane extends JLabel implements TextComponent {
 
         this.setText("");
 
+        switch(alignement){
+            case "center": setHorizontalAlignment(SwingConstants.CENTER); break;
+            case "right": setHorizontalAlignment(SwingConstants.RIGHT); break;
+            default: setHorizontalAlignment(SwingConstants.LEFT); 
+        }
         
         setVerticalAlignment(SwingConstants.CENTER);
-        setHorizontalAlignment(SwingConstants.LEFT); 
+        
         EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate); 
         EventBus.subscribe(ColorUpdate.class, this::onColorUpdate);

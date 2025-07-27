@@ -1,0 +1,32 @@
+{
+      "gui.image_composers.components.ImageUpdateButton": [
+          {
+            "id": "armorBaseLabel",
+            "name": "Common",
+            "path": "resources/glyphs/ac/armor.png"
+          },
+          {
+            "id": "armorBaseLabel",
+            "name": "Uncommon",
+            "path": "resources/glyphs/ac/uncommon_armor.png"
+          },
+          {
+            "id": "armorBaseLabel",
+            "name": "Rare",
+            "path": "resources/glyphs/ac/rare_armor.png"
+          },
+          {
+            "id": "armorBaseLabel",
+            "name": "Legendary",
+            "path": "resources/glyphs/ac/legendary_armor.png"
+          },
+          {
+            "id": "armorBaseLabel",
+            "name": "Artifact",
+            "path": "resources/glyphs/ac/artifact_armor.png"
+          }
+      ],
+      "gui.image_composers.components.DigitOnlyTextField": [
+        
+      ]
+}

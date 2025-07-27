@@ -61,6 +61,7 @@ public class ComponentLoader {
                     String labelName = instance.path("labelName").asText(null);
                     int render = instance.path("render").asInt(0);
                     String side = instance.path("side").asText(null);
+                    String alignement = instance.path("alignement").asText(null);
                     int minLineCount = instance.path("minLineCount").asInt(1);
 
                     JsonNode boundsNode = instance.path("bounds");
@@ -72,11 +73,12 @@ public class ComponentLoader {
                     List<Object> argsWithMinLine = new ArrayList<>();
                     argsWithMinLine.add(id);
                     argsWithMinLine.add(labelName);
+                    argsWithMinLine.add(alignement);
                     argsWithMinLine.add(render);
                     argsWithMinLine.add(bounds);
                     argsWithMinLine.add(minLineCount);
 
-                    List<Object> argsWithoutMinLine = argsWithMinLine.subList(0, 4);
+                    List<Object> argsWithoutMinLine = argsWithMinLine.subList(0, 5);
 
                     try {
                         Class<?> clazz = Class.forName(fqcn);

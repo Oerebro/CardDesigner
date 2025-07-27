@@ -23,14 +23,6 @@ import gui.card_types.*;
 import gui.controlpanel1.*;
 import gui.controlpanel2.*;
 import gui.image_composers.*;
-import gui.image_composers.cardTypes.CharacterCardComposer;
-import gui.image_composers.cardTypes.EffectCardComposer;
-import gui.image_composers.cardTypes.itemTypes.AccessoireCardComposer;
-import gui.image_composers.cardTypes.itemTypes.ConsumableCardComposer;
-import gui.image_composers.cardTypes.itemTypes.equippableTypes.ArkhamHorrorSpellCard;
-import gui.image_composers.cardTypes.itemTypes.equippableTypes.ArmorCard;
-import gui.image_composers.cardTypes.itemTypes.equippableTypes.RuneCard;
-import gui.image_composers.cardTypes.itemTypes.equippableTypes.WeaponCard;
 import gui.previewpanel.*;
 
 

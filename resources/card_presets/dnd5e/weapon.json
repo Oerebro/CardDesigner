@@ -1,0 +1,8 @@
+{
+  "components": {
+    "TextComponents": "resources/card_presets/dnd5e/weapon/TextComponents.json",
+    "BufferedImages": "resources/card_presets/dnd5e/weapon/BufferedImages.json",
+    "ImageBrowserTabs": "resources/card_presets/dnd5e/weapon/ImageBrowserTabs.json",
+    "CardAttributes": "resources/card_presets/dnd5e/weapon/CardAttributes.json"
+  }
+}
