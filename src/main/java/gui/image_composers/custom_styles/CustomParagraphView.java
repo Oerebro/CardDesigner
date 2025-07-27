@@ -1,5 +1,8 @@
 package gui.image_composers.custom_styles;
 
+import java.awt.Font;
+import java.awt.FontMetrics;
+
 import javax.swing.text.*;
 
 public class CustomParagraphView extends ParagraphView {
@@ -15,5 +18,6 @@ public class CustomParagraphView extends ParagraphView {
     public int getVisualLineCount() {
         return getViewCount();
     }
+
 }
 

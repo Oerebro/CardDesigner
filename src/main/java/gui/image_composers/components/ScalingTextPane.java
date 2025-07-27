@@ -74,9 +74,9 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         currentFont = baseFont.deriveFont((float) currentFontSize);
         StyleConstantsAlignement = StyleConstants.ALIGN_LEFT;
 
-        /*fontRegular = currentFont;
+        fontRegular = currentFont;
         fontBold = currentFont;
-        fontItalic = currentFont;*/
+        fontItalic = currentFont;
 
         //experimental custom editor
         textPane.setEditorKit(new CustomEditorKit());
@@ -223,6 +223,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         int height = textPane.getHeight();
         int size = currentFontSize;
         int lineCount = Math.max(minLineCount, getVisualLineCount(textPane));
+        System.out.println("linecount: "+lineCount);
         Font testFont = font.deriveFont((float)size);
 
         FontMetrics fm = textPane.getFontMetrics(testFont);
@@ -262,7 +263,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
                 totalLines += paragraph.getViewCount();
             }
         }
-        return totalLines-1;
+        return totalLines;
     }
 
     public float getMaxSizeFont() {
@@ -463,8 +464,8 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
     private void updateStylesFontSize(float size){
         //System.out.println("test "+size);
         if(fontRegular == null || fontBold == null || fontItalic == null) return;
-        System.out.println("font size set to "+size);
-        //textPane.setFont(textPane.getFont().deriveFont(size)); 
+        //System.out.println("font size set to "+size);
+        textPane.setFont(textPane.getFont().deriveFont(size)); 
         fontRegular = fontRegular.deriveFont((float)size);
         fontBold = fontBold.deriveFont((float)size);
         fontItalic = fontItalic.deriveFont((float)size);
