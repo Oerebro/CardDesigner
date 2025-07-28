@@ -6,7 +6,7 @@ import abstractclasses.ImageBrowser;
 import abstractclasses.TextComponent;
 import gui.ImageBrowserManager;
 import gui.RenderManager;
-import gui.TextComponentManager;
+import gui.ComponentManager;
 import gui.image_composers.components.RenderableImage;
 import gui.image_composers.components.RenderableText;
 
@@ -128,8 +128,8 @@ public class ComponentLoader {
                         RenderableText comp = new RenderableText(id, labelName, render, bounds, (JComponent) obj);
                         RenderManager.addToTextMap(comp);
                         JPanel panel = comp.getInputComponent();
-                        if (!TextComponentManager.isComponentRegistered(id)) {
-                            TextComponentManager.registerComponents(id, panel, side);
+                        if (!ComponentManager.isComponentRegistered(id)) {
+                            ComponentManager.registerComponents(id, panel, side);
                         }
                     } catch (Exception e) {
                         System.err.println("Failed to instantiate " + fqcn + ": " + e.getMessage());
@@ -278,10 +278,10 @@ public class ComponentLoader {
 
                         // Cast and register component
                         JPanel panel = ((TextComponent) obj).getInputComponent();
-                        String componentId = allParameters.get(0).toString();
+                        String updateID = instance.path("updateID").asText(null);
 
-                        if (!TextComponentManager.isComponentRegistered(componentId)) {
-                            TextComponentManager.registerComponents(componentId, panel, "rightSide");
+                        if (!ComponentManager.isComponentRegistered(updateID)) {
+                            ComponentManager.registerCardAttribute(updateID, panel);
                         }
 
                     } catch (Exception e) {

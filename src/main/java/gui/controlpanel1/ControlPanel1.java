@@ -20,7 +20,7 @@ import javax.swing.event.DocumentListener;
 import gui.CardDesignerGUI;
 import gui.GlobalVar;
 import gui.ImageBrowserManager;
-import gui.TextComponentManager;
+import gui.ComponentManager;
 import gui.image_composers.components.DigitOnlyTextField;
 import abstractclasses.*;
 import events.CardLoadEvent;
@@ -83,8 +83,8 @@ public class ControlPanel1 extends ControlPanel {
         imageBrowsers.setLayout(new GridLayout(2,1));
         imageBrowsers.add(ImageBrowserManager.getCardComponents());
         imageBrowsers.add(ImageBrowserManager.getCardImages());
-        JPanel leftSide = TextComponentManager.getLeftSide();
-        JPanel rightSide = TextComponentManager.getRightSide();
+        JPanel leftSide = ComponentManager.getLeftSide();
+        JPanel rightSide = ComponentManager.getRightSide();
         leftSide.setMaximumSize(new Dimension(Integer.MAX_VALUE, 500));
         
         add(imageBrowsers);

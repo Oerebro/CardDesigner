@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -23,11 +24,13 @@ import javax.swing.event.DocumentListener;
 
 import abstractclasses.TextComponent;
 import events.EventBus;
+import events.FontUpdate;
 import events.InfoFontUpdate;
 import events.RepaintPanelEvent;
 import events.TextAlignUpdate;
 import events.ColorUpdate;
 import events.TitleFontUpdate;
+import events.VariableUpdate;
 import events.TextUpdate;
 import gui.GlobalVar;
 import gui.controlpanel1.ColorPicker;
@@ -43,7 +46,8 @@ public class OneLineTextPane extends JLabel implements TextComponent {
     public static final int RANGE_NORMAL = 2;
     public static final int RANGE_MAX = 4;
     public static final int TYPE = 3;
-   
+    private Color fontColor;
+    private boolean border = false;
     
 
     public OneLineTextPane(String id, String labelName, String alignement, int render, int[] bounds) {
@@ -55,6 +59,8 @@ public class OneLineTextPane extends JLabel implements TextComponent {
         this.setSize(bounds[2],bounds[3]);
         this.setLayout(null);
         this.setOpaque(false);
+        this.fontColor = Color.BLACK;
+        this.setForeground(fontColor);
 
         this.setText("");
 
@@ -66,22 +72,43 @@ public class OneLineTextPane extends JLabel implements TextComponent {
         
         setVerticalAlignment(SwingConstants.CENTER);
         
-        EventBus.subscribe(TitleFontUpdate.class, this::onTitleFontUpdate);
+        EventBus.subscribe(FontUpdate.class, this::onFontUpdate);
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate); 
         EventBus.subscribe(ColorUpdate.class, this::onColorUpdate);
         EventBus.subscribe(TextAlignUpdate.class, this::onTextAlignUpdate);
+        EventBus.subscribe(VariableUpdate.class, this::onVariableUpdate);
         
     }
 
+    public boolean hasBorder(){
+        return border;
+    }
+
+    private void onVariableUpdate(VariableUpdate e){
+        System.out.println("variable update "+e.type+" "+this.id);
+        if(e.id.equals(this.id)){
+            switch (e.type) {
+                case "borderBoolean":
+                    this.border = (boolean) e.var;
+                    EventBus.publish(new RepaintPanelEvent("text",this.render));
+                    break;
+            
+                default:
+                    break;
+            }
+        }
+    }
 
     private void onColorUpdate(ColorUpdate e){
         if(e.id.equals(this.id)){
+            fontColor = e.color;
             setColor(e.color);
         }
         EventBus.publish(new RepaintPanelEvent("text",this.render));;
     }
 
     private void setColor(Color color){
+        fontColor = color;
         setForeground(color);    
     }
 
@@ -111,12 +138,15 @@ public class OneLineTextPane extends JLabel implements TextComponent {
         this.setFont(this.getFont().deriveFont(newSize));
     }*/
 
-    private void onTitleFontUpdate(TitleFontUpdate e){
-        Font font = FontLoader.loadFont(e.fontFamily, Font.BOLD,100f);
-        Font scaledFont = getScaledFontLabel(this.getText(), font, this.getWidth(), this.getHeight(), this);
-        this.setFont(scaledFont);
-        //(FontLoader.loadFont(e.fontName,Font.PLAIN, scaledFont.getSize())
-        //publishRepaint();
+    private void onFontUpdate(FontUpdate e){
+        if(e.id.equals(this.id)){
+            Font font = FontLoader.loadFont(e.fontName, Font.PLAIN,100f);
+            Font scaledFont = getScaledFontLabel(this.getText(), font, this.getWidth(), this.getHeight(), this);
+            this.setFont(scaledFont);
+            //(FontLoader.loadFont(e.fontName,Font.PLAIN, scaledFont.getSize())
+            //publishRepaint();
+            EventBus.publish(new RepaintPanelEvent("text",this.render));
+        }
     }
 
     @Override
@@ -124,10 +154,6 @@ public class OneLineTextPane extends JLabel implements TextComponent {
         super.setSize(w,h);
         Font scaledFont = getScaledFontLabel(this.getText(), this.getFont().deriveFont(200f), w, h, this);
         this.setFont(scaledFont);
-    }
-
-    private void onInfoFontUpdate(InfoFontUpdate e){
-        
     }
 
     public JPanel getInputComponent() {
@@ -173,6 +199,18 @@ public class OneLineTextPane extends JLabel implements TextComponent {
         for (JButton btn : alignButtons) {
             settings.add(btn);
         }
+        
+        JCheckBox borderBox = new JCheckBox("Border");
+        borderBox.addActionListener(e -> {
+            EventBus.publish(new VariableUpdate("borderBoolean", this.id, borderBox.isSelected()));
+        });
+
+        settings.add(borderBox);
+
+        FontSelection fontSelection = new FontSelection(this.id);
+        fontSelection.setMaximumSize(new Dimension(800,30));
+        settings.add(fontSelection);
+        EventBus.publish(new FontUpdate(this.id,fontSelection.getSelectedItem().toString()));
         panel.add(settings);
         panel.add(input); 
         return panel;

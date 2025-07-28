@@ -23,6 +23,7 @@ public class ImageUpdateButton extends JButton implements TextComponent{
         this.id = id;
         this.path= path;
         this.updateID = updateID;
+        //this.setText(id);
         setIcon(new ScaledImageIcon(new ImageIcon(path),50,50));
 
         addActionListener(e -> {
@@ -36,19 +37,4 @@ public class ImageUpdateButton extends JButton implements TextComponent{
         return panel;
     }
 
-    private BufferedImage getImageFromFile(String path){
-        if(path == null){
-            return null;
-        }
-
-        BufferedImage i = null;
-         try{
-            i = ImageIO.read(new File(path));
-        }catch(IOException e){
-            System.out.println("Error on ComponentLoader::getImageFromFile ("+path+"); File not found");
-            return null;
-     
-        }
-        return i;
-    }
 }

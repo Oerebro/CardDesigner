@@ -146,15 +146,6 @@ public class RenderManager {
                 bounds = txt.bounds;
                 i = new BufferedImage((int) (bounds[2] * scale), (int) (bounds[3] * scale), BufferedImage.TYPE_INT_ARGB);
                 Graphics2D labelGraphics = i.createGraphics();
-
-                /*try {
-                    Method method = comp.getClass().getMethod("scaleFont", double.class);
-                    method.invoke(comp,scale);
-                } catch (NoSuchMethodException e) {
-                    comp.setSize( (int) (bounds[2] * scale),(int) (bounds[3] * scale));
-                } catch (Exception e) {
-                    e.printStackTrace(); 
-                }*/
                 comp.setSize( (int) (bounds[2] * scale),(int) (bounds[3] * scale));
                 comp.doLayout();
                 comp.revalidate();
@@ -162,6 +153,10 @@ public class RenderManager {
                 comp.printAll(labelGraphics);
                 labelGraphics.dispose();
                     //add check for stroke outline here
+                    if(((TextComponent) comp).hasBorder()){
+                        System.out.println("has border");
+                        i = drawStroke(i,3,Color.WHITE);
+                    }
                 g2d.drawImage(i,(int) (bounds[0]*scale),(int) (bounds[1]*scale),(int) (bounds[2]*scale),(int) (bounds[3]*scale),null);
             }
         }
@@ -222,5 +217,48 @@ public class RenderManager {
         }
 
         return output;
+    }
+
+    private static BufferedImage drawStroke(BufferedImage src, int strokeWidth, Color color) {
+        int w = src.getWidth();
+        int h = src.getHeight();
+
+        BufferedImage result = new BufferedImage(w+(strokeWidth*2), h+(strokeWidth*2), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = result.createGraphics();
+
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setComposite(AlphaComposite.SrcOver);
+
+        // Draw offset copies to simulate a soft stroke (cheap blur)
+        for (int dx = -strokeWidth; dx <= strokeWidth; dx++) {
+            for (int dy = -strokeWidth; dy <= strokeWidth; dy++) {
+                if (dx * dx + dy * dy <= strokeWidth * strokeWidth) {
+                    g.drawImage(tintAlpha(src, color), dx+strokeWidth, dy+strokeWidth, null);
+                }
+            }
+        }
+
+        // Draw the original image on top
+        g.drawImage(src, strokeWidth, strokeWidth, null);
+        g.dispose();
+        return result;
+    }
+
+    private static BufferedImage tintAlpha(BufferedImage src, Color color) {
+        int w = src.getWidth();
+        int h = src.getHeight();
+        BufferedImage tinted = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int argb = src.getRGB(x, y);
+                int alpha = (argb >> 24) & 0xFF;
+                if (alpha > 0) {
+                    tinted.setRGB(x, y, (alpha << 24) | (color.getRGB() & 0x00FFFFFF));
+                }
+            }
+        }
+
+        return tinted;
     }
 }

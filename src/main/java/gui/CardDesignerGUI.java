@@ -50,7 +50,7 @@ public class CardDesignerGUI {
         frame = new JFrame("Card Designer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1920, 1080);
-        frame.setLayout(null);
+        frame.setLayout(new BorderLayout());
 
         createTopMenuBar(frame);
 
@@ -61,34 +61,35 @@ public class CardDesignerGUI {
         // Control Panel on the right
         controlPanel = new ControlPanel1();
         controlPanel.init(this);
-        controlPanel.setBounds(600,0,1200,800);
+        //controlPanel.setBounds(600,0,1200,800);
+        controlPanel.setPreferredSize(new Dimension(1300, 800));
         controlPanel.setBorder(BorderFactory.createTitledBorder("controlPanel"));
 
         controlPanel2 = new ControlPanel2();
         controlPanel2.init(this);
         
-        frame.add(previewPanel.panel);
-        frame.add(controlPanel);
+        frame.add(previewPanel.panel,BorderLayout.WEST);
+        frame.add(controlPanel,BorderLayout.EAST);
         frame.add(controlPanel2, BorderLayout.SOUTH);
         frame.setVisible(true);
 
-        frame.setLayout(null);
+        //frame.setLayout(new BorderLayout());
 
         SwingUtilities.invokeLater(() -> {
             EventBus.publish(new CardLoadEvent());
             frame.addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
-                    rescaleComponents();
+                    previewPanel.repaint();
                 }
             });
             frame.addWindowStateListener(new WindowStateListener() {
                 @Override
                 public void windowStateChanged(WindowEvent e) {
                     if ((e.getNewState() & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH) {
-                        rescaleComponents();
+                        previewPanel.repaint();
                     } else {
-                        rescaleComponents();
+                        previewPanel.repaint();
                     }
                 }
             });
@@ -98,7 +99,7 @@ public class CardDesignerGUI {
     public double getFrameScale() {
         double scaleX = (double) frame.getWidth() / 1920.0;
         double scaleY = (double) frame.getHeight() / 1080.0;
-
+        
         return Math.min(scaleX, scaleY);
     }
 

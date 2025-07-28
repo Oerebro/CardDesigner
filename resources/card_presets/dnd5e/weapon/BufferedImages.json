@@ -40,5 +40,11 @@
         "bounds": [530,405,180,180],
         "path": "null",
         "render": 5
+    },
+    {
+        "id": "runeCharge",
+        "bounds": [0,0,750,1050],
+        "path": "null",
+        "render": 5
     }
 ]

@@ -43,7 +43,8 @@ public class PreviewPanel {
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     double scale = parent.getFrameScale();
-
+                    scaledWidth = (int) (parent.getFrameScale() * (baseWidth*panelRatio));
+                    scaledHeight = (int) (parent.getFrameScale() * (baseHeight*panelRatio));
                     for(int i = 0; i < imageLayers.length; i++){
                         g.drawImage(imageLayers[i], 0, 0, scaledWidth, scaledHeight, this);
                         g.drawImage(textLayers[i], 0, 0, scaledWidth, scaledHeight, this);
@@ -53,15 +54,17 @@ public class PreviewPanel {
                 }
 
         };
+
+        object.setPreferredSize(new Dimension(600,800));
     
-        object.setLayout(null);
-        object.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
+        //object.setLayout(null);
+        //object.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
 
         panel = new JPanel(new BorderLayout());
-        panel.setPreferredSize(new Dimension(0, 1100));
+        panel.setPreferredSize(new Dimension(600, 800));
         panel.add(object, BorderLayout.LINE_START);
         
-        rescale(1.0);  
+        //rescale(1.0);  
         EventBus.publish(new RepaintPanelEvent());
     }
     public void setResolution(int[] res){

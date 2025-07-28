@@ -1,13 +1,18 @@
 package gui;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
 
 //lists to keep track which textcomponents has registered which input field, to avoid unnecessary loading
 /*keeps track of
@@ -15,21 +20,27 @@ import javax.swing.JPanel;
 
 */
 
-public class TextComponentManager {
+public class ComponentManager {
     private static final Map<String, JPanel> allComponents = new HashMap<>();
 
 
 //initialize the panels with layout
     private static final JPanel leftSide;
     private static final JPanel rightSide;
+
+    private static final Map<String, JPanel> attributesMap = new HashMap<>();
+    private static List<JPanel> attributes = new ArrayList<>();
+
     static {
         leftSide = new JPanel();
         leftSide.setLayout(new BoxLayout(leftSide, BoxLayout.Y_AXIS));
         leftSide.setBorder(BorderFactory.createTitledBorder("leftSide"));
         rightSide = new JPanel();
-        rightSide.setLayout(new FlowLayout(FlowLayout.LEFT));
+        rightSide.setLayout(new BoxLayout(rightSide, BoxLayout.Y_AXIS));
         rightSide.setBorder(BorderFactory.createTitledBorder("rightSide"));
     }
+
+    
 
     public static void registerComponents(String componentID, JPanel component, String targetPanel) {
         if(!isComponentRegistered(componentID)){
@@ -47,6 +58,30 @@ public class TextComponentManager {
                 rightSide.repaint();
                 break;
         }
+    }
+
+    public static void registerCardAttribute(String updateID, JComponent comp){
+        if(!attributesMap.containsKey(updateID)){
+            //attributes with new updateID will be put into new JPanel
+            JPanel panel = new JPanel(new FlowLayout());
+            panel.add(comp);
+            panel.setBorder(new TitledBorder(updateID));
+            panel.setPreferredSize(new Dimension(400,200));
+            panel.setMaximumSize(new Dimension(400,150));
+            //add new Panel to map
+            attributesMap.put(updateID,panel);
+            rightSide.add(panel);
+            rightSide.revalidate();
+            rightSide.repaint();
+            
+        }else{
+            //attributes with the same updateID will be grouped into the same JPanel
+            JPanel panel = attributesMap.get(updateID);
+            panel.add(comp);
+            rightSide.revalidate();
+            rightSide.repaint();
+        }
+        
     }
 
     public static void removeComponent(String componentID, String targetPanel) {

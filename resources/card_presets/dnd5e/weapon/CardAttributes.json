@@ -49,6 +49,26 @@
             "id": "Artifact",
             "updateID": "tierImage",
             "path": "resources/glyphs/tier/4.png"
+          },
+          {
+            "id": "runecharge1",
+            "updateID": "runeCharge",
+            "path": ""
+          },
+          {
+            "id": "runecharge2",
+            "updateID": "runeCharge",
+            "path": "resources/glyphs/runecharge/1.png"
+          },
+          {
+            "id": "runecharge3",
+            "updateID": "runeCharge",
+            "path": "resources/glyphs/runecharge/2.png"
+          },
+          {
+            "id": "runecharge4",
+            "updateID": "runeCharge",
+            "path": "resources/glyphs/runecharge/3.png"
           }
       ],
       "gui.image_composers.components.DigitOnlyTextField": [
