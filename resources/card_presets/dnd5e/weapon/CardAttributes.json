@@ -1,29 +1,54 @@
 {
       "gui.image_composers.components.ImageUpdateButton": [
           {
-            "id": "armorBaseLabel",
-            "name": "Common",
-            "path": "resources/glyphs/ac/armor.png"
+            "id": "d4",
+            "updateID": "weaponDice",
+            "path": "resources/glyphs/dice/d4.png"
           },
           {
-            "id": "armorBaseLabel",
-            "name": "Uncommon",
-            "path": "resources/glyphs/ac/uncommon_armor.png"
+            "id": "d6",
+            "updateID": "weaponDice",
+            "path": "resources/glyphs/dice/d6.png"
           },
           {
-            "id": "armorBaseLabel",
-            "name": "Rare",
-            "path": "resources/glyphs/ac/rare_armor.png"
+            "id": "d8",
+            "updateID": "weaponDice",
+            "path": "resources/glyphs/dice/d8.png"
           },
           {
-            "id": "armorBaseLabel",
-            "name": "Legendary",
-            "path": "resources/glyphs/ac/legendary_armor.png"
+            "id": "d10",
+            "updateID": "weaponDice",
+            "path": "resources/glyphs/dice/d10.png"
           },
           {
-            "id": "armorBaseLabel",
-            "name": "Artifact",
-            "path": "resources/glyphs/ac/artifact_armor.png"
+            "id": "d12",
+            "updateID": "weaponDice",
+            "path": "resources/glyphs/dice/d12.png"
+          },
+          {
+            "id": "Common",
+            "updateID": "tierImage",
+            "path": "null"
+          },
+          {
+            "id": "Uncommon",
+            "updateID": "tierImage",
+            "path": "resources/glyphs/tier/1.png"
+          },
+          {
+            "id": "Rare",
+            "updateID": "tierImage",
+            "path": "resources/glyphs/tier/2.png"
+          },
+          {
+            "id": "Legendary",
+            "updateID": "tierImage",
+            "path": "resources/glyphs/tier/3.png"
+          },
+          {
+            "id": "Artifact",
+            "updateID": "tierImage",
+            "path": "resources/glyphs/tier/4.png"
           }
       ],
       "gui.image_composers.components.DigitOnlyTextField": [

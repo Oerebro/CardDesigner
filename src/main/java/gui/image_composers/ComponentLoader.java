@@ -3,6 +3,7 @@ package gui.image_composers;
 import com.fasterxml.jackson.databind.*;
 
 import abstractclasses.ImageBrowser;
+import abstractclasses.TextComponent;
 import gui.ImageBrowserManager;
 import gui.RenderManager;
 import gui.TextComponentManager;
@@ -48,6 +49,7 @@ public class ComponentLoader {
             loadTextComponents(textComponentsPath);
             loadBufferedImages(bufferedImagesPath);
             loadImageBrowserTabs(imageBrowserTabsPath);
+            loadAttributeComponent(cardAttributesPath);
         } catch (Exception e) {
             e.printStackTrace();
         }  
@@ -157,7 +159,7 @@ public class ComponentLoader {
 
                 BufferedImage image = null;
                 if (path != null) {
-                    image = ImageIO.read(new File(path));
+                    image = getImageFromFile(path);
                 }
                 //System.out.println("Loaded image: " + id + ", render: " + render);
                 RenderableImage ri = new RenderableImage(id, path, image, bounds, render);  
@@ -193,6 +195,108 @@ public class ComponentLoader {
             e.printStackTrace();
         }
     }
+
+    protected void loadAttributeComponent(String filePath) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            JsonNode root = mapper.readTree(new File(filePath));
+
+            Iterator<String> classNames = root.fieldNames();
+            while (classNames.hasNext()) {
+                String fqcn = classNames.next();
+                JsonNode instances = root.get(fqcn);
+
+                if (!instances.isArray()) {
+                    System.err.println("Expected an array of instances for class: " + fqcn);
+                    continue;
+                }
+
+                for (JsonNode instance : instances) {
+                    // Create fresh parameter list for each instance
+                    List<Object> allParameters = new ArrayList<>();
+
+                    Iterator<String> fieldNames = instance.fieldNames();
+                    while (fieldNames.hasNext()) {
+                        String fieldName = fieldNames.next();
+                        if (fieldName.equals("bounds")) {
+                            continue; // handle bounds separately
+                        }
+                        JsonNode valueNode = instance.get(fieldName);
+                        if (valueNode.isTextual()) {
+                            allParameters.add(valueNode.asText());
+                        } else if (valueNode.isInt()) {
+                            allParameters.add(valueNode.asInt());
+                        } else if (valueNode.isBoolean()) {
+                            allParameters.add(valueNode.asBoolean());
+                        } else if (valueNode.isDouble()) {
+                            allParameters.add(valueNode.asDouble());
+                        } else {
+                            allParameters.add(valueNode.toString());
+                        }
+                    }
+
+                    // Handle bounds if present
+                    if (instance.has("bounds")) {
+                        JsonNode boundsNode = instance.get("bounds");
+                        int[] bounds = new int[4];
+                        for (int i = 0; i < boundsNode.size() && i < 4; i++) {
+                            bounds[i] = boundsNode.get(i).asInt();
+                        }
+                        allParameters.add(bounds);
+                    }
+
+                    try {
+                        Class<?> clazz = Class.forName(fqcn);
+                        Object obj = null;
+
+                        // Determine parameter types for constructor
+                        Class<?>[] paramTypes = allParameters.stream()
+                            .map(arg -> {
+                                if (arg instanceof Integer) return int.class;
+                                if (arg instanceof String) return String.class;
+                                if (arg instanceof int[]) return int[].class;
+                                return arg.getClass();
+                            })
+                            .toArray(Class<?>[]::new);
+
+                        try {
+                            // Try to instantiate using constructor with these params
+                            obj = clazz.getConstructor(paramTypes).newInstance(allParameters.toArray());
+                        } catch (NoSuchMethodException e) {
+                            System.out.println("No Constructor for " + fqcn);
+                            System.out.println("Parameters: " + allParameters);
+                            continue; // skip this instance
+                        }
+
+                        // Verify the object is a JComponent
+                        if (!(obj instanceof JComponent)) {
+                            System.out.println("Object class: " + obj.getClass());
+                            System.out.println("Is JComponent: " + (obj instanceof JComponent));
+                            throw new IllegalArgumentException("Object is not a JComponent: " + fqcn);
+                        }
+
+                        // Cast and register component
+                        JPanel panel = ((TextComponent) obj).getInputComponent();
+                        String componentId = allParameters.get(0).toString();
+
+                        if (!TextComponentManager.isComponentRegistered(componentId)) {
+                            TextComponentManager.registerComponents(componentId, panel, "rightSide");
+                        }
+
+                    } catch (Exception e) {
+                        System.err.println("Failed to instantiate " + fqcn + ": " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            System.err.println("Failed to read or parse file: " + filePath);
+            e.printStackTrace();
+        }
+    }
+
 
     protected BufferedImage getImageFromFile(String path){
         if(path == null){

@@ -30,9 +30,15 @@
         "render": 1
     },
     {
-        "id": "armorBaseLabel",
+        "id": "weaponDice",
         "bounds": [530,405,180,180],
-        "path": null,
+        "path": "resources/glyphs/dice/d6.png",
         "render": 4
+    },
+    {
+        "id": "tierImage",
+        "bounds": [530,405,180,180],
+        "path": "null",
+        "render": 5
     }
 ]

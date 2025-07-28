@@ -44,7 +44,7 @@ public class CardDesignerGUI {
     public CardDesignerGUI() {     
         EventBus.subscribe(CardTypeUpdate.class, this::onCardTypeUpdate);   
 
-        String defaultPreset = "arkham";
+        String defaultPreset = "dnd5e/weapon";
         
         
         frame = new JFrame("Card Designer");

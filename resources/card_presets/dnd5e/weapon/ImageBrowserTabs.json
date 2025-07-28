@@ -25,14 +25,110 @@
     },
     {
         "id": "cardImage",
-        "sourcePath": "resources\\img\\arkham\\items\\",
+        "sourcePath": "resources\\img\\weapons\\axes\\",
         "type": "cardImage",
-        "name": "Items"
+        "name": "Axes"
     },
     {
         "id": "cardImage",
-        "sourcePath": "resources\\img\\arkham\\spells\\",
+        "sourcePath": "resources\\img\\weapons\\bows\\",
         "type": "cardImage",
-        "name": "Spells"
+        "name": "Bows"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\clubs\\",
+        "type": "cardImage",
+        "name": "Clubs"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\curvedSwords\\",
+        "type": "cardImage",
+        "name": "Curved Swords"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\daggers\\",
+        "type": "cardImage",
+        "name": "Daggers"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\greatAxes\\",
+        "type": "cardImage",
+        "name": "Greataxes"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\greatHammers\\",
+        "type": "cardImage",
+        "name": "Greathammers"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\greatSwords\\",
+        "type": "cardImage",
+        "name": "Greatswords"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\hammers\\",
+        "type": "cardImage",
+        "name": "Hammers"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\katanas\\",
+        "type": "cardImage",
+        "name": "Katanas"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\maces\\",
+        "type": "cardImage",
+        "name": "Maces"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\rapiers\\",
+        "type": "cardImage",
+        "name": "Rapiers"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\scythes\\",
+        "type": "cardImage",
+        "name": "Scythes"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\spears\\",
+        "type": "cardImage",
+        "name": "Spears"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\glaives\\",
+        "type": "cardImage",
+        "name": "Glaives"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\straightSwords\\",
+        "type": "cardImage",
+        "name": "Straight Swords"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\wands\\",
+        "type": "cardImage",
+        "name": "Magic"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\weapons\\whips\\",
+        "type": "cardImage",
+        "name": "Whips"
     }
 ]

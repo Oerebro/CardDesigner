@@ -109,7 +109,6 @@ public class PreviewPanel {
         double scale = parent.getFrameScale();
         scaledWidth = (int) (scale * baseWidth*panelRatio);
         scaledHeight = (int) (scale * baseHeight*panelRatio);
-        System.out.println(e.type+" "+e.render);
         if(render == -1){
             type = "all";
         }

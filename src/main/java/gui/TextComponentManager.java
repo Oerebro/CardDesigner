@@ -1,5 +1,7 @@
 package gui;
 
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,7 @@ public class TextComponentManager {
         leftSide.setLayout(new BoxLayout(leftSide, BoxLayout.Y_AXIS));
         leftSide.setBorder(BorderFactory.createTitledBorder("leftSide"));
         rightSide = new JPanel();
-        rightSide.setLayout(new BoxLayout(rightSide, BoxLayout.Y_AXIS));
+        rightSide.setLayout(new FlowLayout(FlowLayout.LEFT));
         rightSide.setBorder(BorderFactory.createTitledBorder("rightSide"));
     }
 
