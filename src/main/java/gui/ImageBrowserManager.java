@@ -26,16 +26,21 @@ public class ImageBrowserManager {
         
         switch (targetBrowser) {
             case "cardComponent":
-                cardComponents.addTab(tabName, tab.getScrollPane());
+                cardComponents.addTab(tabName, allComponents.get(tabName).getScrollPane());
                 cardComponents.revalidate();
                 cardComponents.repaint();
                 break;
             case "cardImage":
-                cardImages.addTab(tabName, tab.getScrollPane());
+                cardImages.addTab(tabName, allComponents.get(tabName).getScrollPane());
                 cardImages.revalidate();
                 cardImages.repaint();
                 break;
         }
+    }
+
+    public static void reset(){
+        cardComponents.removeAll();
+        cardImages.removeAll();
     }
 
     public static void removeTab(String tabName, String targetBrowser) {
@@ -70,7 +75,7 @@ public class ImageBrowserManager {
         return allComponents.containsKey(tabName);
     }
 
-    public static JTabbedPane getCardComponents() { return cardComponents; }
+    public static JTabbedPane getCardComponents() { System.out.println("tab"); return cardComponents; }
     public static JTabbedPane getCardImages() { return cardImages; }
 }
 

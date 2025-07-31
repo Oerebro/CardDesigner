@@ -26,6 +26,16 @@
             "path": "resources/glyphs/dice/d12.png"
           },
           {
+            "id": "1 WeaponDice",
+            "updateID": "diceAmount",
+            "path": ""
+          },
+          {
+            "id": "2 WeaponDice",
+            "updateID": "diceAmount",
+            "path": "resources/glyphs/dice/2dice.png"
+          },
+          {
             "id": "Common",
             "updateID": "tierImage",
             "path": "null"
@@ -71,7 +81,7 @@
             "path": "resources/glyphs/runecharge/3.png"
           }
       ],
-      "gui.image_composers.components.DigitOnlyTextField": [
+      "gui.image_composers.components.OneLineTextField": [
         
       ]
 }

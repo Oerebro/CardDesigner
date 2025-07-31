@@ -1,32 +1,54 @@
 {
       "gui.image_composers.components.ImageUpdateButton": [
           {
-            "id": "armorBaseLabel",
-            "name": "Common",
+            "id": "Common",
+            "updateID": "armorBaseLabel",
+            "path": ""
+          },
+          {
+            "id": "Uncommon",
+            "updateID": "armorBaseLabel",
             "path": "resources/glyphs/ac/armor.png"
           },
           {
-            "id": "armorBaseLabel",
-            "name": "Uncommon",
+            "id": "Uncommon",
+            "updateID": "armorBaseLabel",
             "path": "resources/glyphs/ac/uncommon_armor.png"
           },
           {
-            "id": "armorBaseLabel",
-            "name": "Rare",
+            "id": "Rare",
+            "updateID": "armorBaseLabel",
             "path": "resources/glyphs/ac/rare_armor.png"
           },
           {
-            "id": "armorBaseLabel",
-            "name": "Legendary",
+            "id": "Legendary",
+            "updateID": "armorBaseLabel",
             "path": "resources/glyphs/ac/legendary_armor.png"
           },
           {
-            "id": "armorBaseLabel",
-            "name": "Artifact",
+            "id": "Artifact",
+            "updateID": "armorBaseLabel",
             "path": "resources/glyphs/ac/artifact_armor.png"
+          },
+          {
+            "id": "runecharge1",
+            "updateID": "runeCharge",
+            "path": ""
+          },
+          {
+            "id": "runecharge2",
+            "updateID": "runeCharge",
+            "path": "resources/glyphs/runecharge/1.png"
+          },
+          {
+            "id": "runecharge3",
+            "updateID": "runeCharge",
+            "path": "resources/glyphs/runecharge/2.png"
+          },
+          {
+            "id": "runecharge4",
+            "updateID": "runeCharge",
+            "path": "resources/glyphs/runecharge/3.png"
           }
-      ],
-      "gui.image_composers.components.DigitOnlyTextField": [
-        
       ]
 }

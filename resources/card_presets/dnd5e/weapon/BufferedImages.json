@@ -8,19 +8,19 @@
     {
         "id": "frameImage",
         "bounds": [0, 0, 750, 1050],
-        "path": "resources\\img\\card_components\\frame\\default.png", 
+        "path": "", 
         "render": 2
     },
     {
         "id": "titleImage",
         "bounds": [20,20,710,200],
-        "path": "resources\\img\\card_components\\title\\default.png", 
+        "path": "", 
         "render": 2
     },
     {
         "id": "textboxImage",
         "bounds": [0,560,750,450],
-        "path": "resources\\img\\card_components\\textbox\\default.png",
+        "path": "resources\\img\\card_components\\textbox\\5e_weapon.png",
         "render": 3
     },
     {
@@ -31,20 +31,26 @@
     },
     {
         "id": "weaponDice",
-        "bounds": [530,405,180,180],
+        "bounds": [550,445,180,180],
         "path": "resources/glyphs/dice/d6.png",
         "render": 4
     },
     {
+        "id": "diceAmount",
+        "bounds": [550,445,180,180],
+        "path": "",
+        "render": 5
+    },
+    {
         "id": "tierImage",
-        "bounds": [530,405,180,180],
+        "bounds": [560,455,180,180],
         "path": "null",
         "render": 5
     },
     {
         "id": "runeCharge",
-        "bounds": [0,0,750,1050],
-        "path": "null",
+        "bounds": [5,745,55,150],
+        "path": "",
         "render": 5
     }
 ]

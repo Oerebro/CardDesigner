@@ -60,6 +60,7 @@ public class ControlPanel1 extends ControlPanel {
 
     private JPanel attributeSelectionPanel;
     private int cardType = 0;
+    private JPanel imageBrowsers;
 
     private int[] titleTextBounds = {10, 340, 305, 30};
     private int[] typeTextBounds = {10, 385, 305, 30};
@@ -79,10 +80,9 @@ public class ControlPanel1 extends ControlPanel {
         setLayout(new GridLayout(1,3));
         //left side: all major text components like title, info etc.
         //right side: all minor text components, like damage
-        JPanel imageBrowsers = new JPanel();
+        imageBrowsers = new JPanel();
         imageBrowsers.setLayout(new GridLayout(2,1));
-        imageBrowsers.add(ImageBrowserManager.getCardComponents());
-        imageBrowsers.add(ImageBrowserManager.getCardImages());
+        registerImageBrowser();
         JPanel leftSide = ComponentManager.getLeftSide();
         JPanel rightSide = ComponentManager.getRightSide();
         leftSide.setMaximumSize(new Dimension(Integer.MAX_VALUE, 500));
@@ -97,6 +97,15 @@ public class ControlPanel1 extends ControlPanel {
         EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         
 
+    }
+    public void reset(){
+        imageBrowsers.removeAll();
+        registerImageBrowser();
+    }
+
+    public void registerImageBrowser(){
+        imageBrowsers.add(ImageBrowserManager.getCardComponents());
+        imageBrowsers.add(ImageBrowserManager.getCardImages());
     }
 
     private void onTextLoad(TextLoadEvent e){

@@ -25,14 +25,50 @@
     },
     {
         "id": "cardImage",
-        "sourcePath": "resources\\img\\arkham\\items\\",
+        "sourcePath": "resources\\img\\armor\\armor\\",
         "type": "cardImage",
-        "name": "Items"
+        "name": "Chestplates"
     },
     {
         "id": "cardImage",
-        "sourcePath": "resources\\img\\arkham\\spells\\",
+        "sourcePath": "resources\\img\\armor\\cape\\",
         "type": "cardImage",
-        "name": "Spells"
+        "name": "Capes"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\armor\\glove\\",
+        "type": "cardImage",
+        "name": "Gloves"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\armor\\helmet\\",
+        "type": "cardImage",
+        "name": "Helmets"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\armor\\pants\\",
+        "type": "cardImage",
+        "name": "Pants & Boots"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\armor\\shield\\lightShields",
+        "type": "cardImage",
+        "name": "Light Shields"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\armor\\shield\\mediumShields",
+        "type": "cardImage",
+        "name": "Medium Shields"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\armor\\shield\\greatShields",
+        "type": "cardImage",
+        "name": "Heavy Shields"
     }
 ]

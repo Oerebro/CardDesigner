@@ -4,10 +4,13 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.BoxView;
 import javax.swing.text.DefaultCaret;
+import javax.swing.text.Element;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import javax.swing.text.Utilities;
 import javax.swing.text.View;
 
 import abstractclasses.TextComponent;
@@ -41,7 +44,8 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
     private int maxSizeFont, currentFontSize,minLineCount;
     private Font currentFont, fontRegular, fontItalic, fontBold;
     private Boolean border = false;
-    private JTextPane textPane = new WrappingTextPane();
+    //private JTextPane textPane = new WrappingTextPane();
+    private JTextPane textPane;
     String fontName;
     private int iconSize, StyleConstantsAlignement, render;
     private String id, labelName, text;
@@ -52,6 +56,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
 
     public ScalingTextPane(String id, String labelName, String alignement, int render, int[] bounds, int minLineCount) {
         this.render = render;
+        
         this.id = id;
         this.labelName = labelName;
         fontName = "";
@@ -90,6 +95,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         fontItalic = currentFont;
 
         //experimental custom editor
+        textPane = new WrappingTextPane();
         textPane.setEditorKit(new CustomEditorKit());
         textPane.setFont(baseFont.deriveFont((float) currentFontSize));
         textPane.setForeground(Color.WHITE);
@@ -131,7 +137,6 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
     }
 
     private void onVariableUpdate(VariableUpdate e){
-        System.out.println("variable update "+e.type+" "+this.id);
         if(e.id.equals(this.id)){
             switch (e.type) {
                 case "borderBoolean":
@@ -225,25 +230,14 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         return panel;
     }
 
-    //@Override
-    /*public void setBounds(int x, int y, int width, int height, double scale){
-        super.setBounds(x, y, width, height);
-        this.setPreferredSize(new Dimension(width, height));
-        textPane.setBounds(0,0, width, height);
-        textPane.setSize(width, height);
-    }*/
-
     public void printAll(Graphics g){
-        //System.out.println("print All");
-        //scaleFont();
-        //setFormattedText(this.text);
+
         textPane.printAll(g);
     }
 
     @Override
     public void setSize(int w, int h){
         textPane.setSize(w,h);
-        System.out.println("############### export w: "+w+" h: "+h);
         
         scaleFont();
         setFormattedText(text);
@@ -256,7 +250,6 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
     public void scaleFont(){
         float newSize = getScaledFont(textPane.getFont());
         currentFontSize = (int) newSize;
-        //System.out.println("scale Font: "+newSize);
         updateStylesFontSize(newSize);
         
         
@@ -296,19 +289,29 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
 
 
     public int getVisualLineCount(JTextPane textPane) {
+        System.out.println("START");
         View root = textPane.getUI().getRootView(textPane);
-        int totalLines = 0;
+       // View section = root.getView(0);
+        int totalLines = 0 ;
+        int test1 = 0;
 
         for (int i = 0; i < root.getViewCount(); i++) {
             View paragraph = root.getView(i);
             if (paragraph instanceof CustomParagraphView) {
                 totalLines += ((CustomParagraphView) paragraph).getVisualLineCount();
+                test1++;
             } else {
+                System.out.println("NOT custom para");
                 totalLines += paragraph.getViewCount();
+                test1++;
             }
         }
-        return totalLines;
+        System.out.println("counted lines: "+(totalLines-1));
+        System.out.println("END count: "+(test1-1));
+        return totalLines-1;
     }
+
+
 
     public float getMaxSizeFont() {
         return (float) maxSizeFont;
@@ -496,9 +499,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
 
 
     private void updateStylesFontSize(float size){
-        //System.out.println("test "+size);
         if(fontRegular == null || fontBold == null || fontItalic == null) return;
-        //System.out.println("font size set to "+size);
         textPane.setFont(textPane.getFont().deriveFont(size)); 
         fontRegular = fontRegular.deriveFont((float)size);
         fontBold = fontBold.deriveFont((float)size);
@@ -516,7 +517,6 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
     private void onColorUpdate(ColorUpdate e) {
 
         if(e.id.equals(this.id)){
-            System.out.println("color");
             textPane.setForeground(e.color);
             fontColor = e.color;
             updateStylesToCurrentFont();
@@ -541,9 +541,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         }
 
         if(e.id.equals(this.id)) {
-            boolean isNowEmpty = e.text.trim().isEmpty();
             String txt = e.text;
-            Font font = textPane.getFont();
             if (txt == null) {
                 txt = "";
             }  
@@ -553,6 +551,14 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
             setFormattedText(text);
             
             EventBus.publish(new RepaintPanelEvent("text",render)); 
+
+            /*Element root = textPane.getDocument().getDefaultRootElement();
+            System.out.println("Root element has " + root.getElementCount() + " children");
+
+            for (int i = 0; i < root.getElementCount(); i++) {
+                Element paragraph = root.getElement(i);
+                System.out.println("Paragraph " + i + " has " + paragraph.getElementCount() + " children");
+            }*/
         }
     }
 

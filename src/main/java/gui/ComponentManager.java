@@ -25,8 +25,8 @@ public class ComponentManager {
 
 
 //initialize the panels with layout
-    private static final JPanel leftSide;
-    private static final JPanel rightSide;
+    private static JPanel leftSide;
+    private static JPanel rightSide;
 
     private static final Map<String, JPanel> attributesMap = new HashMap<>();
     private static List<JPanel> attributes = new ArrayList<>();
@@ -40,20 +40,26 @@ public class ComponentManager {
         rightSide.setBorder(BorderFactory.createTitledBorder("rightSide"));
     }
 
-    
+    public static void reset(){
+        attributesMap.clear();
+        leftSide.removeAll();
+
+        rightSide.removeAll();
+    }
 
     public static void registerComponents(String componentID, JPanel component, String targetPanel) {
         if(!isComponentRegistered(componentID)){
             allComponents.put(componentID, component);
         }
+
         switch (targetPanel) {
             case "leftSide":
-                leftSide.add(componentID, component);
+                leftSide.add(componentID, allComponents.get(componentID));
                 leftSide.revalidate();
                 leftSide.repaint();
                 break;
             case "rightSide":
-                rightSide.add(componentID, component);
+                rightSide.add(componentID, allComponents.get(componentID));
                 rightSide.revalidate();
                 rightSide.repaint();
                 break;

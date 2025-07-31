@@ -49,7 +49,9 @@ public class ComponentLoader {
             loadTextComponents(textComponentsPath);
             loadBufferedImages(bufferedImagesPath);
             loadImageBrowserTabs(imageBrowserTabsPath);
-            loadAttributeComponent(cardAttributesPath);
+            if(cardAttributesPath != null){
+                loadAttributeComponent(cardAttributesPath);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }  
@@ -58,7 +60,6 @@ public class ComponentLoader {
     }
 
     
-
 
     protected void loadTextComponents(String filePath){
         ObjectMapper mapper = new ObjectMapper();

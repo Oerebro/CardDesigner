@@ -1,0 +1,34 @@
+{
+    "gui.image_composers.components.OneLineTextPane": [
+        {
+          "id": "titleText",
+          "labelName": "Card Title",
+          "bounds": [57, 570, 632, 60],
+          "render":4,
+          "side": "leftSide",
+          "alignement": "center"
+          
+        },
+        {
+          "id": "typeText",
+          "labelName": "Card Types",
+          "bounds": [50, 620, 650, 40],
+          "render":4,
+          "side": "leftSide",
+          "alignement": "center"
+          
+        }
+      ],
+      "gui.image_composers.components.ScalingTextPane": [
+        {
+          "id": "infoText",
+          "labelName": "Info Text",
+          "bounds": [55, 710, 640, 295],
+          "minLineCount": 6,
+          "render":4,
+          "side": "leftSide",
+          "alignement": "center"
+          
+        }
+      ]
+}

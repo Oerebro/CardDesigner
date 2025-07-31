@@ -3,7 +3,7 @@
         {
           "id": "titleText",
           "labelName": "Card Title",
-          "bounds": [57, 70, 632, 60],
+          "bounds": [50, 47, 650, 60],
           "render":4,
           "side": "leftSide",
           "alignement": "center"
@@ -12,10 +12,19 @@
         {
           "id": "typeText",
           "labelName": "Card Types",
-          "bounds": [50, 600, 650, 50],
+          "bounds": [50, 600, 530, 50],
           "render":4,
           "side": "leftSide",
           "alignement": "left"
+          
+        },
+        {
+          "id": "ac",
+          "labelName": "AC",
+          "bounds": [625,545,90,90],
+          "render":5,
+          "side": "leftSide",
+          "alignement": "center"
           
         }
       ],

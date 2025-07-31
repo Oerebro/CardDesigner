@@ -51,6 +51,12 @@ public class RenderManager {
         return textMap;
     }
 
+    public static void reset(){
+        imageMap.clear();
+        textMap.clear();
+        //EventBus.publish(new RepaintPanelEvent());
+    }
+
     public static BufferedImage renderAll(Card card, double scale, boolean hasBleedEdge) {
         int[] baseResolution  = card.getResolution();
         int[] bleedResolution = card.getBleedResolution();
@@ -75,11 +81,11 @@ public class RenderManager {
         if(hasBleedEdge){
             BufferedImage bleedEdge = new BufferedImage(bleedWidth, bleedHeight, BufferedImage.TYPE_INT_ARGB);
             g2d = bleedEdge.createGraphics();
-            g2d.setColor(Color.BLACK);
+            g2d.setColor(Color.WHITE);
             g2d.fillRect(0, 0, bleedWidth, bleedHeight);
 
             //creating bleedEdge
-            g2d.setColor(Color.BLACK);
+            g2d.setColor(Color.WHITE);
             g2d.fillRect(0, 0, bleedWidth, bleedHeight);
             BufferedImage leftEdge = img.getSubimage(0, 0, 1, baseHeight);
             g2d.drawImage(leftEdge, 0, offsetY, offsetX, baseHeight, null);

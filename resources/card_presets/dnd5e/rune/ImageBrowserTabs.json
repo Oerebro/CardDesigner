@@ -1,0 +1,44 @@
+[
+    {
+        "id": "backgroundImage",
+        "sourcePath": "resources\\img\\card_components\\background\\",
+        "type": "cardComponent",
+        "name": "Background"
+    },
+    {
+        "id": "frameImage",
+        "sourcePath": "resources\\img\\card_components\\frame\\",
+        "type": "cardComponent",
+        "name": "Frame"
+    },
+    {
+        "id": "titleImage",
+        "sourcePath": "resources\\img\\card_components\\title\\",
+        "type": "cardComponent",
+        "name": "Title"
+    },
+    {
+        "id": "textboxImage",
+        "sourcePath": "resources\\img\\card_components\\textbox\\",
+        "type": "cardComponent",
+        "name": "Textbox"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\runes\\defensive\\",
+        "type": "cardImage",
+        "name": "Defensive"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\runes\\offensive\\",
+        "type": "cardImage",
+        "name": "Offensive"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\runes\\utility\\",
+        "type": "cardImage",
+        "name": "Utility"
+    }
+]

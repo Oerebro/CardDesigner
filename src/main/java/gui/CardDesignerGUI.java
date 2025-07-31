@@ -19,6 +19,7 @@ import events.CardLoadEvent;
 import events.CardTypeUpdate;
 import events.EventBus;
 import events.RepaintPanelEvent;
+import events.VariableUpdate;
 import gui.card_types.*;
 import gui.controlpanel1.*;
 import gui.controlpanel2.*;
@@ -33,7 +34,8 @@ public class CardDesignerGUI {
     private PreviewPanel previewPanel;
     ControlPanel1 controlPanel;
     ControlPanel2 controlPanel2;
-    private boolean hasBleedEdge = true;
+    private boolean hasBleedEdge = false;
+    private String preset;
 
 
     public Frame getFrame(){
@@ -42,9 +44,7 @@ public class CardDesignerGUI {
   
 
     public CardDesignerGUI() {     
-        EventBus.subscribe(CardTypeUpdate.class, this::onCardTypeUpdate);   
-
-        String defaultPreset = "dnd5e/weapon";
+        String defaultPreset = "dnd5e/armor";
         
         
         frame = new JFrame("Card Designer");
@@ -56,7 +56,7 @@ public class CardDesignerGUI {
 
         // Preview Panel on the left
         previewPanel = new PreviewPanel(this);
-        setImageComposerType(defaultPreset);
+        setCardType(defaultPreset);
 
         // Control Panel on the right
         controlPanel = new ControlPanel1();
@@ -72,8 +72,6 @@ public class CardDesignerGUI {
         frame.add(controlPanel,BorderLayout.EAST);
         frame.add(controlPanel2, BorderLayout.SOUTH);
         frame.setVisible(true);
-
-        //frame.setLayout(new BorderLayout());
 
         SwingUtilities.invokeLater(() -> {
             EventBus.publish(new CardLoadEvent());
@@ -94,6 +92,8 @@ public class CardDesignerGUI {
                 }
             });
         });
+
+        EventBus.subscribe(VariableUpdate.class, this::onCardTypeUpdate);
     }
 
     public double getFrameScale() {
@@ -232,14 +232,34 @@ public class CardDesignerGUI {
         return sdf.format(now);
     }
 
-    private void onCardTypeUpdate(CardTypeUpdate e){
-        //setImageComposerType(e.type);
+    private void onCardTypeUpdate(VariableUpdate e){
+        if(e.type.equals("card type"))
+            setCardType((String) e.var);
     }
 
-    private void setImageComposerType(String preset){
-        imageComposer = new Card(preset);
-        previewPanel.setResolution(imageComposer.getResolution());
+    private void setCardType(String preset){
+        if(preset.equals(this.preset)){
+            return;
+        }
+        
+        this.preset = preset;
+        //clear all images and text in render pipeline
+        RenderManager.reset();
+        //clear all input components from controlpanel
+        ComponentManager.reset();
+        //clear imageBrowsers
+        ImageBrowserManager.reset();
 
+        SwingUtilities.invokeLater(() -> {
+            imageComposer = new Card(preset);
+            if(controlPanel != null)
+            controlPanel.reset();
+            previewPanel.setResolution(imageComposer.getResolution());
+            controlPanel.revalidate();
+            controlPanel.repaint();
+        });
+        
+        
     }
     
     

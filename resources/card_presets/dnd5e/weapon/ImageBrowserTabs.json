@@ -15,7 +15,7 @@
         "id": "titleImage",
         "sourcePath": "resources\\img\\card_components\\title\\",
         "type": "cardComponent",
-        "name": "Tile"
+        "name": "Title"
     },
     {
         "id": "textboxImage",

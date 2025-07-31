@@ -4,6 +4,9 @@ import javax.swing.text.*;
 import java.awt.*;
 
 public class CustomGlyphView extends GlyphView {
+
+    GlyphView painter;
+
     public CustomGlyphView(Element elem) {
         super(elem);
     }
@@ -17,4 +20,6 @@ public class CustomGlyphView extends GlyphView {
         }
         return super.getFont();
     }
+
+
 }
