@@ -14,6 +14,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JComponent;
+import javax.swing.text.JTextComponent;
+
+import org.w3c.dom.Text;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.formdev.flatlaf.json.Json;
 
 import abstractclasses.TextComponent;
 import events.EventBus;
@@ -55,6 +63,34 @@ public class RenderManager {
         imageMap.clear();
         textMap.clear();
         //EventBus.publish(new RepaintPanelEvent());
+    }
+
+    public static ObjectNode saveToNode(String preset) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+        ArrayNode items = mapper.createArrayNode();
+        root.put("preset",preset);
+
+        for (Map.Entry<String, RenderableText> entry : textMap.entrySet()) {
+            RenderableText rt = entry.getValue();
+            ObjectNode item = mapper.createObjectNode();
+            item.put("type", "text");
+            item.put("id", rt.id);
+            item.put("text", (((TextComponent) rt.component).getText()));
+            items.add(item);
+        }
+
+        for (Map.Entry<String, RenderableImage> entry : imageMap.entrySet()) {
+            RenderableImage rt = entry.getValue();
+            ObjectNode item = mapper.createObjectNode();
+            item.put("type", "image");
+            item.put("id", rt.id);
+            item.put("path", rt.sourcePath);
+            items.add(item);
+        }
+
+        root.set("config", items);
+        return root;
     }
 
     public static BufferedImage renderAll(Card card, double scale, boolean hasBleedEdge) {

@@ -35,8 +35,8 @@ public class ControlPanel2 extends ControlPanel{
     }
 
     private JButton getExportButton(){
-        exportButton = new JButton();
-        exportButton.addActionListener(e -> parent.exportImage());
+        exportButton = new JButton("Export as Image");
+        exportButton.addActionListener(e -> parent.exportCard());
         return exportButton;
     }
 

@@ -12,13 +12,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import events.CardLoadEvent;
 import events.CardTypeUpdate;
 import events.EventBus;
+import events.ImageUpdate;
 import events.RepaintPanelEvent;
+import events.TextUpdate;
 import events.VariableUpdate;
 import gui.card_types.*;
 import gui.controlpanel1.*;
@@ -138,10 +142,31 @@ public class CardDesignerGUI {
             }
         };
 
-        // 2. Bind Ctrl+S to the action
+        Action exportAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                exportCard();
+            }
+        };
+
+        Action loadAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadCard();
+            }
+        };
+
         KeyStroke saveKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
         frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(saveKeyStroke, "saveAction");
         frame.getRootPane().getActionMap().put("saveAction", saveAction);
+
+        KeyStroke exportKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_E, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+        frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(exportKeyStroke, "exportAction");
+        frame.getRootPane().getActionMap().put("exportAction", exportAction);
+
+        KeyStroke loadKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+        frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(loadKeyStroke, "loadAction");
+        frame.getRootPane().getActionMap().put("loadAction", loadAction);
 
 
         fileMenu.add(newCardItem);
@@ -172,46 +197,65 @@ public class CardDesignerGUI {
             
 
             try {
-                new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(fileToSave, imageComposer.saveConfig() );
+                ObjectNode node = RenderManager.saveToNode(this.preset);
+                new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(fileToSave, node);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-
-
     private void loadCard() {
-        File savedDir = new File("saved");
-        if (!savedDir.exists()) {
-            savedDir.mkdirs(); // Ensure the directory exists
+        JFileChooser chooser = new JFileChooser(new File("saved"));
+        chooser.setFileFilter(new FileNameExtensionFilter("Card files", "card"));
+        
+        int result = chooser.showOpenDialog(frame);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            // User cancelled or closed dialog, do nothing
+            return;
         }
 
-        JFileChooser fileChooser = new JFileChooser(savedDir);
-        fileChooser.setDialogTitle("Load Card Configuration");
+        File selectedFile = chooser.getSelectedFile();
 
-        // Filter for .card files only
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Card Files (*.card)", "card");
-        fileChooser.setFileFilter(filter);
+        if (selectedFile == null || !selectedFile.exists() || !selectedFile.getName().endsWith(".card")) {
+            System.err.println("Invalid card file selected.");
+            return;
+        }
 
-        int result = fileChooser.showOpenDialog(frame); // 'frame' is your main JFrame
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(selectedFile);
 
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-            //imageComposer.loadFromConfig(selectedFile);
+            JsonNode config = root.path("config");
+            if (!config.isArray()) {
+                System.err.println("Expected 'config' to be a JSON array.");
+                return;
+            }
+
+            for (JsonNode field : config) {
+                String type = field.path("type").asText("");
+                String id = field.path("id").asText("");
+
+                if (type.equals("text")) {
+                    String text = field.path("text").asText("");
+                    EventBus.publish(new TextUpdate(id, text));
+                } else {
+                    String path = field.path("path").asText("");
+                    EventBus.publish(new ImageUpdate(id, path));
+                }
+            }
+
+        } catch (IOException e) {
+            System.err.println("Failed to load card: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    public void exportImage() {
+
+    public void exportCard() {
         double scale = 1.5;
 
         BufferedImage finalImage = RenderManager.renderAll(imageComposer,scale, hasBleedEdge);
-
-        /*Graphics2D g2d = finalImage.createGraphics();
-
-        g2d.setColor(Color.WHITE);
-        //g2d.fillRect(0, 0, targetWidth, targetHeight);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);*/
 
         try {
             File outputfile = new File("export//"+generateDateTimeString()+".png");
@@ -221,8 +265,6 @@ public class CardDesignerGUI {
             JOptionPane.showMessageDialog(frame, "Error exporting image: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-
-        //rescaleComponents();
         
     }
 
