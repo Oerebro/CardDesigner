@@ -13,6 +13,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.JTextComponent;
+
+import events.EventBus;
+import events.TextUpdate;
 
 //lists to keep track which textcomponents has registered which input field, to avoid unnecessary loading
 /*keeps track of
@@ -22,7 +26,6 @@ import javax.swing.border.TitledBorder;
 
 public class ComponentManager {
     private static final Map<String, JPanel> allComponents = new HashMap<>();
-
 
 //initialize the panels with layout
     private static JPanel leftSide;
@@ -38,13 +41,25 @@ public class ComponentManager {
         rightSide = new JPanel();
         rightSide.setLayout(new BoxLayout(rightSide, BoxLayout.Y_AXIS));
         rightSide.setBorder(BorderFactory.createTitledBorder("rightSide"));
+        EventBus.subscribe(TextUpdate.class, e -> onTextUpdate(e));
     }
 
     public static void reset(){
         attributesMap.clear();
         leftSide.removeAll();
-
         rightSide.removeAll();
+    }
+
+    private static void onTextUpdate(TextUpdate e){
+        if(e.type != null && (e.type.equals("ComponentManager.insertText"))){
+            System.out.println("Trying to insert into: "+e.id);
+            for(Map.Entry<String,JPanel> entry : allComponents.entrySet()){
+                if(entry.getKey().equals(e.id)){
+                    System.out.println(e.id);
+                    ((JTextComponent) entry.getValue().getComponent(1)).setText(e.text);
+                }
+            }
+        }
     }
 
     public static void registerComponents(String componentID, JPanel component, String targetPanel) {

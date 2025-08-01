@@ -16,6 +16,7 @@ public class ControlPanel2 extends ControlPanel{
     private JLabel textboxLabel;
     private JButton  exportButton;
     private CardDesignerGUI parent;
+    private JComboBox<String> presetSelection;
 
     public void init(CardDesignerGUI parent){
         this.parent = parent;
@@ -26,9 +27,14 @@ public class ControlPanel2 extends ControlPanel{
 
     public void compose(){
         add(getExportButton());
-        add(getPresetSelection());
+        getPresetSelection();
+        add(presetSelection);
+        
     }
     
+    public void setSelected(String preset){
+        presetSelection.setSelectedItem(preset);
+    }
 
     public void rescale(double scale){
         setBounds((int)(10*scale),(int)(755*scale),(int)(750*scale),(int)(100*scale));
@@ -40,13 +46,13 @@ public class ControlPanel2 extends ControlPanel{
         return exportButton;
     }
 
-    private JComboBox<String> getPresetSelection(){
-        JComboBox<String> presetSelection = new JComboBox<>();
+    private void getPresetSelection(){
+        presetSelection = new JComboBox<>();
         // get main folder
         File folder1 = new File("resources/card_presets/");
         if (!folder1.exists() || !folder1.isDirectory()) {
             System.out.println("Preset folder not found.");
-            return null;
+            return;
         }
         
         // get all subfolders in that folder (arkham, dnd5e)
@@ -71,7 +77,7 @@ public class ControlPanel2 extends ControlPanel{
             EventBus.publish(new VariableUpdate("card type", "", presetSelection.getSelectedItem()))
         );
 
-        return presetSelection;
+        //return presetSelection;
         
     }
 }

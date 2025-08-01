@@ -11,7 +11,6 @@ public class CustomStyleContext extends StyleContext {
     public Font getFont(AttributeSet attr) {
         Object f = attr.getAttribute("MyFont");
         if (f instanceof Font) {
-             System.out.println("getFont called!  MyFont=" + f + "  isItalicAttr?=" + StyleConstants.isItalic(attr));
             return (Font) f;
         }
         return super.getFont(attr);

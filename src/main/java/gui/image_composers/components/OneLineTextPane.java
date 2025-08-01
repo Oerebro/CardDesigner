@@ -85,7 +85,6 @@ public class OneLineTextPane extends JLabel implements TextComponent {
     }
 
     private void onVariableUpdate(VariableUpdate e){
-        System.out.println("variable update "+e.type+" "+this.id);
         if(e.id.equals(this.id)){
             switch (e.type) {
                 case "borderBoolean":
@@ -132,11 +131,6 @@ public class OneLineTextPane extends JLabel implements TextComponent {
         }
     }
 
-    /*public void scaleForPaint(double scale){
-        System.out.println("scale for paint");
-        float newSize = this.getFont().getSize() * ((float) scale / 0.7f);
-        this.setFont(this.getFont().deriveFont(newSize));
-    }*/
 
     private void onFontUpdate(FontUpdate e){
         if(e.id.equals(this.id)){

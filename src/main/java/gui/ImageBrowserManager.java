@@ -75,7 +75,7 @@ public class ImageBrowserManager {
         return allComponents.containsKey(tabName);
     }
 
-    public static JTabbedPane getCardComponents() { System.out.println("tab"); return cardComponents; }
+    public static JTabbedPane getCardComponents() { return cardComponents; }
     public static JTabbedPane getCardImages() { return cardImages; }
 }
 

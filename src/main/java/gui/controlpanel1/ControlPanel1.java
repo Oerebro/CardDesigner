@@ -94,7 +94,6 @@ public class ControlPanel1 extends ControlPanel {
         EventBus.subscribe(CardTypeUpdate.class, this::onTypeUpdate);
         EventBus.subscribe(TextLoadEvent.class, this::onTextLoad);
         EventBus.subscribe(CardLoadEvent.class, this::onCardLoad);
-        EventBus.subscribe(TextUpdate.class, this::onTextUpdate);
         
 
     }
@@ -116,10 +115,7 @@ public class ControlPanel1 extends ControlPanel {
         }
     }
 
-    private void onTextUpdate(TextUpdate e){
-        if(!(e.type == GlobalVar.FONTSIZE_FIELD_UPDATE)) return;
-        fontSizeManual.setText(e.text);
-    }
+    
 
     private void createButtons() {
     

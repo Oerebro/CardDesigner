@@ -259,7 +259,6 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         int height = textPane.getHeight();
         int size = currentFontSize;
         int lineCount = Math.max(minLineCount, getVisualLineCount(textPane));
-        System.out.println("linecount: "+lineCount);
         Font testFont = font.deriveFont((float)size);
 
         FontMetrics fm = textPane.getFontMetrics(testFont);
@@ -274,7 +273,6 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         }
 
         while(lineHeight * lineCount > height && size > 1){
-            //System.out.println("text height: "+(lineHeight * lineCount));
             size--;
             testFont = testFont.deriveFont((float)size);
             fm = textPane.getFontMetrics(testFont);
@@ -282,14 +280,12 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
         
         }
         textPane.setFont(currentFont);
-        System.out.println("final size: "+size);
         return (float)size;
     }
 
 
 
     public int getVisualLineCount(JTextPane textPane) {
-        System.out.println("START");
         View root = textPane.getUI().getRootView(textPane);
        // View section = root.getView(0);
         int totalLines = 0 ;
@@ -301,13 +297,11 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
                 totalLines += ((CustomParagraphView) paragraph).getVisualLineCount();
                 test1++;
             } else {
-                System.out.println("NOT custom para");
                 totalLines += paragraph.getViewCount();
                 test1++;
             }
         }
-        System.out.println("counted lines: "+(totalLines-1));
-        System.out.println("END count: "+(test1-1));
+
         return totalLines-1;
     }
 
@@ -527,7 +521,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
 
     private void onTextUpdate(TextUpdate e) {
         
-        if(e.type == GlobalVar.FONTSIZE_TEXT_UPDATE){
+        /*if(e.type == GlobalVar.FONTSIZE_TEXT_UPDATE){
             if(e.text.matches("")) return;
             if(e.text.equals("+")||e.text.equals("-")){
                 onFontSizeUpdate(e.text.charAt(0));
@@ -538,7 +532,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
             setFormattedText(getText());
             EventBus.publish(new RepaintPanelEvent("text",-1)); 
             return;
-        }
+        }*/
 
         if(e.id.equals(this.id)) {
             String txt = e.text;
@@ -552,13 +546,6 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
             
             EventBus.publish(new RepaintPanelEvent("text",render)); 
 
-            /*Element root = textPane.getDocument().getDefaultRootElement();
-            System.out.println("Root element has " + root.getElementCount() + " children");
-
-            for (int i = 0; i < root.getElementCount(); i++) {
-                Element paragraph = root.getElement(i);
-                System.out.println("Paragraph " + i + " has " + paragraph.getElementCount() + " children");
-            }*/
         }
     }
 

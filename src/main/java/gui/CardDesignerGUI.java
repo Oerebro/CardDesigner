@@ -48,7 +48,7 @@ public class CardDesignerGUI {
   
 
     public CardDesignerGUI() {     
-        String defaultPreset = "dnd5e/armor";
+        String defaultPreset = "dnd5e\\weapon";
         
         
         frame = new JFrame("Card Designer");
@@ -71,6 +71,7 @@ public class CardDesignerGUI {
 
         controlPanel2 = new ControlPanel2();
         controlPanel2.init(this);
+        controlPanel2.setSelected(defaultPreset);
         
         frame.add(previewPanel.panel,BorderLayout.WEST);
         frame.add(controlPanel,BorderLayout.EAST);
@@ -222,9 +223,13 @@ public class CardDesignerGUI {
             return;
         }
 
+        
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(selectedFile);
+            //load preset
+            setCardType(root.path("preset").asText(""));
 
             JsonNode config = root.path("config");
             if (!config.isArray()) {
@@ -239,6 +244,9 @@ public class CardDesignerGUI {
                 if (type.equals("text")) {
                     String text = field.path("text").asText("");
                     EventBus.publish(new TextUpdate(id, text));
+                    EventBus.publish(new TextUpdate("ComponentManager.insertText", id, text));
+
+                    
                 } else {
                     String path = field.path("path").asText("");
                     EventBus.publish(new ImageUpdate(id, path));

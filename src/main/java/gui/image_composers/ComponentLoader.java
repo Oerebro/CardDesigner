@@ -45,7 +45,7 @@ public class ComponentLoader {
             String bufferedImagesPath = components.path("BufferedImages").asText(null);
             String imageBrowserTabsPath = components.path("ImageBrowserTabs").asText(null);
             String cardAttributesPath = components.path("CardAttributes").asText(null);
-            System.out.println(bufferedImagesPath);
+
             loadTextComponents(textComponentsPath);
             loadBufferedImages(bufferedImagesPath);
             loadImageBrowserTabs(imageBrowserTabsPath);
@@ -128,10 +128,11 @@ public class ComponentLoader {
 
                         RenderableText comp = new RenderableText(id, labelName, render, bounds, (JComponent) obj);
                         RenderManager.addToTextMap(comp);
-                        JPanel panel = comp.getInputComponent();
-                        if (!ComponentManager.isComponentRegistered(id)) {
-                            ComponentManager.registerComponents(id, panel, side);
+                        JPanel panel = null;
+                        if(!ComponentManager.isComponentRegistered(comp.id)){
+                            panel = comp.getInputComponent();
                         }
+                        ComponentManager.registerComponents(id, panel, side);
                     } catch (Exception e) {
                         System.err.println("Failed to instantiate " + fqcn + ": " + e.getMessage());
                         e.printStackTrace();
@@ -162,7 +163,7 @@ public class ComponentLoader {
                 if (path != null) {
                     image = getImageFromFile(path);
                 }
-                //System.out.println("Loaded image: " + id + ", render: " + render);
+
                 RenderableImage ri = new RenderableImage(id, path, image, bounds, render);  
                 RenderManager.addToImageMap(ri);       
             }
@@ -187,9 +188,9 @@ public class ComponentLoader {
             //register tabs into ImageBrowserManager 
                 ImageBrowser br = new ImageBrowser(name, sourcePath, id);
                 if(!ImageBrowserManager.isTabRegistered(name)){
-                    br.init();   
-                    ImageBrowserManager.registerTab(name, br, type);
+                    br.init();       
                 }
+                ImageBrowserManager.registerTab(name, br, type);
             }
 
         } catch (Exception e) {
@@ -280,10 +281,7 @@ public class ComponentLoader {
                         // Cast and register component
                         JPanel panel = ((TextComponent) obj).getInputComponent();
                         String updateID = instance.path("updateID").asText(null);
-
-                        if (!ComponentManager.isComponentRegistered(updateID)) {
-                            ComponentManager.registerCardAttribute(updateID, panel);
-                        }
+                        ComponentManager.registerCardAttribute(updateID, panel);
 
                     } catch (Exception e) {
                         System.err.println("Failed to instantiate " + fqcn + ": " + e.getMessage());

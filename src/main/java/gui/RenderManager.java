@@ -26,6 +26,7 @@ import com.formdev.flatlaf.json.Json;
 import abstractclasses.TextComponent;
 import events.EventBus;
 import events.RepaintPanelEvent;
+import events.TextUpdate;
 import gui.image_composers.Card;
 import gui.image_composers.components.RenderableImage;
 import gui.image_composers.components.RenderableText;
@@ -37,6 +38,8 @@ public class RenderManager {
 
 //keeps track of which text is assigned to which id (cardTitle etc)
     private static Map<String, RenderableText> textMap = new HashMap<>();
+
+    
 
     public static void addToImageMap(RenderableImage img){
         if(!imageMap.containsKey(img.id)){
@@ -50,6 +53,7 @@ public class RenderManager {
             textMap.put(txt.id, txt);
         }
     }
+    
 
     public static Map<String,RenderableImage> getImageMap(){
         return imageMap;
@@ -196,7 +200,7 @@ public class RenderManager {
                 labelGraphics.dispose();
                     //add check for stroke outline here
                     if(((TextComponent) comp).hasBorder()){
-                        System.out.println("has border");
+
                         i = drawStroke(i,3,Color.WHITE);
                     }
                 g2d.drawImage(i,(int) (bounds[0]*scale),(int) (bounds[1]*scale),(int) (bounds[2]*scale),(int) (bounds[3]*scale),null);

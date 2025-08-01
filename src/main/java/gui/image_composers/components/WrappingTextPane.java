@@ -8,7 +8,6 @@ import javax.swing.JTextPane;
 public class WrappingTextPane extends JTextPane {
     @Override
     public boolean getScrollableTracksViewportWidth() {
-        System.out.println("Test Test");
         // Only track viewport width when the viewport is wider than the preferred width
         return getUI().getPreferredSize(this).width 
             <= getParent().getSize().width;
