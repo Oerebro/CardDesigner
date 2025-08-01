@@ -20,8 +20,10 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import events.CardLoadEvent;
 import events.CardTypeUpdate;
 import events.EventBus;
+import events.FontUpdate;
 import events.ImageUpdate;
 import events.RepaintPanelEvent;
+import events.ResizeUpdate;
 import events.TextUpdate;
 import events.VariableUpdate;
 import gui.card_types.*;
@@ -90,9 +92,9 @@ public class CardDesignerGUI {
                 @Override
                 public void windowStateChanged(WindowEvent e) {
                     if ((e.getNewState() & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH) {
-                        previewPanel.repaint();
+                        EventBus.publish(new ResizeUpdate(getFrameScale()));
                     } else {
-                        previewPanel.repaint();
+                        EventBus.publish(new ResizeUpdate(getFrameScale()));
                     }
                 }
             });
@@ -240,13 +242,13 @@ public class CardDesignerGUI {
             for (JsonNode field : config) {
                 String type = field.path("type").asText("");
                 String id = field.path("id").asText("");
+                String fontName= field.path("font").asText("");
 
                 if (type.equals("text")) {
                     String text = field.path("text").asText("");
                     EventBus.publish(new TextUpdate(id, text));
-                    EventBus.publish(new TextUpdate("ComponentManager.insertText", id, text));
-
-                    
+                    EventBus.publish(new FontUpdate(id, fontName));
+                    EventBus.publish(new TextUpdate("ComponentManager.insertText", id, text));     
                 } else {
                     String path = field.path("path").asText("");
                     EventBus.publish(new ImageUpdate(id, path));
@@ -266,7 +268,7 @@ public class CardDesignerGUI {
         BufferedImage finalImage = RenderManager.renderAll(imageComposer,scale, hasBleedEdge);
 
         try {
-            File outputfile = new File("export//"+generateDateTimeString()+".png");
+            File outputfile = new File("export//"+generateDateTimeString()+" "+RenderManager.getCardTitle()+".png");
             ImageIO.write(finalImage, "PNG", outputfile);
             JOptionPane.showMessageDialog(frame, "Image exported successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {
@@ -283,8 +285,32 @@ public class CardDesignerGUI {
     }
 
     private void onCardTypeUpdate(VariableUpdate e){
-        if(e.type.equals("card type"))
+        if(e.type.equals("card type")){
+            ObjectNode node = RenderManager.saveToNode(this.preset);
             setCardType((String) e.var);
+            SwingUtilities.invokeLater(()->{transferText(node);});
+        }
+    }
+
+    private void transferText(ObjectNode node){
+        JsonNode config = node.path("config");
+        if (!config.isArray()) {
+            System.err.println("Error when transferring text to new Card");
+            return;
+        }
+
+        for (JsonNode field : config) {
+            String type = field.path("type").asText("");
+            String id = field.path("id").asText("");
+            String fontName= field.path("font").asText("");
+
+            if (type.equals("text")) {
+                String text = field.path("text").asText("");
+                EventBus.publish(new TextUpdate(id, text));
+                EventBus.publish(new FontUpdate(id, fontName));
+                EventBus.publish(new TextUpdate("ComponentManager.insertText", id, text));     
+            }
+        }
     }
 
     private void setCardType(String preset){

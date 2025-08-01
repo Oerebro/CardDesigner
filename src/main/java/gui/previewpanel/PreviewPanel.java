@@ -1,8 +1,11 @@
 package gui.previewpanel;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+
 import events.EventBus;
 import events.RepaintPanelEvent;
+import events.ResizeUpdate;
 import gui.*;
 import gui.image_composers.Card;
 
@@ -10,19 +13,16 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class PreviewPanel {
     public JPanel panel;
-    private JPanel object;
+    private JPanel previewImage;
     private CardDesignerGUI parent;
     private double panelRatio = 0.7;
     private int scaledWidth,scaledHeight;
     private int baseWidth = 750;
     private int baseHeight = 1050;
-    private Card card;
 
     private BufferedImage[] imageLayers = new BufferedImage[6];
     private BufferedImage[] textLayers = new BufferedImage[6];
@@ -35,19 +35,17 @@ public class PreviewPanel {
     
     private void init() {
         EventBus.subscribe(RepaintPanelEvent.class, this::onRepaintEvent);
+        EventBus.subscribe(ResizeUpdate.class, this::onResizeUpdate);
         scaledWidth = (int) (parent.getFrameScale() * (baseWidth*panelRatio));
         scaledHeight = (int) (parent.getFrameScale() * (baseHeight*panelRatio));
 
-        object = new JPanel() {
+        previewImage = new JPanel() {
             @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
-                    double scale = parent.getFrameScale();
-                    scaledWidth = (int) (parent.getFrameScale() * (baseWidth*panelRatio));
-                    scaledHeight = (int) (parent.getFrameScale() * (baseHeight*panelRatio));
                     for(int i = 0; i < imageLayers.length; i++){
-                        g.drawImage(imageLayers[i], 0, 0, scaledWidth, scaledHeight, this);
-                        g.drawImage(textLayers[i], 0, 0, scaledWidth, scaledHeight, this);
+                        g.drawImage(imageLayers[i], 0, 0, this.getWidth(), this.getHeight(), this);
+                        g.drawImage(textLayers[i], 0, 0, this.getWidth(), this.getHeight(), this);
                     }
                     
 
@@ -55,14 +53,20 @@ public class PreviewPanel {
 
         };
 
-        object.setPreferredSize(new Dimension(600,800));
+        System.out.println("w:"+scaledWidth+" h:"+scaledHeight);
+        Dimension dim = new Dimension(scaledWidth,scaledHeight);
+        previewImage.setPreferredSize(dim);
+        previewImage.setMaximumSize(dim);
     
-        //object.setLayout(null);
-        //object.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
+        previewImage.setLayout(null);
+        //previewImage.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
 
-        panel = new JPanel(new BorderLayout());
-        panel.setPreferredSize(new Dimension(600, 800));
-        panel.add(object, BorderLayout.LINE_START);
+        panel = new JPanel();
+        panel.setPreferredSize(dim);
+        panel.setMaximumSize(dim);
+        panel.add(previewImage);
+        previewImage.setBorder(new TitledBorder("Card Image"));
+        panel.setBorder(new TitledBorder("Preview Panel"));
         
         //rescale(1.0);  
         EventBus.publish(new RepaintPanelEvent());
@@ -91,18 +95,14 @@ public class PreviewPanel {
         panel.repaint();
     }
 
-    public void rescale(double scale){
-        scaledWidth = (int) (parent.getFrameScale() * (750*panelRatio));
-        scaledHeight = (int) (parent.getFrameScale() * (1050*panelRatio));
 
-        panel.setBounds((int) (10*scale), (int) (10*scale), (int) (scaledWidth), (int) (scaledHeight));
-        object.setPreferredSize(new Dimension((int) (scaledWidth), (int) (scaledHeight)));
+    public void onResizeUpdate(ResizeUpdate e){
+        Dimension dim = new Dimension((int)(baseWidth*e.scale),(int)(baseHeight*e.scale));
+        previewImage.setPreferredSize(dim);
+        previewImage.setMaximumSize(dim);
 
-        rescaleComponents(scale);
-        panel.repaint();
-    }
-
-    public void rescaleComponents(double scale){
+        panel.setPreferredSize(dim);
+        panel.setMaximumSize(dim);
     }
 
     private void onRepaintEvent(RepaintPanelEvent e){
@@ -123,6 +123,11 @@ public class PreviewPanel {
             case "text":
                 textLayers[render] = RenderManager.renderTextLayer(baseWidth, baseHeight, render, scale);
                 break;
+            case "clearAllLayers":
+                for(int i = 0; i<imageLayers.length;i++){
+                    imageLayers[i] = null;
+                    textLayers[i] = null;
+                }
             default:
             for(int i = 0; i < imageLayers.length; i++){
                 imageLayers[i] = RenderManager.renderImageLayer(baseWidth, baseHeight, i, scale);

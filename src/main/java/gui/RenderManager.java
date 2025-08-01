@@ -66,7 +66,17 @@ public class RenderManager {
     public static void reset(){
         imageMap.clear();
         textMap.clear();
-        //EventBus.publish(new RepaintPanelEvent());
+        EventBus.publish(new RepaintPanelEvent("clearAllLayers",-1));
+    }
+
+    public static String getCardTitle(){
+        for (Map.Entry<String, RenderableText> entry : textMap.entrySet()) {
+            if(entry.getValue().id.equals("titleText")){
+                return ((TextComponent) entry.getValue().component).getText();
+            }
+        }
+
+        return "";
     }
 
     public static ObjectNode saveToNode(String preset) {
@@ -81,6 +91,7 @@ public class RenderManager {
             item.put("type", "text");
             item.put("id", rt.id);
             item.put("text", (((TextComponent) rt.component).getText()));
+            item.put("font", rt.font);
             items.add(item);
         }
 

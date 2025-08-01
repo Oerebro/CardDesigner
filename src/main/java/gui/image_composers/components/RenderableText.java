@@ -4,9 +4,11 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import abstractclasses.TextComponent;
+import events.EventBus;
+import events.FontUpdate;
 
 public class RenderableText {
-        public String id, labelName;
+        public String id, labelName, font;
         public int[] bounds;
         public int render;
         public JComponent component;
@@ -17,6 +19,7 @@ public class RenderableText {
             this.bounds = bounds;
             this.render = render;
             this.component = component;
+            EventBus.subscribe(FontUpdate.class, this::onFontUpdate);
         }
 
         public JPanel getInputComponent() {
@@ -24,6 +27,12 @@ public class RenderableText {
                 return ((TextComponent) component).getInputComponent();
             } else {
                 throw new IllegalStateException("Component does not implement InputComponentProvider");
+            }
+        }
+
+        public void onFontUpdate(FontUpdate e){
+            if(this.id.equals(e.id)){
+                this.font=e.fontName;
             }
         }
 }
