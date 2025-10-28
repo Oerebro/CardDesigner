@@ -25,9 +25,21 @@
     },
     {
         "id": "cardImage",
-        "sourcePath": "resources\\img\\armor\\armor\\",
+        "sourcePath": "resources\\img\\armor\\armor\\light\\",
         "type": "cardImage",
-        "name": "Chestplates"
+        "name": "Light Chestplates"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\armor\\armor\\medium\\",
+        "type": "cardImage",
+        "name": "Medium Chestplates"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\armor\\armor\\heavy\\",
+        "type": "cardImage",
+        "name": "Heavy Chestplates"
     },
     {
         "id": "cardImage",
@@ -43,9 +55,21 @@
     },
     {
         "id": "cardImage",
-        "sourcePath": "resources\\img\\armor\\helmet\\",
+        "sourcePath": "resources\\img\\armor\\helmet\\light\\",
         "type": "cardImage",
-        "name": "Helmets"
+        "name": "Light Helmets"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\armor\\helmet\\medium\\",
+        "type": "cardImage",
+        "name": "Medium Helmets"
+    },
+    {
+        "id": "cardImage",
+        "sourcePath": "resources\\img\\armor\\helmet\\heavy\\",
+        "type": "cardImage",
+        "name": "Heavy Helmets"
     },
     {
         "id": "cardImage",

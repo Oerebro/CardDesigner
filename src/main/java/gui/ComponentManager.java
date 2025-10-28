@@ -139,5 +139,7 @@ public class ComponentManager {
 
     public static JPanel getLeftSide() { return leftSide; }
     public static JPanel getRightSide() { return rightSide; }
+
+    
 }
 

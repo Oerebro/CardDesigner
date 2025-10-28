@@ -7,10 +7,17 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
 import java.io.*;
-
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -101,6 +108,7 @@ public class CardDesignerGUI {
         });
 
         EventBus.subscribe(VariableUpdate.class, this::onCardTypeUpdate);
+        createAutoSave();
     }
 
     public double getFrameScale() {
@@ -113,7 +121,7 @@ public class CardDesignerGUI {
     private void rescaleComponents(){
         double scale = getFrameScale();
 
-        previewPanel.rescale(scale);
+        //previewPanel.rescale(scale);
         controlPanel.rescale(scale);
         controlPanel2.rescale(scale);
     }
@@ -181,32 +189,77 @@ public class CardDesignerGUI {
         frame.setJMenuBar(menuBar);
     }
 
+    private void createAutoSave(){
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        Runnable task = () -> {
+                autoSave();
+        };
+        scheduler.scheduleAtFixedRate(task, 180, 180, TimeUnit.SECONDS);
+    }
+
     private void saveCard(){
+        saveCard(RenderManager.getTitleText());
+    }
+
+    private void autoSave(){
+        String name = "autosave_"+RenderManager.getTitleText();
+        if(name.equals("autosave_")){
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
+            name += timestamp + ".card";
+        }else{
+            name += ".card";
+        }
+
+        saveCard(name);   
+    }
+
+    private void saveCard(String name) {
+        if (name.equals("")) {
+            JOptionPane.showMessageDialog(
+                frame,
+                "Please set a card title before saving.",
+                "Missing Card Title",
+                JOptionPane.WARNING_MESSAGE
+            );
+            return; // Stop execution until title is set
+        }
+
+       
         File saveDir = new File("saved");
         if (!saveDir.exists()) {
             saveDir.mkdirs();
         }
-        JFileChooser fileChooser = new JFileChooser(saveDir);
-        fileChooser.setDialogTitle("Save Card Configuration");
+        File fileToSave = new File(saveDir, name);
+        if(!name.contains("autosave")){
+            // Get the suggested file name
+            File suggestedFile = new File(saveDir, name + ".card");
 
-        int userSelection = fileChooser.showSaveDialog(frame);
+            // Configure file chooser
+            JFileChooser fileChooser = new JFileChooser(saveDir);
+            fileChooser.setDialogTitle("Save Card Configuration");
+            fileChooser.setSelectedFile(suggestedFile); // <-- This sets the default filename
 
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
-            // Ensure it ends with .card
-            if (!fileToSave.getName().toLowerCase().endsWith(".card")) {
-                fileToSave = new File(fileToSave.getAbsolutePath() + ".card");
+            int userSelection = fileChooser.showSaveDialog(frame);
+
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                fileToSave = fileChooser.getSelectedFile();
+
+                // Ensure it ends with .card
+                if (!fileToSave.getName().toLowerCase().endsWith(".card")) {
+                    fileToSave = new File(fileToSave.getAbsolutePath() + ".card");
+                }
             }
-            
+        }  
 
-            try {
+        try {
                 ObjectNode node = RenderManager.saveToNode(this.preset);
                 new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(fileToSave, node);
+                System.out.println("Card saved to: " + fileToSave.getAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
     }
+
 
     private void loadCard() {
         JFileChooser chooser = new JFileChooser(new File("saved"));

@@ -2,6 +2,7 @@ package gui.image_composers.components;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.text.JTextComponent;
 
 import abstractclasses.TextComponent;
 import events.EventBus;
@@ -34,5 +35,12 @@ public class RenderableText {
             if(this.id.equals(e.id)){
                 this.font=e.fontName;
             }
+        }
+
+        public String getText(){
+            if(component instanceof JTextComponent){
+                return ((JTextComponent) component).getText();
+            }
+            return null;
         }
 }

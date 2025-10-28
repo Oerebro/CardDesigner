@@ -1,0 +1,55 @@
+{
+  "preset" : "dnd5e\\weapon",
+  "config" : [ {
+    "type" : "text",
+    "id" : "infoText",
+    "text" : "<runecharge><runecharge><runecharge> <-> Shoot a beam of pure light (15ft. x 60ft.) that deals 6d6 + 20 radiant damage. Creatures who saw the beam must suceed a DC 8 Constitution save or be permanently blinded.\n\n*Searing light that burns the sky.",
+    "font" : "PlantinMTPro"
+  }, {
+    "type" : "text",
+    "id" : "titleText",
+    "text" : "Bow of Light",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "text",
+    "id" : "typeText",
+    "text" : "Two-Handed, Range (150/600)",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "image",
+    "id" : "titleImage",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "cardImage",
+    "path" : "resources\\img\\weapons\\bows\\autarch.png"
+  }, {
+    "type" : "image",
+    "id" : "textboxImage",
+    "path" : "resources\\img\\card_components\\textbox\\5e_weapon.png"
+  }, {
+    "type" : "image",
+    "id" : "runeCharge",
+    "path" : "resources/glyphs/runecharge/2.png"
+  }, {
+    "type" : "image",
+    "id" : "weaponDice",
+    "path" : "resources/glyphs/dice/d8.png"
+  }, {
+    "type" : "image",
+    "id" : "diceAmount",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "backgroundImage",
+    "path" : "resources\\img\\card_components\\background\\frosted.png"
+  }, {
+    "type" : "image",
+    "id" : "frameImage",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "tierImage",
+    "path" : "resources/glyphs/tier/3.png"
+  } ]
+}

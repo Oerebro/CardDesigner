@@ -14,6 +14,15 @@ public class ColorPicker extends JButton{
 
     public ColorPicker(int width,int height, String id){
         this.setBackground(Color.BLACK);  
+        init(width,height,id);
+    }
+
+    public ColorPicker(Color color, int width,int height, String id){
+        this.setBackground(color);  
+        init(width,height,id);
+    }
+
+    private void init(int width, int height, String id){
         this.setFocusPainted(false);
         Dimension dim = new Dimension(width,height);
         this.setPreferredSize(dim);
@@ -29,6 +38,7 @@ public class ColorPicker extends JButton{
 
                 }
             });
+        EventBus.publish(new ColorUpdate(id, this.getBackground()));
     }
 
 }

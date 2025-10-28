@@ -197,7 +197,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
                 EventBus.publish(new TextUpdate(id, input.getText()));
             }
         });
-        ColorPicker colorPicker = new ColorPicker(20,20,this.id);
+        ColorPicker colorPicker = new ColorPicker(Color.WHITE,20,20,this.id);
         colorPicker.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         settings.add(colorPicker);
 

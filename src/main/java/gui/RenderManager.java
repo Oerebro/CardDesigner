@@ -69,7 +69,7 @@ public class RenderManager {
         EventBus.publish(new RepaintPanelEvent("clearAllLayers",-1));
     }
 
-    public static String getCardTitle(){
+    public static String getTitleText(){
         for (Map.Entry<String, RenderableText> entry : textMap.entrySet()) {
             if(entry.getValue().id.equals("titleText")){
                 return ((TextComponent) entry.getValue().component).getText();

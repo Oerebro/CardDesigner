@@ -1,0 +1,52 @@
+{
+  "preset" : "dnd5e\\armor",
+  "config" : [ {
+    "type" : "text",
+    "id" : "infoText",
+    "text" : "<runecharge> <-> Gain 10 temporary hitpoints.\n<runecharge><runecharge> <-> Summon 1d4 <d4> Warriors of the Bronze Pacts.\n\n*The Visionary was the highest seat of power in all of the Bronze Pact. He, who was cast from metal, was closest to the divine.",
+    "font" : "PlantinMTPro"
+  }, {
+    "type" : "text",
+    "id" : "ac",
+    "text" : "15",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "text",
+    "id" : "titleText",
+    "text" : "Visionary of the Bronze Pact",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "text",
+    "id" : "typeText",
+    "text" : "Medium Armor — Chest",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "image",
+    "id" : "titleImage",
+    "path" : "resources\\img\\card_components\\title\\default.png"
+  }, {
+    "type" : "image",
+    "id" : "cardImage",
+    "path" : "resources\\img\\armor\\armor\\medium\\iconInquisitorEliteMaleBodyArmor.png"
+  }, {
+    "type" : "image",
+    "id" : "textboxImage",
+    "path" : "resources\\img\\card_components\\textbox\\5e_armor.png"
+  }, {
+    "type" : "image",
+    "id" : "runeCharge",
+    "path" : "resources/glyphs/runecharge/3.png"
+  }, {
+    "type" : "image",
+    "id" : "backgroundImage",
+    "path" : "resources\\img\\card_components\\background\\frosted.png"
+  }, {
+    "type" : "image",
+    "id" : "frameImage",
+    "path" : "resources\\img\\card_components\\frame\\transparent.png"
+  }, {
+    "type" : "image",
+    "id" : "armorBaseLabel",
+    "path" : "resources/glyphs/ac/legendary_armor.png"
+  } ]
+}
