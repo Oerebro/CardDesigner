@@ -1,0 +1,50 @@
+{
+      "gui.image_composers.components.ImageUpdateButton": [
+          {
+            "id": "runecharge1",
+            "updateID": "runeCharge",
+            "path": ""
+          },
+          {
+            "id": "runecharge2",
+            "updateID": "runeCharge",
+            "path": "resources/glyphs/runecharge/1.png"
+          },
+          {
+            "id": "runecharge3",
+            "updateID": "runeCharge",
+            "path": "resources/glyphs/runecharge/2.png"
+          },
+          {
+            "id": "runecharge4",
+            "updateID": "runeCharge",
+            "path": "resources/glyphs/runecharge/3.png"
+          },
+          {
+            "id": "artifact",
+            "updateID": "rarity",
+            "path": "resources/glyphs/accessoire rarity/artifact.png"
+          },
+          {
+            "id": "wiuncommon",
+            "updateID": "rarity",
+            "path": "resources/glyphs/wondrous item rarity/uncommon.png"
+          },
+          {
+            "id": "wirare",
+            "updateID": "rarity",
+            "path": "resources/glyphs/wondrous item rarity/rare.png"
+          },
+          {
+            "id": "wilegendary",
+            "updateID": "rarity",
+            "path": "resources/glyphs/wondrous item rarity/legendary.png"
+          },
+          {
+            "id": "wiartifact",
+            "updateID": "rarity",
+            "path": "resources/glyphs/wondrous item rarity/artifact.png"
+          }
+      ]
+      
+}

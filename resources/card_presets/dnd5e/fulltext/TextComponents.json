@@ -1,0 +1,14 @@
+{
+      "gui.image_composers.components.ScalingTextPane": [
+        {
+          "id": "infoText",
+          "labelName": "Info Text",
+          "bounds": [50, 40, 695, 1050],
+          "minLineCount": 7,
+          "render":4,
+          "side": "leftSide",
+          "alignement": "left"
+          
+        }
+      ]
+}

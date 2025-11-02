@@ -1,0 +1,39 @@
+{
+  "preset" : "dnd5e\\consumables",
+  "config" : [ {
+    "type" : "text",
+    "id" : "infoText",
+    "text" : "",
+    "font" : "PlantinMTPro"
+  }, {
+    "type" : "text",
+    "id" : "titleText",
+    "text" : "",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "text",
+    "id" : "typeText",
+    "text" : "",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "image",
+    "id" : "titleImage",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "cardImage",
+    "path" : "resources\\img\\consumable\\elixir\\ELX_Elixir_of_Battlemage's_Power_Faded.png"
+  }, {
+    "type" : "image",
+    "id" : "textboxImage",
+    "path" : "resources\\img\\card_components\\textbox\\5e_weapon.png"
+  }, {
+    "type" : "image",
+    "id" : "backgroundImage",
+    "path" : "resources\\img\\card_components\\background\\armory.png"
+  }, {
+    "type" : "image",
+    "id" : "frameImage",
+    "path" : ""
+  } ]
+}

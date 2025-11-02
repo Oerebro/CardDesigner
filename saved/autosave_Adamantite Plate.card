@@ -1,0 +1,43 @@
+{
+  "preset" : "dnd5e\\accessoire",
+  "config" : [ {
+    "type" : "text",
+    "id" : "infoText",
+    "text" : "\nThis suit of armor is reinforced with adamantine, one of the hardest substances in existence. While you're wearing it, **any critical hit against you becomes a normal hit.",
+    "font" : "PlantinMTPro"
+  }, {
+    "type" : "text",
+    "id" : "titleText",
+    "text" : "Adamantite Plate",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "text",
+    "id" : "typeText",
+    "text" : "Heavy Armor — Chest",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "image",
+    "id" : "titleImage",
+    "path" : "resources\\img\\card_components\\title\\default.png"
+  }, {
+    "type" : "image",
+    "id" : "cardImage",
+    "path" : "resources\\img\\armor\\ring\\uiIconItemRingJadeRing.png"
+  }, {
+    "type" : "image",
+    "id" : "textboxImage",
+    "path" : "resources\\img\\card_components\\textbox\\5e_weapon.png"
+  }, {
+    "type" : "image",
+    "id" : "runeCharge",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "backgroundImage",
+    "path" : "resources\\img\\card_components\\background\\treasure.png"
+  }, {
+    "type" : "image",
+    "id" : "frameImage",
+    "path" : "resources\\img\\card_components\\frame\\default.png"
+  } ]
+}

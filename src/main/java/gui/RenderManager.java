@@ -8,6 +8,7 @@ import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.Buffer;
 import java.util.HashMap;
@@ -92,6 +93,9 @@ public class RenderManager {
             item.put("id", rt.id);
             item.put("text", (((TextComponent) rt.component).getText()));
             item.put("font", rt.font);
+            item.put("hasBorder", rt.hasBorder);
+            item.put("alignement", rt.alignement);
+            item.put("color", getColorName(rt.color));
             items.add(item);
         }
 
@@ -107,6 +111,18 @@ public class RenderManager {
         root.set("config", items);
         return root;
     }
+
+    private static String getColorName(Color color) {
+        for (Field f : Color.class.getFields()) {
+            try {
+                if (f.getType() == Color.class && f.get(null).equals(color)) {
+                    return f.getName();
+                }
+            } catch (Exception ignored) {}
+        }
+        return null; // or "UNKNOWN"
+    }
+
 
     public static BufferedImage renderAll(Card card, double scale, boolean hasBleedEdge) {
         int[] baseResolution  = card.getResolution();

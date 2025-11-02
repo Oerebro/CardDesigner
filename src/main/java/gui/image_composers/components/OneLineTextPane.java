@@ -120,7 +120,7 @@ public class OneLineTextPane extends JLabel implements TextComponent {
     
 
     private void onTextUpdate(TextUpdate e){
-        if(e.id.equals(this.id))
+        if(e.type == null && e.id.equals(this.id))
             {
                 String str = e.text;
                 //this.setFont(getScaledFontLabel(str, getFont(), getWidth(), getHeight(), this));

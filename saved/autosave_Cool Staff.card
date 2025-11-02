@@ -1,0 +1,47 @@
+{
+  "preset" : "dnd5e\\Wondrous Item",
+  "config" : [ {
+    "type" : "text",
+    "id" : "infoText",
+    "text" : "\n\nLimited to cool wizard use only.",
+    "font" : "PlantinMTPro"
+  }, {
+    "type" : "text",
+    "id" : "titleText",
+    "text" : "Cool Staff",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "text",
+    "id" : "typeText",
+    "text" : "Wondrous Item — Arcane Focus",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "image",
+    "id" : "titleImage",
+    "path" : "resources\\img\\card_components\\title\\default.png"
+  }, {
+    "type" : "image",
+    "id" : "cardImage",
+    "path" : null
+  }, {
+    "type" : "image",
+    "id" : "textboxImage",
+    "path" : "resources\\img\\card_components\\textbox\\5e_armor.png"
+  }, {
+    "type" : "image",
+    "id" : "runeCharge",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "backgroundImage",
+    "path" : "resources\\img\\card_components\\background\\library.png"
+  }, {
+    "type" : "image",
+    "id" : "frameImage",
+    "path" : "resources\\img\\card_components\\frame\\transparent.png"
+  }, {
+    "type" : "image",
+    "id" : "rarity",
+    "path" : "resources/glyphs/wondrous item rarity/uncommon.png"
+  } ]
+}

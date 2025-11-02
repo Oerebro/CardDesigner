@@ -1,0 +1,55 @@
+{
+  "preset" : "dnd5e\\weapon",
+  "config" : [ {
+    "type" : "text",
+    "id" : "infoText",
+    "text" : "",
+    "font" : "PlantinMTPro"
+  }, {
+    "type" : "text",
+    "id" : "titleText",
+    "text" : "Moonlight Greatsword",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "text",
+    "id" : "typeText",
+    "text" : "Legendary Greatsword",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "image",
+    "id" : "titleImage",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "cardImage",
+    "path" : "resources\\img\\weapons\\greatSwords\\8mkszmi.png"
+  }, {
+    "type" : "image",
+    "id" : "textboxImage",
+    "path" : "resources\\img\\card_components\\textbox\\5e_weapon.png"
+  }, {
+    "type" : "image",
+    "id" : "runeCharge",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "weaponDice",
+    "path" : "resources/glyphs/dice/d6.png"
+  }, {
+    "type" : "image",
+    "id" : "diceAmount",
+    "path" : "resources/glyphs/dice/2dice.png"
+  }, {
+    "type" : "image",
+    "id" : "backgroundImage",
+    "path" : "resources\\img\\card_components\\background\\artifact.png"
+  }, {
+    "type" : "image",
+    "id" : "frameImage",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "tierImage",
+    "path" : "resources/glyphs/tier/3.png"
+  } ]
+}

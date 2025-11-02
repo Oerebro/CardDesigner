@@ -1,0 +1,39 @@
+{
+  "preset" : "dnd5e\\consumables",
+  "config" : [ {
+    "type" : "text",
+    "id" : "infoText",
+    "text" : "You are granted **Hasted** for 3 turns.\nAfter that, you are **Lethargic** for 1 turn.",
+    "font" : "PlantinMTPro"
+  }, {
+    "type" : "text",
+    "id" : "titleText",
+    "text" : "Potion of Haste",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "text",
+    "id" : "typeText",
+    "text" : "",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "image",
+    "id" : "titleImage",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "cardImage",
+    "path" : "resources\\img\\consumable\\potion\\POT_Potion_of_Speed_Faded.png"
+  }, {
+    "type" : "image",
+    "id" : "textboxImage",
+    "path" : "resources\\img\\card_components\\textbox\\transparent.png"
+  }, {
+    "type" : "image",
+    "id" : "backgroundImage",
+    "path" : "resources\\img\\card_components\\background\\symbol.png"
+  }, {
+    "type" : "image",
+    "id" : "frameImage",
+    "path" : ""
+  } ]
+}

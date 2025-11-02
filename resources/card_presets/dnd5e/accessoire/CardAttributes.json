@@ -19,6 +19,32 @@
             "id": "runecharge4",
             "updateID": "runeCharge",
             "path": "resources/glyphs/runecharge/3.png"
+          },
+          {
+            "id": "common",
+            "updateID": "rarity",
+            "path": "resources/glyphs/accessoire rarity/common.png"
+          },
+          {
+            "id": "uncommon",
+            "updateID": "rarity",
+            "path": "resources/glyphs/accessoire rarity/uncommon.png"
+          },
+          {
+            "id": "rare",
+            "updateID": "rarity",
+            "path": "resources/glyphs/accessoire rarity/rare.png"
+          },
+          {
+            "id": "legendary",
+            "updateID": "rarity",
+            "path": "resources/glyphs/accessoire rarity/legendary.png"
+          },
+          {
+            "id": "artifact",
+            "updateID": "rarity",
+            "path": "resources/glyphs/accessoire rarity/artifact.png"
           }
       ]
+      
 }

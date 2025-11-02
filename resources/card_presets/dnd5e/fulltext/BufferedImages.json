@@ -1,0 +1,26 @@
+[
+    {
+        "id": "backgroundImage",
+        "bounds": [0, 0, 750, 1050],
+        "path": "resources\\img\\card_components\\background\\library.png",
+        "render": 0
+    },
+    {
+        "id": "frameImage",
+        "bounds": [0, 0, 750, 1050],
+        "path": "resources\\img\\card_components\\frame\\default.png", 
+        "render": 2
+    },
+    {
+        "id": "textboxImage",
+        "bounds": [0,0,750,1050],
+        "path": "resources\\img\\card_components\\textbox\\fulltext.png",
+        "render": 3
+    },
+    {
+        "id": "cardImage",
+        "bounds": [0,0,750,1050],
+        "path": null,
+        "render": 1
+    }
+]

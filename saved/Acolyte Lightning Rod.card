@@ -4,17 +4,26 @@
     "type" : "text",
     "id" : "infoText",
     "text" : "\n**Lightning Zap** <-> *Ranged Spell Attack.* 1d8 <d8> lightning damage.\n\n<runecharge> <-> Force All creatures in a 15ft. cone to make a Constitution save or take 2d6 lightning damage (half as much on a success).",
-    "font" : "PlantinMTPro"
+    "font" : "PlantinMTPro",
+    "hasBorder" : false,
+    "alignement" : 0,
+    "color" : "white"
   }, {
     "type" : "text",
     "id" : "titleText",
     "text" : "Acolyte Lightning Rod",
-    "font" : "Beleren2016"
+    "font" : "Beleren2016",
+    "hasBorder" : true,
+    "alignement" : 0,
+    "color" : "black"
   }, {
     "type" : "text",
     "id" : "typeText",
     "text" : "Arcane Focus — Finesse, Range (40)",
-    "font" : "Beleren2016"
+    "font" : "Beleren2016",
+    "hasBorder" : true,
+    "alignement" : 0,
+    "color" : "black"
   }, {
     "type" : "image",
     "id" : "titleImage",

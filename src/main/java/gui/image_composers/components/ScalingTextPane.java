@@ -534,7 +534,7 @@ public class ScalingTextPane extends JScrollPane implements TextComponent{
             return;
         }*/
 
-        if(e.id.equals(this.id)) {
+        if(e.type == null && e.id.equals(this.id)) {
             String txt = e.text;
             if (txt == null) {
                 txt = "";

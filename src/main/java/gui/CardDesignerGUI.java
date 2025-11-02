@@ -13,6 +13,7 @@ import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -26,11 +27,14 @@ import com.formdev.flatlaf.FlatDarkLaf;
 
 import events.CardLoadEvent;
 import events.CardTypeUpdate;
+import events.ColorUpdate;
+import events.ComponentManagerInsertUpdate;
 import events.EventBus;
 import events.FontUpdate;
 import events.ImageUpdate;
 import events.RepaintPanelEvent;
 import events.ResizeUpdate;
+import events.TextAlignUpdate;
 import events.TextUpdate;
 import events.VariableUpdate;
 import gui.card_types.*;
@@ -49,6 +53,7 @@ public class CardDesignerGUI {
     ControlPanel2 controlPanel2;
     private boolean hasBleedEdge = false;
     private String preset;
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
 
     public Frame getFrame(){
@@ -273,16 +278,16 @@ public class CardDesignerGUI {
 
         File selectedFile = chooser.getSelectedFile();
 
-        if (selectedFile == null || !selectedFile.exists() || !selectedFile.getName().endsWith(".card")) {
+        if (selectedFile == null || !selectedFile.exists()) {
             System.err.println("Invalid card file selected.");
             return;
         }
 
-        
+        List<ComponentManagerInsertUpdate> textUpdates = new ArrayList<>();
+        List<ImageUpdate> imageUpdates = new ArrayList<>();
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(selectedFile);
+            JsonNode root = MAPPER.readTree(selectedFile);
             //load preset
             setCardType(root.path("preset").asText(""));
 
@@ -295,18 +300,29 @@ public class CardDesignerGUI {
             for (JsonNode field : config) {
                 String type = field.path("type").asText("");
                 String id = field.path("id").asText("");
-                String fontName= field.path("font").asText("");
 
                 if (type.equals("text")) {
-                    String text = field.path("text").asText("");
-                    EventBus.publish(new TextUpdate(id, text));
-                    EventBus.publish(new FontUpdate(id, fontName));
-                    EventBus.publish(new TextUpdate("ComponentManager.insertText", id, text));     
+                    textUpdates.add(new ComponentManagerInsertUpdate(
+                        id,
+                        field.path("text").asText(""),
+                        Integer.toString(field.path("alignement").asInt(0)),
+                        field.path("font").asText(""),
+                        Boolean.toString(field.path("hasBorder").asBoolean(true)),
+                        field.path("color").asText("")
+                        
+                    ));
+                    System.out.println("Publishing Text: "+ id);
+                      
                 } else {
-                    String path = field.path("path").asText("");
-                    EventBus.publish(new ImageUpdate(id, path));
+                    imageUpdates.add(new ImageUpdate(id, field.path("path").asText("")));
+                    System.out.println("Publishing Image: "+ id);
                 }
             }
+
+            SwingUtilities.invokeLater(() -> {
+                textUpdates.forEach(EventBus::publish);
+                //imageUpdates.forEach(EventBus::publish);
+            });
 
         } catch (IOException e) {
             System.err.println("Failed to load card: " + e.getMessage());
@@ -321,7 +337,7 @@ public class CardDesignerGUI {
         BufferedImage finalImage = RenderManager.renderAll(imageComposer,scale, hasBleedEdge);
 
         try {
-            File outputfile = new File("export//"+generateDateTimeString()+" "+RenderManager.getCardTitle()+".png");
+            File outputfile = new File("export//"+generateDateTimeString()+" "+RenderManager.getTitleText()+".png");
             ImageIO.write(finalImage, "PNG", outputfile);
             JOptionPane.showMessageDialog(frame, "Image exported successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {

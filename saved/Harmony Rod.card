@@ -4,17 +4,26 @@
     "type" : "text",
     "id" : "infoText",
     "text" : "\n**Screeching Tone** <-> *Ranged Spell Attack.* 2d4 <d4> thunder damage.\n\n<runecharge> <-> Cast Magic Mouth at 1st level.",
-    "font" : "PlantinMTPro"
+    "font" : "PlantinMTPro",
+    "hasBorder" : true,
+    "alignement" : 0,
+    "color" : "white"
   }, {
     "type" : "text",
     "id" : "titleText",
     "text" : "Acolyte Harmony Rod",
-    "font" : "Beleren2016"
+    "font" : "Beleren2016",
+    "hasBorder" : true,
+    "alignement" : 0,
+    "color" : "white"
   }, {
     "type" : "text",
     "id" : "typeText",
     "text" : "Arcane Focus — Finesse, Range (40)",
-    "font" : "Beleren2016"
+    "font" : "Beleren2016",
+    "hasBorder" : true,
+    "alignement" : 0,
+    "color" : "black"
   }, {
     "type" : "image",
     "id" : "titleImage",

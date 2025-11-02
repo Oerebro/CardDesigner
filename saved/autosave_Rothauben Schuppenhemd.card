@@ -1,0 +1,52 @@
+{
+  "preset" : "dnd5e\\armor",
+  "config" : [ {
+    "type" : "text",
+    "id" : "infoText",
+    "text" : "",
+    "font" : "PlantinMTPro"
+  }, {
+    "type" : "text",
+    "id" : "ac",
+    "text" : "13",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "text",
+    "id" : "titleText",
+    "text" : "Rothauben Schuppenhemd",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "text",
+    "id" : "typeText",
+    "text" : "Medium Armor — Chest",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "image",
+    "id" : "titleImage",
+    "path" : "resources\\img\\card_components\\title\\default.png"
+  }, {
+    "type" : "image",
+    "id" : "cardImage",
+    "path" : "resources\\img\\armor\\armor\\medium\\iconBanditRapierMaleBodyArmor.png"
+  }, {
+    "type" : "image",
+    "id" : "textboxImage",
+    "path" : "resources\\img\\card_components\\textbox\\5e_armor.png"
+  }, {
+    "type" : "image",
+    "id" : "runeCharge",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "backgroundImage",
+    "path" : "resources\\img\\card_components\\background\\armory.png"
+  }, {
+    "type" : "image",
+    "id" : "frameImage",
+    "path" : "resources\\img\\card_components\\frame\\default.png"
+  }, {
+    "type" : "image",
+    "id" : "armorBaseLabel",
+    "path" : "resources/glyphs/ac/uncommon_armor.png"
+  } ]
+}

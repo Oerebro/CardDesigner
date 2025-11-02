@@ -1,0 +1,39 @@
+{
+  "preset" : "dnd5e\\consumables",
+  "config" : [ {
+    "type" : "text",
+    "id" : "infoText",
+    "text" : "",
+    "font" : ""
+  }, {
+    "type" : "text",
+    "id" : "titleText",
+    "text" : "Scrap Bomb",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "text",
+    "id" : "typeText",
+    "text" : "Throwable ",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "image",
+    "id" : "titleImage",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "cardImage",
+    "path" : "resources\\img\\consumable\\grenade\\uiIconItemScrapBomb.png"
+  }, {
+    "type" : "image",
+    "id" : "textboxImage",
+    "path" : "resources\\img\\card_components\\textbox\\faded.png"
+  }, {
+    "type" : "image",
+    "id" : "backgroundImage",
+    "path" : "resources\\img\\card_components\\background\\workshop.png"
+  }, {
+    "type" : "image",
+    "id" : "frameImage",
+    "path" : ""
+  } ]
+}

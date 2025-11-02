@@ -1,0 +1,25 @@
+{
+  "preset" : "dnd5e\\Fulltext",
+  "config" : [ {
+    "type" : "text",
+    "id" : "infoText",
+    "text" : "Test",
+    "font" : "PlantinMTPro"
+  }, {
+    "type" : "image",
+    "id" : "cardImage",
+    "path" : null
+  }, {
+    "type" : "image",
+    "id" : "textboxImage",
+    "path" : "resources\\img\\card_components\\textbox\\fulltext.png"
+  }, {
+    "type" : "image",
+    "id" : "backgroundImage",
+    "path" : "resources\\img\\card_components\\background\\library.png"
+  }, {
+    "type" : "image",
+    "id" : "frameImage",
+    "path" : "resources\\img\\card_components\\frame\\default.png"
+  } ]
+}

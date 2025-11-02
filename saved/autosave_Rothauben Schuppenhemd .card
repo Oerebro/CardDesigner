@@ -1,0 +1,52 @@
+{
+  "preset" : "dnd5e\\armor",
+  "config" : [ {
+    "type" : "text",
+    "id" : "infoText",
+    "text" : "",
+    "font" : null
+  }, {
+    "type" : "text",
+    "id" : "ac",
+    "text" : "",
+    "font" : "Beleren2016"
+  }, {
+    "type" : "text",
+    "id" : "titleText",
+    "text" : "Rothauben Schuppenhemd ",
+    "font" : null
+  }, {
+    "type" : "text",
+    "id" : "typeText",
+    "text" : "Medium Armor — Chest ",
+    "font" : null
+  }, {
+    "type" : "image",
+    "id" : "titleImage",
+    "path" : "resources\\img\\card_components\\title\\default.png"
+  }, {
+    "type" : "image",
+    "id" : "cardImage",
+    "path" : null
+  }, {
+    "type" : "image",
+    "id" : "textboxImage",
+    "path" : "resources\\img\\card_components\\textbox\\5e_armor.png"
+  }, {
+    "type" : "image",
+    "id" : "runeCharge",
+    "path" : ""
+  }, {
+    "type" : "image",
+    "id" : "backgroundImage",
+    "path" : "resources\\img\\card_components\\background\\armory.png"
+  }, {
+    "type" : "image",
+    "id" : "frameImage",
+    "path" : "resources\\img\\card_components\\frame\\default.png"
+  }, {
+    "type" : "image",
+    "id" : "armorBaseLabel",
+    "path" : "resources/glyphs/ac/armor.png"
+  } ]
+}

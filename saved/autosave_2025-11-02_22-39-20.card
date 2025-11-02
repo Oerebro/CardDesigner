@@ -1,0 +1,12 @@
+{
+  "preset" : "dnd5e\\weapon",
+  "config" : [ {
+    "type" : "text",
+    "id" : "titleText",
+    "text" : "",
+    "font" : null,
+    "hasBorder" : true,
+    "alignement" : 0,
+    "color" : null
+  } ]
+}

@@ -1,0 +1,10 @@
+{
+  "components": {
+    "resolution":[750,1050],
+    "bleed_resolution": [825,1125],
+    "TextComponents": "resources/card_presets/dnd5e/fulltext/TextComponents.json",
+    "BufferedImages": "resources/card_presets/dnd5e/fulltext/BufferedImages.json",
+    "ImageBrowserTabs": "resources/card_presets/dnd5e/fulltext/ImageBrowserTabs.json",
+    "CardAttributes": "resources/card_presets/dnd5e/fulltext/CardAttributes.json"
+  }
+}

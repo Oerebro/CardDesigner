@@ -2,7 +2,7 @@
     {
         "id": "backgroundImage",
         "bounds": [0, 0, 750, 1050],
-        "path": "resources\\img\\card_components\\background\\default.png",
+        "path": "resources\\img\\card_components\\background\\armory.png",
         "render": 0
     },
     {

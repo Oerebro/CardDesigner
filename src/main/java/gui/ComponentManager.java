@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -10,13 +11,21 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
 
+import events.ColorUpdate;
+import events.ComponentManagerInsertUpdate;
 import events.EventBus;
+import events.TextAlignUpdate;
 import events.TextUpdate;
+import events.VariableUpdate;
+import gui.controlpanel1.ColorPicker;
 
 //lists to keep track which textcomponents has registered which input field, to avoid unnecessary loading
 /*keeps track of
@@ -41,7 +50,7 @@ public class ComponentManager {
         rightSide = new JPanel();
         rightSide.setLayout(new BoxLayout(rightSide, BoxLayout.Y_AXIS));
         rightSide.setBorder(BorderFactory.createTitledBorder("rightSide"));
-        EventBus.subscribe(TextUpdate.class, e -> onTextUpdate(e));
+        EventBus.subscribe(ComponentManagerInsertUpdate.class, e -> onComponentManagerUpdate(e));
     }
 
     public static void reset(){
@@ -50,16 +59,22 @@ public class ComponentManager {
         rightSide.removeAll();
     }
 
-    private static void onTextUpdate(TextUpdate e){
-        if(e.type != null && (e.type.equals("ComponentManager.insertText"))){
-            System.out.println("Trying to insert into: "+e.id);
-            for(Map.Entry<String,JPanel> entry : allComponents.entrySet()){
-                if(entry.getKey().equals(e.id)){
-                    System.out.println(e.id);
-                    ((JTextComponent) entry.getValue().getComponent(1)).setText(e.text);
-                }
-            }
-        }
+    private static void onComponentManagerUpdate(ComponentManagerInsertUpdate e){
+        ((JTextComponent) allComponents.get(e.id).getComponent(1)).setText(e.text);
+        JPanel panel = ((JPanel) allComponents.get(e.id).getComponent(0));
+        
+        try{
+            Color color =  (Color) Color.class.getField(e.color).get(null);
+            ((ColorPicker) panel.getComponent(0)).setColor(color);;
+        }catch(Exception e2){}
+
+        ((JComboBox<?>) panel.getComponent(5)).setSelectedItem(e.fontName);
+        ((JCheckBox) panel.getComponent(4)).setSelected(Boolean.parseBoolean(e.hasBorder));
+
+        EventBus.publish(new VariableUpdate("borderBoolean",e.id,Boolean.parseBoolean(e.hasBorder)));
+        EventBus.publish(new TextAlignUpdate(Integer.parseInt(e.alignement) , e.id));
+
+        
     }
 
     public static void registerComponents(String componentID, JPanel component, String targetPanel) {

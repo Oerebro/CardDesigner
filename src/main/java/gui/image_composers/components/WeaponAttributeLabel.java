@@ -59,13 +59,14 @@ public class WeaponAttributeLabel extends Loggable {
     }
 
     private void onTextUpdate(TextUpdate e){
-        if(e.type != GlobalVar.RANGE_MAX_TEXT_UPDATE)
+        return;
+        /*if(e.type == null e.id.equals(this.id))
             return;
         if((e.text.equals(""))){
             setBaseLabel(GlobalVar.W_MELEE);
         }else{
             setBaseLabel(GlobalVar.W_RANGED);
-        }
+        }*/
     }
 
     private void setAttribute(AttributeUpdate e){

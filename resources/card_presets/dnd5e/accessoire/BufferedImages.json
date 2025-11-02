@@ -2,7 +2,7 @@
     {
         "id": "backgroundImage",
         "bounds": [0, 0, 750, 1050],
-        "path": "resources\\img\\card_components\\background\\default.png",
+        "path": "resources\\img\\card_components\\background\\library.png",
         "render": 0
     },
     {
@@ -19,8 +19,8 @@
     },
     {
         "id": "textboxImage",
-        "bounds": [0,560,750,450],
-        "path": "resources\\img\\card_components\\textbox\\5e_weapon.png",
+        "bounds": [0,560,750,500],
+        "path": "resources\\img\\card_components\\textbox\\5e_armor.png",
         "render": 3
     },
     {
@@ -33,6 +33,12 @@
         "id": "runeCharge",
         "bounds": [5,745,55,150],
         "path": "",
+        "render": 5
+    },
+    {
+        "id": "rarity",
+        "bounds":  [590,520,180,180],
+        "path": "resources/glyphs/accessoire rarity/common.png",
         "render": 5
     }
 ]
